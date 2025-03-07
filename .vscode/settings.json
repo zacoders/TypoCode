@@ -1,0 +1,44 @@
+{
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/.pytest_cache": true,
+        "**/.vs": true,
+        "**/.venv": true
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8",
+        "editor.formatOnSave": true,
+        "editor.tabSize": 4
+    },
+    "autopep8.args": [
+        "--indent-size=4",
+        "--max-line-length=120"
+    ],
+    "python.analysis.typeCheckingMode": "basic",
+    "cSpell.language": "en,ru",
+    "cSpell.dictionaries": ["russian"],
+    "cSpell.words": [
+        "blit",
+        "centerx",
+        "centery",
+        "collidepoint",
+        "colliderect",
+        "colorkey",
+        "consts",
+        "dtype",
+        "KEYDOWN",
+        "koefficient",
+        "MOUSEBUTTONDOWN",
+        "MOUSEBUTTONUP",
+        "ndenumerate",
+        "NOFRAME",
+        "pygame",
+        "RCTRL",
+        "respawn",
+        "SRCALPHA",
+        "tankmap",
+        "topleft",
+        "VIDEORESIZE",
+        "WINDOWRESIZED"
+    ]
+}
