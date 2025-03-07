@@ -12,7 +12,8 @@
     },
     "autopep8.args": [
         "--indent-size=4",
-        "--max-line-length=120"
+        "--max-line-length=120",
+        "--aggressive"
     ],
     "python.analysis.typeCheckingMode": "basic",
     "cSpell.language": "en,ru",
