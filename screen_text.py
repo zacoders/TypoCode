@@ -21,6 +21,13 @@ class ScreenText:
 
     def update(self, events: list[Event]):
 
+        self.__text = self.__font.render(self.__input_text, True, self.__text_color)
+
+        self.__text_line_rect = pygame.Rect(
+            0, self.__screen.get_height() // 2,
+            self.__screen.get_width(), self.__font_size
+        )
+
         for event in events:
             if event.type != pygame.KEYDOWN:
                 continue
@@ -33,19 +40,13 @@ class ScreenText:
             elif event.key == pygame.K_RETURN:
                 self.__input_text = ""
             else:
-                self.__input_text += event.unicode
-
-        self.__text_line_rect = pygame.Rect(
-            0, self.__screen.get_height() // 2,
-            self.__screen.get_width(), self.__font_size
-        )
+                if self.__text.get_width() < self.__text_line_rect.width:
+                    self.__input_text += event.unicode
 
     def draw(self):
         pygame.draw.rect(self.__screen, self.__text_line_color, self.__text_line_rect)
 
-        text = self.__font.render(self.__input_text, True, self.__text_color)
-
         text_rect = pygame.Rect(self.__text_line_rect.x, self.__text_line_rect.y,
-                                text.get_width(), text.get_height())
+                                self.__text.get_width(), self.__text.get_height())
 
-        self.__screen.blit(text, text_rect)
+        self.__screen.blit(self.__text, text_rect)
