@@ -20,7 +20,7 @@ class MainWindow:
             if event.key == pygame.K_ESCAPE:
                 continue
 
-            self.__input_line.update(event)
+            self.__input_line.update(event, self.__random_line.get_len())
 
     def draw(self, screen: pygame.Surface):
         self.__input_line.draw(screen)

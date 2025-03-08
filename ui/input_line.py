@@ -12,14 +12,28 @@ class InputLine:
         self.__text_color = (255, 255, 255)
         self.__text_line_color = (0, 0, 0)
         self.__font = Font("fonts/Inconsolata-Regular.ttf", self.__font_size)
+        self.__current_char = 0
 
-    def update(self, event: Event):
+    def update(self, event: Event, rand_text_line_list):
         if event.key == pygame.K_BACKSPACE:
+            if not self.__text:
+                return
             self.__text = self.__text[:-1]
+            if self.__current_char > 0:
+                self.__current_char -= 1
         elif event.key == pygame.K_RETURN:
             self.__text = ""
+            self.__current_char = 0
         else:
-            self.__text += event.unicode
+            if len(self.__text) >= len(rand_text_line_list):
+                return
+
+            if event.unicode == rand_text_line_list[self.__current_char]:
+                pygame.mixer.Sound("sounds/right_char.mp3").play()
+                self.__text += event.unicode
+                self.__current_char += 1
+            else:
+                pygame.mixer.Sound("sounds/wrong_char.mp3").play()
 
     def draw(self, screen: pygame.Surface):
         line_rect = pygame.Rect(

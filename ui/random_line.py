@@ -35,3 +35,6 @@ class RandomLine:
         pygame.draw.rect(screen, self.__text_line_color, line_rect)
         text = self.__font.render(self.__text, True, self.__text_color)
         screen.blit(text, line_rect)
+
+    def get_len(self):
+        return list(self.__text)
