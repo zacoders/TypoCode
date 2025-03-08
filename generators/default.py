@@ -2,13 +2,10 @@
 
 import random
 import string
-import pygame
-
-from pygame.event import Event
-from pygame.font import Font
+from generators.base import BaseGenerator
 
 
-class TextGenerator:
+class RandomGenerator(BaseGenerator):
 
     def get(self, len: int) -> str:
         result = ''

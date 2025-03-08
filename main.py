@@ -1,8 +1,7 @@
 import pygame
 import sys
-
 from consts import BG_COLOR, FPS
-from text_generator import TextGenerator
+from generators.python import PythonGenerator
 from ui.main_window import MainWindow
 
 
@@ -14,7 +13,7 @@ screen_size = info.current_w - info.current_w * 0.3, info.current_h - info.curre
 screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
 pygame.display.set_caption("TypoCode")
 
-text_generator = TextGenerator()
+text_generator = PythonGenerator()
 screen_text = MainWindow()
 
 clock = pygame.time.Clock()
