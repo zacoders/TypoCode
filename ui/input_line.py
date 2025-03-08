@@ -33,6 +33,8 @@ class InputLine:
                 self.__text += event.unicode
                 self.__current_char += 1
             else:
+                if event.key in [pygame.K_LSHIFT, pygame.K_RSHIFT]:
+                    return
                 pygame.mixer.Sound("sounds/wrong_char.mp3").play()
 
     def draw(self, screen: pygame.Surface):
