@@ -6,6 +6,8 @@ from ui.main_window import MainWindow
 
 
 pygame.init()
+pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=100)
+# pygame.mixer.init()
 
 info = pygame.display.Info()
 screen_size = info.current_w - info.current_w * 0.3, info.current_h - info.current_h * 0.3

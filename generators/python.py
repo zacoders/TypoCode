@@ -43,7 +43,7 @@ class PythonGenerator(BaseGenerator):
         words_count = len(self.python_words)
         result_string = ''
         while (True):
-            rnd = randint(0, words_count)
+            rnd = randint(0, words_count - 1)
             result_string += ' ' + self.python_words[rnd]
             if len(result_string) >= length:
                 break

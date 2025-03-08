@@ -13,6 +13,8 @@ class InputLine:
         self.__text_line_color = (0, 0, 0)
         self.__font = Font("fonts/Inconsolata-Regular.ttf", self.__font_size)
         self.__current_char = 0
+        self.__type_sound = pygame.mixer.Sound("sounds/typing-sound-02-229861.wav")
+        self.__error_sound = pygame.mixer.Sound("sounds/error.mp3")
 
     def update(self, event: Event, rand_text_line_list):
         if event.key == pygame.K_BACKSPACE:
@@ -29,13 +31,13 @@ class InputLine:
                 return
 
             if event.unicode == rand_text_line_list[self.__current_char]:
-                pygame.mixer.Sound("sounds/right_char.mp3").play()
+                self.__type_sound.play()
                 self.__text += event.unicode
                 self.__current_char += 1
             else:
                 if event.key in [pygame.K_LSHIFT, pygame.K_RSHIFT]:
                     return
-                pygame.mixer.Sound("sounds/wrong_char.mp3").play()
+                self.__error_sound.play()
 
     def draw(self, screen: pygame.Surface):
         line_rect = pygame.Rect(
