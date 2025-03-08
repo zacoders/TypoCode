@@ -1,7 +1,5 @@
 import pygame
 from pygame.event import Event
-from pygame.font import Font
-from text_generator import TextGenerator
 from ui.input_line import InputLine
 from ui.random_line import RandomLine
 

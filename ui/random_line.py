@@ -3,13 +3,13 @@ from pygame.font import Font
 from pygame.event import Event
 import pygame
 
-from text_generator import TextGenerator
+from generators.python import PythonGenerator
 
 
 class RandomLine:
 
     def __init__(self):
-        text_generator = TextGenerator()
+        text_generator = PythonGenerator()
         self.__text = text_generator.get(32)
 
         self.__font_size = 100
