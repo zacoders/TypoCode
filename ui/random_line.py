@@ -9,10 +9,10 @@ from generators.python import PythonGenerator
 class RandomLine:
 
     def __init__(self):
-        text_generator = PythonGenerator()
-        self.__text = text_generator.get(32)
+        self.__text_generator = PythonGenerator()
+        self.__text = self.__text_generator.get(32)
 
-        self.__font_size = 100
+        self.__font_size = 80
         self.__text_color = (155, 255, 155)
         self.__text_line_color = (0, 0, 0)
         self.__font = Font("fonts/Inconsolata-Regular.ttf", self.__font_size)
@@ -36,5 +36,8 @@ class RandomLine:
         text = self.__font.render(self.__text, True, self.__text_color)
         screen.blit(text, line_rect)
 
-    def get_len(self):
-        return list(self.__text)
+    def get_text(self) -> str:
+        return self.__text
+
+    def next_line(self):
+        self.__text = self.__text_generator.get(32)

@@ -8,7 +8,7 @@ class MainWindow:
 
     def __init__(self):
         self.__random_line = RandomLine()
-        self.__input_line = InputLine()
+        self.__input_line = InputLine(self.__random_line)
 
     def update(self, events: list[Event]):
         for event in events:
@@ -18,7 +18,7 @@ class MainWindow:
             if event.key == pygame.K_ESCAPE:
                 continue
 
-            self.__input_line.update(event, self.__random_line.get_len())
+            self.__input_line.update(event)
 
     def draw(self, screen: pygame.Surface):
         self.__input_line.draw(screen)
