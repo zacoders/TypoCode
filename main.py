@@ -1,13 +1,17 @@
 import pygame
 import sys
 
-from consts import BG_COLOR, FPS, START_SCREEN_HEIGHT, START_SCREEN_WIDTH
+from consts import BG_COLOR, FPS
 from screen_text import ScreenText
 
 
 pygame.init()
 
-screen: pygame.Surface = pygame.display.set_mode((START_SCREEN_WIDTH, START_SCREEN_HEIGHT), pygame.RESIZABLE)
+info = pygame.display.Info()
+screen_size = info.current_w - 2, info.current_h - 60
+
+screen = pygame.display.set_mode(
+    screen_size, pygame.RESIZABLE)
 pygame.display.set_caption("TypoCode")
 
 screen_text = ScreenText(screen)
@@ -27,7 +31,7 @@ while True:
             pygame.quit()
             sys.exit()
 
-    screen_text.update(events, keys)
+    screen_text.update(events)
     screen_text.draw()
 
     pygame.display.update()

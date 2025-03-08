@@ -12,19 +12,14 @@ class ScreenText:
         self.__screen = screen
 
         self.__font_size = 100
-        self.__font = Font(None, self.__font_size)
+        self.__font = Font("fonts/UbuntuMono-Regular.ttf", self.__font_size)
 
         self.__input_text = ""
-
         self.__text_color = (255, 255, 255)
 
         self.__text_line_color = (0, 0, 0)
-        self.__text_line_rect = pygame.Rect(
-            0, self.__screen.get_height() // 2,
-            self.__screen.get_width(), self.__font_size
-        )
 
-    def update(self, events: list[Event], keys):
+    def update(self, events: list[Event]):
 
         for event in events:
             if event.type != pygame.KEYDOWN:
@@ -33,13 +28,17 @@ class ScreenText:
             if event.key == pygame.K_ESCAPE:
                 continue
 
-            print(event.key)
-            if event.key == pygame.K_BACKSPACE:  # Удаление символа
+            if event.key == pygame.K_BACKSPACE:
                 self.__input_text = self.__input_text[:-1]
             elif event.key == pygame.K_RETURN:
                 self.__input_text = ""
             else:
                 self.__input_text += event.unicode
+
+        self.__text_line_rect = pygame.Rect(
+            0, self.__screen.get_height() // 2,
+            self.__screen.get_width(), self.__font_size
+        )
 
     def draw(self):
         pygame.draw.rect(self.__screen, self.__text_line_color, self.__text_line_rect)
