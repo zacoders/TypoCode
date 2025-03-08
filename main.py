@@ -8,7 +8,7 @@ from screen_text import ScreenText
 pygame.init()
 
 info = pygame.display.Info()
-screen_size = info.current_w - 2, info.current_h - 60
+screen_size = info.current_w - info.current_w * 0.3, info.current_h - info.current_h * 0.3
 
 screen = pygame.display.set_mode(
     screen_size, pygame.RESIZABLE)
