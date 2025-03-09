@@ -4,14 +4,16 @@ from pygame.event import Event
 import pygame
 
 from errors import Errors
+from ui.keyboard import Keyboard
 from ui.random_line import RandomLine
 
 
 class InputLine:
 
-    def __init__(self, random_line: RandomLine):
+    def __init__(self, random_line: RandomLine, keyboard: Keyboard):
 
         self.__random_line = random_line
+        self.__keyboard = keyboard
 
         self.__text = ''
         self.__cursor_symbol = "\u258F"
@@ -37,7 +39,7 @@ class InputLine:
             count += len(word) + 1  # +1 for space
         return ""
 
-    def update(self, event: Event):
+    def update(self, events: list[Event]):
         rand_text = self.__random_line.get_text()
 
         if len(self.__text) >= len(rand_text):
@@ -47,18 +49,28 @@ class InputLine:
 
         current_char_pos = len(self.__text)
         current_char = rand_text[current_char_pos]
-        if event.unicode == current_char:
-            self.__type_sound.play()
-            self.__text += event.unicode
-        else:
-            if event.key in [pygame.K_LSHIFT, pygame.K_RSHIFT, pygame.K_CAPSLOCK]:
-                return
 
-            if event.unicode:
-                word = self.__get_word(current_char_pos)
-                self.__errors.add_errors(current_char, word)
+        self.__keyboard.highlight_key(current_char)
 
-            self.__error_sound.play()
+        for event in events:
+            if event.type != pygame.KEYDOWN:
+                continue
+
+            if event.key == pygame.K_ESCAPE:
+                continue
+
+            if event.unicode == current_char:
+                self.__type_sound.play()
+                self.__text += event.unicode
+            else:
+                if event.key in [pygame.K_LSHIFT, pygame.K_RSHIFT, pygame.K_CAPSLOCK]:
+                    return
+
+                if event.unicode:
+                    word = self.__get_word(current_char_pos)
+                    self.__errors.add_errors(current_char, word)
+
+                self.__error_sound.play()
 
     def draw(self, screen: pygame.Surface, font_size: int):
         line_rect = pygame.Rect(

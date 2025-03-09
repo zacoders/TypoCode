@@ -17,8 +17,7 @@ screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
 pygame.display.set_caption("TypoCode")
 
 text_generator = PythonGenerator()
-screen_text = MainWindow()
-keyboard = Keyboard(0, 0)
+main_window = MainWindow()
 
 clock = pygame.time.Clock()
 
@@ -38,9 +37,8 @@ while True:
             new_width, new_height = event.w, event.h
             screen = pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
 
-    screen_text.update(events, screen.get_width())
-    screen_text.draw(screen)
-    keyboard.draw(screen)
+    main_window.update(events, screen.get_width())
+    main_window.draw(screen)
 
     pygame.display.update()
     pygame.display.flip()

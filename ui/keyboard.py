@@ -5,15 +5,15 @@ import pygame
 class Keyboard:
     def __init__(self, x: int, y: int, key_size: int = 40):
 
-        self.x = x
-        self.y = y
-        self.key_size = key_size
-        self.spacing = 6
-        self.keys = {}
-        self.highlighted_key = None
-        self.font = pygame.font.Font(None, 24)
+        self.__x = x
+        self.__y = y
+        self.__key_size = key_size
+        self.__spacing = 6
+        self.__keys = {}
+        self.__highlighted_key = None
+        self.__font = pygame.font.Font(None, 24)
 
-        self.layout = [
+        self.__layout = [
             [("~", 1), ("1", 1), ("2", 1), ("3", 1), ("4", 1), ("5", 1), ("6", 1),
              ("7", 1), ("8", 1), ("9", 1), ("0", 1), ("-", 1), ("=", 1), ("<--", 2)],
 
@@ -30,25 +30,25 @@ class Keyboard:
              ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("RCtrl", 1.25)]
         ]
 
-        self.create_keys()
+        self.__create_keys()
 
-    def create_keys(self):
-        y_offset = self.y
-        for row in self.layout:
-            x_offset = self.x
+    def __create_keys(self):
+        y_offset = self.__y
+        for row in self.__layout:
+            x_offset = self.__x
             for key, width in row:
-                self.keys[key] = pygame.Rect(x_offset, y_offset, self.key_size * width, self.key_size)
-                x_offset += self.key_size * width + self.spacing
-            y_offset += self.key_size + self.spacing
+                self.__keys[key] = pygame.Rect(x_offset, y_offset, self.__key_size * width, self.__key_size)
+                x_offset += self.__key_size * width + self.__spacing
+            y_offset += self.__key_size + self.__spacing
 
-    def highlight_key(self, key):
-        if key in self.keys:
-            self.highlighted_key = key
+    def highlight_key(self, key: str):
+        if key.upper() in self.__keys:
+            self.__highlighted_key = key.upper()
 
     def draw(self, screen: pygame.Surface):
-        for key, rect in self.keys.items():
-            bg_color = (30, 30, 30) if key != self.highlighted_key else (255, 0, 0)
+        for key, rect in self.__keys.items():
+            bg_color = (30, 30, 30) if key != self.__highlighted_key else (35, 56, 35)
             pygame.draw.rect(screen, bg_color, rect, border_radius=5)
-            text = self.font.render(key, True, (200, 200, 200))
+            text = self.__font.render(key, True, (200, 200, 200))
             text_rect = text.get_rect(center=rect.center)
             screen.blit(text, text_rect)
