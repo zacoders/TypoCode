@@ -2,6 +2,7 @@ import pygame
 import sys
 from consts import BG_COLOR, FPS
 from generators.python import PythonGenerator
+from ui.keyboard import Keyboard
 from ui.main_window import MainWindow
 
 
@@ -17,6 +18,7 @@ pygame.display.set_caption("TypoCode")
 
 text_generator = PythonGenerator()
 screen_text = MainWindow()
+keyboard = Keyboard(0, 0)
 
 clock = pygame.time.Clock()
 
@@ -38,6 +40,7 @@ while True:
 
     screen_text.update(events, screen.get_width())
     screen_text.draw(screen)
+    keyboard.draw(screen)
 
     pygame.display.update()
     pygame.display.flip()
