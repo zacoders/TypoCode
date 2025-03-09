@@ -51,11 +51,8 @@ class InputLine:
         pygame.draw.rect(screen, self.__text_line_color, line_rect)
 
         if self.__prev_font_size != font_size:
-            if font_size > 5:
-                self.__font = Font("fonts/Inconsolata-Regular.ttf", font_size)
-                self.__prev_font_size = font_size
-            else:
-                return
+            self.__font = Font("fonts/Inconsolata-Regular.ttf", font_size)
+            self.__prev_font_size = font_size
 
         text = self.__font.render(self.__text + self.__cursor_symbol, True, self.__text_color)
         screen.blit(text, line_rect)

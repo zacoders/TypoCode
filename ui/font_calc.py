@@ -27,7 +27,7 @@ class FontCalc:
             if text_width < screen_width:
                 break
 
-            if text_width > screen_width:
+            if text_width >= screen_width:
                 font_size -= 1
 
             font = Font("fonts/Inconsolata-Regular.ttf", font_size)

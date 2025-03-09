@@ -16,6 +16,7 @@ class MainWindow:
     def update(self, events: list[Event], screen_width):
 
         self.__font_calc.update(self.__text_len, screen_width)
+
         for event in events:
             if event.type != pygame.KEYDOWN:
                 continue
