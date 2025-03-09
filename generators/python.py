@@ -1,6 +1,6 @@
 
 from generators.base import BaseGenerator
-from random import randint
+import random
 
 
 class PythonGenerator(BaseGenerator):
@@ -71,29 +71,45 @@ class PythonGenerator(BaseGenerator):
     ]
 
     def get(self, length: int) -> str:
-        words_count = len(self.python_words)
-        result_string = ''
+        for _ in range(1, 10):
+            text = self.__get(length)
+            if len(text) == length:
+                return text
+        raise Exception("Cannot get random text.")
+
+    def __get(self, length: int) -> str:
+        total_len = -1
+        words = []
         while True:
-            rnd = randint(0, words_count - 1)
-            word = self.python_words[rnd]
-            
-            if len(result_string) + len(word) + 1 > length:
-                remaining_length = length - len(result_string) - 1
-                if remaining_length > 0:
-                    result_string += ' ' + self.__get_random_word(remaining_length)
+            if total_len >= length:
                 break
-            
-            result_string += ' ' + word
-            
-        return result_string.lstrip()
+            max_word_len = length - total_len - 1
+            if max_word_len == 0:
+                break
 
-    def __get_random_word(self, length: int):
-        right_words = []
+            word = self._get_random_word(max_length=max_word_len)
+            words.append(word)
+            total_len += len(word) + 1  # + 1 space
 
-        for word in self.python_words:
-            if len(word) == length:
-                right_words.append(word)
+        return " ".join(words)
 
-        random_num = randint(0, len(right_words) - 1)
+    # def get_old(self, length: int) -> str:
+    #     result_string = ''
+    #     while len(result_string) < length:
+    #         max_word_len = length - len(result_string)
+    #         if max_word_len == 1:
+    #             word = '.'
+    #         elif max_word_len > 5:
+    #             if result_string:
+    #                 result_string += ' '
+    #             word = self._get_random_word(max_length=max_word_len + 1)
+    #         else:
+    #             word = self._get_random_word(min_length=max_word_len, max_length=max_word_len)
 
-        return right_words[random_num]
+    #         result_string += word
+
+    #     return result_string.rstrip()
+
+    def _get_random_word(self, min_length: int = 0, max_length: int = 999):
+        right_words = filter(lambda w: len(w) >= min_length and len(w) <= max_length, self.python_words)
+        return random.choice(list(right_words))
