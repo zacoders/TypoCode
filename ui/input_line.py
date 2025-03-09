@@ -28,28 +28,35 @@ class InputLine:
         self.__type_sound = pygame.mixer.Sound("sounds/typing-sound-02-229861.wav")
         self.__error_sound = pygame.mixer.Sound("sounds/error.mp3")
 
+    def __get_word(self, pos: int) -> str:
+        words = self.__random_line.get_text().split()
+        count = 0
+        for word in words:
+            if count <= pos < count + len(word):
+                return word
+            count += len(word) + 1  # +1 for space
+        return ""
+
     def update(self, event: Event):
         rand_text = self.__random_line.get_text()
-        rand_words_list = self.__random_line.get_words_list()
 
         if len(self.__text) >= len(rand_text):
             self.__random_line.next_line()
             self.__text = ''
             return
 
-        current_char = len(self.__text)
-        if event.unicode == rand_text[current_char]:
+        current_char_pos = len(self.__text)
+        current_char = rand_text[current_char_pos]
+        if event.unicode == current_char:
             self.__type_sound.play()
             self.__text += event.unicode
         else:
             if event.key in [pygame.K_LSHIFT, pygame.K_RSHIFT, pygame.K_CAPSLOCK]:
                 return
 
-            for word in rand_words_list:
-                if event.unicode in word:
-                    self.__errors.add_errors(event.unicode, word)
-
-            print(self.__errors.get_error_letters(), self.__errors.get_error_words())
+            if event.unicode:
+                word = self.__get_word(current_char_pos)
+                self.__errors.add_errors(current_char, word)
 
             self.__error_sound.play()
 

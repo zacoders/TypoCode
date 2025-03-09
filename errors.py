@@ -1,24 +1,26 @@
+from collections import defaultdict
+from typing import ItemsView
+
 
 class Errors:
 
     def __init__(self):
-        self.__error_letters = {}
-        self.__error_words = {}
+        self.__error_letters = defaultdict(int)
+        self.__error_words = defaultdict(int)
 
-    def add_errors(self, current_letter: str, current_word: str):
+    def add_errors(self, letter: str, word: str):
 
-        if current_letter in self.__error_letters:
-            self.__error_letters[current_letter] += 1
-        else:
-            self.__error_letters[current_letter] = 1
+        if letter:
+            self.__error_letters[letter] += 1
 
-        if current_word in self.__error_words:
-            self.__error_letters[current_letter] += 1
-        else:
-            self.__error_words[current_word] = 1
+        if word:
+            self.__error_words[word] += 1
 
-    def get_error_letters(self):
-        return self.__error_letters
+        print(f'{self.__error_letters=}')
+        print(f'{self.__error_words=}')
 
-    def get_error_words(self):
-        return self.__error_words
+    def get_error_letters(self) -> ItemsView[str, int]:
+        return self.__error_letters.items()
+
+    def get_error_words(self) -> ItemsView[str, int]:
+        return self.__error_words.items()

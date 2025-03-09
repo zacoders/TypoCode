@@ -51,22 +51,3 @@ class RandomLine:
 
     def next_line(self):
         self.__text = self.__text_generator.get(self.__text_len)
-
-    def get_words_list(self):
-        words_list = []
-        word = ""
-
-        for letter in self.__text:
-            if letter == ' ':
-                if word:
-                    words_list.append(word)
-                    word = ""
-                words_list.append(' ')
-            else:
-                word += letter
-
-        if word:
-            words_list.append(word)
-
-        print(words_list)
-        return words_list
