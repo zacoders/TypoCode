@@ -13,6 +13,7 @@ class InputLine:
         self.__random_line = random_line
 
         self.__text = ''
+        self.__cursor_symbol = "\u258F"
 
         self.__prev_font_size = 100
 
@@ -56,5 +57,5 @@ class InputLine:
             else:
                 return
 
-        text = self.__font.render(self.__text, True, self.__text_color)
+        text = self.__font.render(self.__text + self.__cursor_symbol, True, self.__text_color)
         screen.blit(text, line_rect)

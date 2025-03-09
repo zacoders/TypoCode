@@ -8,13 +8,13 @@ from ui.random_line import RandomLine
 class MainWindow:
 
     def __init__(self):
-        self.__text_len = 34
+        self.__text_len = 64
         self.__random_line = RandomLine(self.__text_len)
         self.__input_line = InputLine(self.__random_line)
         self.__font_calc = FontCalc()
 
     def update(self, events: list[Event], screen_width):
-        
+
         self.__font_calc.update(self.__text_len, screen_width)
         for event in events:
             if event.type != pygame.KEYDOWN:

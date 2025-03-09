@@ -14,21 +14,22 @@ class PythonGenerator(BaseGenerator):
         'match', 'case',
 
         # Special Identifiers
-        'self', 'cls', '_', '__', 'self.__', 'self._',
+        'self', 'cls', '_', '__', 'self.__', 'self._', '@dataclass', '@classmethod', '@abstractmethod', '@staticmethod',
 
         # Common Built-in Functions
         'print', "print('...')", 'len', 'range', 'type', 'int', 'str', 'list', 'dict', 'set', 'tuple', 'float', 'bool',
         'open', 'input', 'sum', 'min', 'max', 'sorted', 'abs', 'round', 'enumerate', 'zip',
-        'map', 'filter', 'reduce', 'any', 'all', 'isinstance', 'issubclass', 'date'
+        'map', 'filter', 'reduce', 'any', 'all', 'isinstance', 'issubclass', 'date',
 
         # Common Dunder (Magic) Methods
-        '__init__', '__new__', '__str__', '__repr__', '__len__',
-        '__call__', '__getitem__', '__setitem__', '__delitem__',
-        '__iter__', '__next__', '__enter__', '__exit__',
+        'def __init__', 'def __init__(self):', 'def __new__', 'def __str__', 'def __repr__', 'def __len__',
+        'def __call__', 'def __getitem__', 'def __setitem__', 'def __delitem__',
+        'def __iter__', 'def __next__', 'def __enter__', 'def __exit__',
 
         # Common Standard Library Modules
         'os', 'sys', 'json', 're', 'datetime', 'math', 'random', 'itertools', 'collections',
         'functools', 'logging', 'threading', 'multiprocessing', 'asyncio', 'pathlib', 'enum', "Enum",
+        'pytest', 'pygame', 'abc', 'ABC',
 
         # Symbols and Operators
         '+', '-', '*', '/', '//', '%', '**', '==', '!=', '<', '>', '<=', '>=',
@@ -37,7 +38,7 @@ class PythonGenerator(BaseGenerator):
         '->',
 
         # Delimiters
-        '(', ')', '()', '[', ']', '[]', '{', '}', '{}', ':', ';', ',', '.', '...', '_', '@',
+        '(', ')', '()', '[', ']', '[]', '{', '}', '{}', ':', ';', ',', '.', '...', '_', '@', "'", '"', "f'...'", 'f"..."',
 
         # Other
         'while True:', 'number', 'text', 'module', 'attribute', 'library', 'package',
@@ -51,6 +52,14 @@ class PythonGenerator(BaseGenerator):
         'end_time', 'is_valid', 'is_empty', 'buffer', 'length', 'size', 'key',
         'obj', 'obj_list', 'model', 'query', 'connection', 'log', 'undefined',
         'api', 'instance', 'environment', 'env', 'local', 'localhost',
+
+        # Common class names
+        "App", "Base", "Config", "Controller", "Database", "Data", "Entity", "Error", "Exception", "Factory",
+        "Handler", "Helper", "Job", "Logger", "Manager", "Mapper", "Model", "Node", "Parser", "Processor",
+        "Queue", "Reader", "Registry", "Request", "Response", "Router", "Scheduler", "Serializer", "Service",
+        "Session", "Settings", "Singleton", "State", "Strategy", "Task", "Thread", "Tracker", "Transformer",
+        "Unit", "User", "Validator", "View", "Worker", "Writer", "Adapter", "Builder", "Command", "Component",
+        "Controller", "Observer",
 
         # Common constant names
         'PI', 'E', 'MAX_INT', 'MIN_INT', 'NULL', 'TRUE', 'FALSE', 'DEFAULT',
@@ -66,7 +75,7 @@ class PythonGenerator(BaseGenerator):
 
 
         # Command line
-        'python', 'python --version', 'python --help', 'python -m venv', 'source bin/activate', 'Scripts\\activate', 'pip install', 'pip install --upgrade', 'pip uninstall', 'pip freeze', 'pip list', 'pip show', 'python -m pip install', 'python -m pip list', 'python -m pip freeze', 'python -c', 'python', 'python -m unittest', 'python -m pydoc', 'python -i', 'python -m timeit', 'python -m http.server', 'python -m cProfile', 'python -m pdb', 'python -m venv', 'deactivate', 'python -m venv .', 'python -m pip install --user', 'python -m pip uninstall --yes', 'python setup.py install', 'python setup.py bdist_wheel', 'python -m ensurepip --upgrade', 'python -m venv --clear', 'pip search', 'python -m tarfile', 'python -m socket', 'python -m smtpd -n -c DebuggingServer'
+        'python', '--version', '--help', 'venv', 'source bin/activate', 'Scripts\\activate', 'pip install', 'pip install --upgrade', 'pip uninstall', 'pip freeze', 'pip list', 'pip show', 'pip install', 'pip list', 'pip freeze', '-c', 'unittest', 'pydoc', '-i', 'timeit', 'http.server', 'cProfile', 'pdb', 'deactivate', 'pip install --user', 'pip uninstall --yes', 'setup.py install', 'setup.py bdist_wheel', 'ensurepip --upgrade', 'venv --clear', 'pip search', 'tarfile', 'socket', 'smtpd -n -c DebuggingServer', '-m'
 
     ]
 
