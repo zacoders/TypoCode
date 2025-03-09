@@ -20,6 +20,7 @@
     "cSpell.dictionaries": ["russian"],
     "cSpell.words": [
         "blit",
+        "CAPSLOCK",
         "centerx",
         "centery",
         "collidepoint",

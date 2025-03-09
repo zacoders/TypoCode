@@ -32,8 +32,11 @@ while True:
         if keys[pygame.K_ESCAPE] or event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        elif event.type == pygame.VIDEORESIZE:
+            new_width, new_height = event.w, event.h
+            screen = pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
 
-    screen_text.update(events)
+    screen_text.update(events, screen.get_width())
     screen_text.draw(screen)
 
     pygame.display.update()
