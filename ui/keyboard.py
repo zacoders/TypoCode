@@ -3,15 +3,13 @@ import pygame
 
 
 class Keyboard:
-    def __init__(self, x: int, y: int, key_size: int = 40):
-
-        self.__x = x
-        self.__y = y
-        self.__key_size = key_size
-        self.__spacing = 6
+    def __init__(self):
+        self.__x = 0
+        self.__y = 0
         self.__keys = {}
         self.__highlighted_key = None
-        self.__font = pygame.font.Font(None, 24)
+        self.__screen_height = -1
+        self.__screen_width = -1
 
         self.__layout = [
             [("~", 1), ("1", 1), ("2", 1), ("3", 1), ("4", 1), ("5", 1), ("6", 1),
@@ -29,8 +27,7 @@ class Keyboard:
             [("LCtrl", 1.25), ("Win", 1.25), ("LAlt", 1.25), ("Space", 7.15),
              ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("RCtrl", 1.25)]
         ]
-
-        self.__create_keys()
+        # self.__set_scale(1.0)
 
     def __create_keys(self):
         y_offset = self.__y
@@ -40,6 +37,22 @@ class Keyboard:
                 self.__keys[key] = pygame.Rect(x_offset, y_offset, self.__key_size * width, self.__key_size)
                 x_offset += self.__key_size * width + self.__spacing
             y_offset += self.__key_size + self.__spacing
+
+    def update(self, screen_height: int, screen_width: int):
+        if self.__screen_height != screen_height or self.__screen_width != screen_width:
+            self.__screen_height = screen_height
+            self.__screen_width = screen_width
+            scale_w = (screen_width * 0.6 / 15.0) / 40.0
+            self.__set_scale(scale_w)
+
+    def __set_scale(self, scale: float):
+        self.__scale = scale
+        self.__x = self.__screen_width / 2 - 8.5 * 40 * self.__scale
+        self.__y = self.__screen_height / 2 + 1.0 * 40 * self.__scale
+        self.__key_size = 40 * scale
+        self.__spacing = 6 * scale
+        self.__font = pygame.font.Font(None, int(24 * scale))
+        self.__create_keys()
 
     def highlight_key(self, key: str):
         if key.upper() in self.__keys:

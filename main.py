@@ -37,7 +37,7 @@ while True:
             new_width, new_height = event.w, event.h
             screen = pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
 
-    main_window.update(events, screen.get_width())
+    main_window.update(events, screen.get_height(), screen.get_width())
     main_window.draw(screen)
 
     pygame.display.update()
