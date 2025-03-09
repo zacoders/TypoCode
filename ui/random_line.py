@@ -10,7 +10,7 @@ class RandomLine:
 
     def __init__(self):
         self.__text_generator = PythonGenerator()
-        self.__text = self.__text_generator.get(32)
+        self.__text = self.__text_generator.get(34)
 
         self.__font_size = 80
         self.__text_color = (155, 255, 155)
@@ -40,4 +40,4 @@ class RandomLine:
         return self.__text
 
     def next_line(self):
-        self.__text = self.__text_generator.get(32)
+        self.__text = self.__text_generator.get(34)

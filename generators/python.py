@@ -75,7 +75,25 @@ class PythonGenerator(BaseGenerator):
         result_string = ''
         while True:
             rnd = randint(0, words_count - 1)
-            result_string += ' ' + self.python_words[rnd]
-            if len(result_string) >= length:
+            word = self.python_words[rnd]
+            
+            if len(result_string) + len(word) + 1 > length:
+                remaining_length = length - len(result_string) - 1
+                if remaining_length > 0:
+                    result_string += ' ' + self.__get_random_word(remaining_length)
                 break
+            
+            result_string += ' ' + word
+            
         return result_string.lstrip()
+
+    def __get_random_word(self, length: int):
+        right_words = []
+
+        for word in self.python_words:
+            if len(word) == length:
+                right_words.append(word)
+
+        random_num = randint(0, len(right_words) - 1)
+
+        return right_words[random_num]
