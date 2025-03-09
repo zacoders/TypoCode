@@ -75,7 +75,7 @@ class InputLine:
     def draw(self, screen: pygame.Surface, font_size: int):
         line_rect = pygame.Rect(
             0,
-            screen.get_height() // 2,
+            screen.get_height() // 3,
             screen.get_width(),
             font_size
         )
