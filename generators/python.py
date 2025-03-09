@@ -102,23 +102,6 @@ class PythonGenerator(BaseGenerator):
 
         return " ".join(words)
 
-    # def get_old(self, length: int) -> str:
-    #     result_string = ''
-    #     while len(result_string) < length:
-    #         max_word_len = length - len(result_string)
-    #         if max_word_len == 1:
-    #             word = '.'
-    #         elif max_word_len > 5:
-    #             if result_string:
-    #                 result_string += ' '
-    #             word = self._get_random_word(max_length=max_word_len + 1)
-    #         else:
-    #             word = self._get_random_word(min_length=max_word_len, max_length=max_word_len)
-
-    #         result_string += word
-
-    #     return result_string.rstrip()
-
     def _get_random_word(self, min_length: int = 0, max_length: int = 999):
         right_words = filter(lambda w: len(w) >= min_length and len(w) <= max_length, self.python_words)
         return random.choice(list(right_words))
