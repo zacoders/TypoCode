@@ -32,10 +32,11 @@ class RandomLine:
     def draw(self, screen: pygame.Surface, font_size: int):
         line_rect = pygame.Rect(
             0,
-            screen.get_height() // 2 - 100,
+            screen.get_height() // 2 - font_size,
             screen.get_width(),
             font_size
         )
+
         pygame.draw.rect(screen, self.__text_line_color, line_rect)
 
         if self.__prev_font_size != font_size:
