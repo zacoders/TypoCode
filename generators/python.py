@@ -80,12 +80,15 @@ class PythonGenerator(BaseGenerator):
 
     ]
 
-    def get(self, length: int, errors: Errors) -> str:
-        for _ in range(1, 10):
+    def get(self, length: int, errors: Errors = Errors()) -> str:
+        for _ in range(1, 100):
             text = self.__get(length, errors)
             if len(text) == length:
                 return text
-        raise Exception("Cannot get random text.")
+
+        if len(text) > length:
+            return text[:length]
+        return text
 
     def __get(self, length: int, errors: Errors) -> str:
         total_len = -1
@@ -97,17 +100,35 @@ class PythonGenerator(BaseGenerator):
             if max_word_len == 0:
                 break
 
+            words_and_weight = {}
+
             if len(errors.get_error_words()) > 0:
                 error_words = []
                 for word, _ in errors.get_error_words():
                     error_words.append(word)
-
                 error_word = random.choice(error_words)
-                generated_word = self._get_random_word(max_length=max_word_len)
-                word = random.choice((error_word, generated_word))
-            else:
-                word = self._get_random_word(max_length=max_word_len)
+                error_weight = 0.5
+                words_and_weight[error_word] = error_weight
 
+            elif len(errors.get_error_words()) == 0 and len(errors.get_error_letters()) > 0:
+                error_letters = []
+                for letter, _ in errors.get_error_letters():
+                    error_letters.append(letter)
+
+                letter_word = self._get_random_word_with_letter(
+                    max_length=max_word_len, letters=error_letters)
+                error_letter_weight = 0.25
+                words_and_weight[letter_word] = error_letter_weight
+
+            else:
+                usual_word = self._get_random_word(max_length=max_word_len)
+                usual_weight = 0.25
+                words_and_weight[usual_word] = usual_weight
+
+            all_words = list(words_and_weight.keys())
+            weights = list(words_and_weight.values())
+
+            word = random.choices(all_words, weights=weights, k=1)[0]
             words.append(word)
             total_len += len(word) + 1  # + 1 space
 
@@ -115,4 +136,12 @@ class PythonGenerator(BaseGenerator):
 
     def _get_random_word(self, min_length: int = 0, max_length: int = 999):
         right_words = filter(lambda w: len(w) >= min_length and len(w) <= max_length, self.python_words)
+        return random.choice(list(right_words))
+
+    def _get_random_word_with_letter(self, min_length: int = 0, max_length: int = 999, letters: list[str] | str = ""):
+        right_words = filter(
+            lambda w: len(w) >= min_length and len(w) <= max_length and any(
+                letter in w for letter in letters),
+            self.python_words)
+
         return random.choice(list(right_words))
