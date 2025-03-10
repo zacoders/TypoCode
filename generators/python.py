@@ -81,12 +81,35 @@ class PythonGenerator(BaseGenerator):
     ]
 
     def get(self, length: int, errors: Errors = Errors()) -> str:
-        for _ in range(1, 100):
-            text = self.__get(length, errors)
-            if len(text) == length:
-                return text
+        text = self.__get(length, errors)
 
-        if len(text) > length:
+        error_words = []
+        for error_word, _ in errors.get_error_words():
+            error_words.append(error_word)
+
+        error_letters = []
+        for error_letter, _ in errors.get_error_letters():
+            error_letters.append(error_letter)
+
+        del_words = []
+        del_letters = []
+
+        for word in error_words:
+            if word in text:
+                del_words.append(word)
+
+        for letter in error_letters:
+            if letter in del_words:
+                del_letters.append(letter)
+                print('letter in del_words!!!')
+
+        for word in del_words:
+            for letter in del_letters:
+                errors.del_error(letter, word)
+
+        if len(text) == length:
+            return text
+        elif len(text) > length:
             return text[:length]
         return text
 
