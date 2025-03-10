@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import ItemsView
+from typing import ItemsView, List
 
 
 class Errors:
@@ -19,21 +19,23 @@ class Errors:
         print(f'{self.__error_letters=}')
         print(f'{self.__error_words=}')
 
-    def del_error(self, letter: str, word: str):
-        if letter:
-            self.__error_letters[letter] -= 1
-            if self.__error_letters[letter] <= 0:
-                del self.__error_letters[letter]
+    def del_word(self, word: str):
         if word:
             self.__error_words[word] -= 1
             if self.__error_words[word] <= 0:
                 del self.__error_words[word]
 
-        print(f'{self.__error_letters=}')
         print(f'{self.__error_words=}')
 
-    def get_error_letters(self) -> ItemsView[str, int]:
-        return self.__error_letters.items()
+    def del_letter(self, letter: str):
+        if letter:
+            self.__error_letters[letter] -= 1
+            if self.__error_letters[letter] <= 0:
+                del self.__error_letters[letter]
+        print(f'{self.__error_letters=}')
 
-    def get_error_words(self) -> ItemsView[str, int]:
-        return self.__error_words.items()
+    def get_error_letters(self) -> List[str]:
+        return list(self.__error_letters.keys())
+
+    def get_error_words(self) -> List[str]:
+        return list(self.__error_words.keys())

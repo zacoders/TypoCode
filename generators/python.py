@@ -80,40 +80,7 @@ class PythonGenerator(BaseGenerator):
 
     ]
 
-    def get(self, length: int, errors: Errors = Errors()) -> str:
-        text = self.__get(length, errors)
-
-        error_words = []
-        for error_word, _ in errors.get_error_words():
-            error_words.append(error_word)
-
-        error_letters = []
-        for error_letter, _ in errors.get_error_letters():
-            error_letters.append(error_letter)
-
-        del_words = []
-        del_letters = []
-
-        for word in error_words:
-            if word in text:
-                del_words.append(word)
-
-        for letter in error_letters:
-            if letter in del_words:
-                del_letters.append(letter)
-                print('letter in del_words!!!')
-
-        for word in del_words:
-            for letter in del_letters:
-                errors.del_error(letter, word)
-
-        if len(text) == length:
-            return text
-        elif len(text) > length:
-            return text[:length]
-        return text
-
-    def __get(self, length: int, errors: Errors) -> str:
+    def get(self, length: int, errors: Errors) -> str:
         total_len = -1
         words = []
         while True:
@@ -123,48 +90,30 @@ class PythonGenerator(BaseGenerator):
             if max_word_len == 0:
                 break
 
-            words_and_weight = {}
+            word_type = random.random()
 
-            if len(errors.get_error_words()) > 0:
-                error_words = []
-                for word, _ in errors.get_error_words():
-                    error_words.append(word)
-                error_word = random.choice(error_words)
-                error_weight = 0.5
-                words_and_weight[error_word] = error_weight
-
-            elif len(errors.get_error_words()) == 0 and len(errors.get_error_letters()) > 0:
-                error_letters = []
-                for letter, _ in errors.get_error_letters():
-                    error_letters.append(letter)
-
-                letter_word = self._get_random_word_with_letter(
-                    max_length=max_word_len, letters=error_letters)
-                error_letter_weight = 0.25
-                words_and_weight[letter_word] = error_letter_weight
-
+            if word_type < 0.5 and len(errors.get_error_words()) > 0:
+                word = random.choice(errors.get_error_words())
+                errors.del_word(word)
+            elif word_type < 0.75 and len(errors.get_error_words()) == 0 and len(errors.get_error_letters()) > 0:
+                rand_letter = random.choice(errors.get_error_letters())
+                errors.del_letter(rand_letter)
+                word = self._get_random_word(max_length=max_word_len)
             else:
-                usual_word = self._get_random_word(max_length=max_word_len)
-                usual_weight = 0.25
-                words_and_weight[usual_word] = usual_weight
+                word = self._get_random_word(max_length=max_word_len)
 
-            all_words = list(words_and_weight.keys())
-            weights = list(words_and_weight.values())
-
-            word = random.choices(all_words, weights=weights, k=1)[0]
             words.append(word)
             total_len += len(word) + 1  # + 1 space
 
-        return " ".join(words)
+        return " ".join(words)[0:length]
 
     def _get_random_word(self, min_length: int = 0, max_length: int = 999):
         right_words = filter(lambda w: len(w) >= min_length and len(w) <= max_length, self.python_words)
         return random.choice(list(right_words))
 
-    def _get_random_word_with_letter(self, min_length: int = 0, max_length: int = 999, letters: list[str] | str = ""):
+    def _get_random_word_with_letter(self, min_length: int = 0, max_length: int = 999, letter: str = ''):
         right_words = filter(
-            lambda w: len(w) >= min_length and len(w) <= max_length and any(
-                letter in w for letter in letters),
-            self.python_words)
-
+            lambda w: len(w) >= min_length and len(w) <= max_length and letter in w,
+            self.python_words
+        )
         return random.choice(list(right_words))

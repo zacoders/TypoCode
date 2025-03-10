@@ -10,7 +10,7 @@ from ui.random_line import RandomLine
 
 class InputLine:
 
-    def __init__(self, random_line: RandomLine, keyboard: Keyboard):
+    def __init__(self, random_line: RandomLine, keyboard: Keyboard, errors: Errors):
 
         self.__random_line = random_line
         self.__keyboard = keyboard
@@ -25,7 +25,7 @@ class InputLine:
 
         self.__font = Font("fonts/Inconsolata-Regular.ttf", self.__prev_font_size)
 
-        self.__errors = Errors()
+        self.__errors = errors
 
         self.__type_sound = pygame.mixer.Sound("sounds/typing-sound-02-229861.wav")
         self.__error_sound = pygame.mixer.Sound("sounds/error.mp3")
@@ -98,6 +98,6 @@ class InputLine:
 
         text = self.__font.render(self.__text + self.__cursor_symbol, True, self.__text_color)
         screen.blit(text, line_rect)
-        
+
     def get_errors(self):
         return self.__errors

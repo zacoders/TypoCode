@@ -12,10 +12,9 @@ class MainWindow:
     def __init__(self):
         self.__text_len = 64
         self.__keyboard = Keyboard()
-        self.__random_line = RandomLine(self.__text_len, Errors())
-        self.__input_line = InputLine(self.__random_line, self.__keyboard)
-        self.__random_line.set_errors(self.__input_line.get_errors())
-        print(self.__random_line.set_errors(self.__input_line.get_errors()))
+        self.__errors = Errors()
+        self.__random_line = RandomLine(self.__text_len, self.__errors)
+        self.__input_line = InputLine(self.__random_line, self.__keyboard, self.__errors)
         self.__font_calc = FontCalc()
 
     def update(self, events: list[Event], screen_height: int, screen_width: int):
