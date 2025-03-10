@@ -3,17 +3,20 @@ from pygame.font import Font
 from pygame.event import Event
 import pygame
 
+from errors import Errors
 from generators.python import PythonGenerator
 
 
 class RandomLine:
 
-    def __init__(self, text_len: int):
+    def __init__(self, text_len: int, errors: Errors):
 
         self.__text_len = text_len
+        
+        self.__errors = errors
 
         self.__text_generator = PythonGenerator()
-        self.__text = self.__text_generator.get(self.__text_len)
+        self.__text = self.__text_generator.get(self.__text_len, self.__errors)
 
         self.__text_color = (155, 255, 155)
         self.__text_line_color = (0, 0, 0)
@@ -50,4 +53,7 @@ class RandomLine:
         return self.__text
 
     def next_line(self):
-        self.__text = self.__text_generator.get(self.__text_len)
+        self.__text = self.__text_generator.get(self.__text_len, self.__errors)
+        
+    def set_errors(self, errors: Errors):
+        self.__errors = errors

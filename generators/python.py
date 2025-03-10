@@ -1,4 +1,5 @@
 
+from errors import Errors
 from generators.base import BaseGenerator
 import random
 
@@ -79,14 +80,14 @@ class PythonGenerator(BaseGenerator):
 
     ]
 
-    def get(self, length: int) -> str:
+    def get(self, length: int, errors: Errors) -> str:
         for _ in range(1, 10):
-            text = self.__get(length)
+            text = self.__get(length, errors)
             if len(text) == length:
                 return text
         raise Exception("Cannot get random text.")
 
-    def __get(self, length: int) -> str:
+    def __get(self, length: int, errors: Errors) -> str:
         total_len = -1
         words = []
         while True:
@@ -96,7 +97,17 @@ class PythonGenerator(BaseGenerator):
             if max_word_len == 0:
                 break
 
-            word = self._get_random_word(max_length=max_word_len)
+            if len(errors.get_error_words()) > 0:
+                error_words = []
+                for word, _ in errors.get_error_words():
+                    error_words.append(word)
+
+                error_word = random.choice(error_words)
+                generated_word = self._get_random_word(max_length=max_word_len)
+                word = random.choice((error_word, generated_word))
+            else:
+                word = self._get_random_word(max_length=max_word_len)
+
             words.append(word)
             total_len += len(word) + 1  # + 1 space
 

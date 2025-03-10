@@ -30,6 +30,17 @@ class InputLine:
         self.__type_sound = pygame.mixer.Sound("sounds/typing-sound-02-229861.wav")
         self.__error_sound = pygame.mixer.Sound("sounds/error.mp3")
 
+        self.__interactive_buttons = [pygame.K_TAB,
+                                      pygame.K_CAPSLOCK,
+                                      pygame.K_LSHIFT,
+                                      pygame.K_LCTRL,
+                                      pygame.K_LALT,
+                                      pygame.K_RALT,
+                                      pygame.K_RCTRL,
+                                      pygame.K_RSHIFT,
+                                      pygame.K_RETURN,
+                                      pygame.K_BACKSPACE]
+
     def __get_word(self, pos: int) -> str:
         words = self.__random_line.get_text().split()
         count = 0
@@ -63,7 +74,7 @@ class InputLine:
                 self.__type_sound.play()
                 self.__text += event.unicode
             else:
-                if event.key in [pygame.K_LSHIFT, pygame.K_RSHIFT, pygame.K_CAPSLOCK]:
+                if event.key in self.__interactive_buttons:
                     return
 
                 if event.unicode:
@@ -87,3 +98,6 @@ class InputLine:
 
         text = self.__font.render(self.__text + self.__cursor_symbol, True, self.__text_color)
         screen.blit(text, line_rect)
+        
+    def get_errors(self):
+        return self.__errors
