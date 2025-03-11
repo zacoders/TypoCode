@@ -24,6 +24,8 @@ class BaseGenerator(ABC):
                 word = self._get_random_word(words=self._words, max_length=1)
                 text += word
                 continue
+            elif word_type < 0.1:
+                word = self._get_random_number(max_word_len)
             elif word_type < 0.5 and len(error_words) > 0:
                 word = self._get_random_word(words=error_words, max_length=max_word_len)
                 if not word:
@@ -55,3 +57,9 @@ class BaseGenerator(ABC):
             words
         )
         return random.choice(list(right_words))
+
+    def _get_random_number(self, max_length: int) -> str:
+        if max_length > 10:
+            max_length = 10
+        max_length = random.randint(1, max_length)
+        return str(random.randint(0, 10 ** max_length - 1))
