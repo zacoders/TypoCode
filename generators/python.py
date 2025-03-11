@@ -6,7 +6,7 @@ import random
 
 class PythonGenerator(BaseGenerator):
 
-    python_words = [
+    __words = [
         # Keywords
         'False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break',
         'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'finally',
@@ -80,36 +80,41 @@ class PythonGenerator(BaseGenerator):
 
     ]
 
-    def get(self, length: int, errors: Errors) -> str:
-        total_len = -1
-        words = []
+    def get_text(self, length: int, errors: Errors) -> str:
+        text = ''
         while True:
+            total_len = len(text)
             if total_len >= length:
                 break
+
             max_word_len = length - total_len - 1
-            if max_word_len == 0:
-                break
 
             word_type = random.random()
+            error_words = errors.get_error_words()
+            error_letters = errors.get_error_letters()
 
-            if word_type < 0.5 and len(errors.get_error_words()) > 0:
-                word = self._get_random_word(words=errors.get_error_words(), max_length=max_word_len)
+            if max_word_len == 0:
+                word = self._get_random_word(words=self.__words, max_length=1)
+                text += word
+                continue
+            elif word_type < 0.5 and len(error_words) > 0:
+                word = self._get_random_word(words=error_words, max_length=max_word_len)
                 if not word:
                     continue
                 errors.del_word(word)
-            elif word_type < 0.75 and len(errors.get_error_words()) == 0 and len(errors.get_error_letters()) > 0:
-                rand_letter = random.choice(errors.get_error_letters())
-                word = self._get_random_word_with_letter(words=self.python_words, max_length=max_word_len)
+            elif word_type < 0.75 and len(error_words) == 0 and len(error_letters) > 0:
+                rand_letter = random.choice(error_letters)
+                word = self._get_random_word_with_letter(words=self.__words, max_length=max_word_len)
                 if not word:
                     continue
                 errors.del_letter(rand_letter)
             else:
-                word = self._get_random_word(words=self.python_words, max_length=max_word_len)
+                word = self._get_random_word(words=self.__words, max_length=max_word_len)
 
-            words.append(word)
-            total_len += len(word) + 1  # + 1 space
+            text += ' ' + word
+            text = text.lstrip()
 
-        return " ".join(words)[0:length]
+        return text
 
     def _get_random_word(self, words: list[str], max_length: int = 999):
         right_words = list(filter(lambda w: len(w) <= max_length, words))

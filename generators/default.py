@@ -7,7 +7,7 @@ from generators.base import BaseGenerator
 
 class RandomGenerator(BaseGenerator):
 
-    def get(self, len: int) -> str:
+    def get_text(self, len: int) -> str:
         result = ''
         for _ in range(len):
             random_char = random.choice(string.ascii_lowercase)
