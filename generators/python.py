@@ -93,27 +93,33 @@ class PythonGenerator(BaseGenerator):
             word_type = random.random()
 
             if word_type < 0.5 and len(errors.get_error_words()) > 0:
-                word = random.choice(errors.get_error_words())
+                word = self._get_random_word(words=errors.get_error_words(), max_length=max_word_len)
+                if not word:
+                    continue
                 errors.del_word(word)
             elif word_type < 0.75 and len(errors.get_error_words()) == 0 and len(errors.get_error_letters()) > 0:
                 rand_letter = random.choice(errors.get_error_letters())
+                word = self._get_random_word_with_letter(words=self.python_words, max_length=max_word_len)
+                if not word:
+                    continue
                 errors.del_letter(rand_letter)
-                word = self._get_random_word(max_length=max_word_len)
             else:
-                word = self._get_random_word(max_length=max_word_len)
+                word = self._get_random_word(words=self.python_words, max_length=max_word_len)
 
             words.append(word)
             total_len += len(word) + 1  # + 1 space
 
         return " ".join(words)[0:length]
 
-    def _get_random_word(self, min_length: int = 0, max_length: int = 999):
-        right_words = filter(lambda w: len(w) >= min_length and len(w) <= max_length, self.python_words)
+    def _get_random_word(self, words: list[str], max_length: int = 999):
+        right_words = list(filter(lambda w: len(w) <= max_length, words))
+        if len(right_words) == 0:
+            return ''
         return random.choice(list(right_words))
 
-    def _get_random_word_with_letter(self, min_length: int = 0, max_length: int = 999, letter: str = ''):
+    def _get_random_word_with_letter(self, words: list[str], max_length: int = 999, letter: str = ''):
         right_words = filter(
-            lambda w: len(w) >= min_length and len(w) <= max_length and letter in w,
-            self.python_words
+            lambda w: len(w) <= max_length and letter in w,
+            words
         )
         return random.choice(list(right_words))
