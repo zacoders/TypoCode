@@ -10,7 +10,7 @@ from ui.random_line import RandomLine
 
 class InputLine:
 
-    def __init__(self, random_line: RandomLine, keyboard: Keyboard, errors: Errors):
+    def __init__(self, random_line: RandomLine, keyboard: Keyboard, errors: Errors, font_file_path: str):
 
         self.__random_line = random_line
         self.__keyboard = keyboard
@@ -23,7 +23,8 @@ class InputLine:
         self.__text_color = (255, 255, 255)
         self.__text_line_color = (0, 0, 0)
 
-        self.__font = Font("fonts/Inconsolata-Regular.ttf", self.__prev_font_size)
+        self.__font_file_path = font_file_path
+        self.__font = Font(font_file_path, self.__prev_font_size)
 
         self.__errors = errors
 
@@ -93,7 +94,7 @@ class InputLine:
         pygame.draw.rect(screen, self.__text_line_color, line_rect)
 
         if self.__prev_font_size != font_size:
-            self.__font = Font("fonts/Inconsolata-Regular.ttf", font_size)
+            self.__font = Font(self.__font_file_path, font_size)
             self.__prev_font_size = font_size
 
         text = self.__font.render(self.__text + self.__cursor_symbol, True, self.__text_color)

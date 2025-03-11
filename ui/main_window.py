@@ -1,6 +1,7 @@
 import pygame
 from pygame.event import Event
 from errors import Errors
+from generators.russian import RussianGenerator
 from ui.font_calc import FontCalc
 from ui.input_line import InputLine
 from ui.keyboard import Keyboard
@@ -10,12 +11,14 @@ from ui.random_line import RandomLine
 class MainWindow:
 
     def __init__(self):
+        font_file_path = "fonts/UbuntuMono-Regular.ttf"
         self.__text_len = 64
         self.__keyboard = Keyboard()
         self.__errors = Errors()
-        self.__random_line = RandomLine(self.__text_len, self.__errors)
-        self.__input_line = InputLine(self.__random_line, self.__keyboard, self.__errors)
-        self.__font_calc = FontCalc()
+        self.__text_generator = RussianGenerator()
+        self.__random_line = RandomLine(self.__text_len, self.__errors, self.__text_generator, font_file_path)
+        self.__input_line = InputLine(self.__random_line, self.__keyboard, self.__errors, font_file_path)
+        self.__font_calc = FontCalc(font_file_path)
 
     def update(self, events: list[Event], screen_height: int, screen_width: int):
 

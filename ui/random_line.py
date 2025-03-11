@@ -4,25 +4,26 @@ from pygame.event import Event
 import pygame
 
 from errors import Errors
-from generators.python import PythonGenerator
+from generators.base import BaseGenerator
 
 
 class RandomLine:
 
-    def __init__(self, text_len: int, errors: Errors):
+    def __init__(self, text_len: int, errors: Errors, text_generator: BaseGenerator, font_file_path: str):
 
         self.__text_len = text_len
 
         self.__errors = errors
 
-        self.__text_generator = PythonGenerator()
+        self.__text_generator = text_generator
         self.__text = self.__text_generator.get_text(self.__text_len, self.__errors)
 
         self.__text_color = (155, 255, 155)
         self.__text_line_color = (0, 0, 0)
 
         self.__prev_font_size = 100
-        self.__font = Font("fonts/Inconsolata-Regular.ttf", self.__prev_font_size)
+        self.__font_file_path = font_file_path
+        self.__font = Font(font_file_path, self.__prev_font_size)
 
     def update(self, event: Event):
         if event.key == pygame.K_BACKSPACE:
@@ -43,7 +44,7 @@ class RandomLine:
         pygame.draw.rect(screen, self.__text_line_color, line_rect)
 
         if self.__prev_font_size != font_size:
-            self.__font = Font("fonts/Inconsolata-Regular.ttf", font_size)
+            self.__font = Font(self.__font_file_path, font_size)
             self.__prev_font_size = font_size
 
         text = self.__font.render(self.__text, True, self.__text_color)

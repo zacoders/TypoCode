@@ -4,9 +4,10 @@ from pygame.font import Font
 
 class FontCalc:
 
-    def __init__(self):
+    def __init__(self, font_file_path: str):
         self.__font_size = 100
         self.__prev_width = -1
+        self.__font_file_path = font_file_path
 
     def current_font_size(self):
         return self.__font_size
@@ -18,7 +19,7 @@ class FontCalc:
 
     def __find_font_size(self, text_len: int, screen_width: int) -> int:
         font_size = 100
-        font = Font("fonts/Inconsolata-Regular.ttf", font_size)
+        font = Font(self.__font_file_path, font_size)
 
         while True:
             render_text = font.render('0' * text_len, True, (0, 0, 0))
@@ -30,6 +31,6 @@ class FontCalc:
             if text_width >= screen_width:
                 font_size -= 1
 
-            font = Font("fonts/Inconsolata-Regular.ttf", font_size)
+            font = Font(self.__font_file_path, font_size)
 
         return font_size
