@@ -10,15 +10,16 @@ class Keyboard:
     LINE_KEYS_COUNT = 15
     SIZE = 0.7  # 70% of the screen
 
-    def __init__(self):
+    def __init__(self, language: str = "eng"):
         self.__x = 0
         self.__y = 0
         self.__keys = {}
         self.__highlighted_key = None
         self.__screen_height = -1
         self.__screen_width = -1
+        self.__language = language
 
-        self.__layout = [
+        self.__eng_layout = [
             [("~", 1), ("1", 1), ("2", 1), ("3", 1), ("4", 1), ("5", 1), ("6", 1),
              ("7", 1), ("8", 1), ("9", 1), ("0", 1), ("-", 1), ("=", 1), ("<--", 2)],
 
@@ -34,11 +35,37 @@ class Keyboard:
             [("CTRL", 1.25), ("Win", 1.25), ("ALT", 1.25), ("Space", 7.15),
              ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
         ]
+
+        self.__rus_layout = [
+            [("~", 1), ("1", 1), ("2", 1), ("3", 1), ("4", 1), ("5", 1), ("6", 1),
+             ("7", 1), ("8", 1), ("9", 1), ("0", 1), ("-", 1), ("=", 1), ("<--", 2)],
+
+            [("Tab", 1.5), ("Й", 1), ("Ц", 1), ("У", 1), ("К", 1), ("E", 1), ("Н", 1),
+             ("Г", 1), ("Ш", 1), ("Щ", 1), ("З", 1), ("Х", 1), ("Ъ", 1), ("\\", 1.5)],
+
+            [("CAPS", 1.8), ("Ф", 1), ("Ы", 1), ("В", 1), ("А", 1), ("П", 1),
+             ("Р", 1), ("О", 1), ("Л", 1), ("Д", 1), ("Ж", 1), ("Э", 1), ("ENTER", 2.35)],
+
+            [("SHIFT", 2.30), ("Я", 1), ("Ч", 1), ("С", 1), ("М", 1), ("И", 1),
+             ("Т", 1), ("Ь", 1), ("Б", 1), ("Ю", 1), (",", 1), (".", 1), ("Shift", 3.0)],
+
+            [("CTRL", 1.25), ("Win", 1.25), ("ALT", 1.25), ("Space", 7.15),
+             ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
+        ]
+
         # self.__set_scale(1.0)
 
     def __create_keys(self):
         y_offset = self.__y
-        for row in self.__layout:
+
+        if self.__language == "eng":
+            self.__create_keys_from_layout(y_offset, self.__eng_layout)
+
+        elif self.__language == "rus":
+            self.__create_keys_from_layout(y_offset, self.__rus_layout)
+
+    def __create_keys_from_layout(self, y_offset, layout):
+        for row in layout:
             x_offset = self.__x
             for key, width in row:
                 self.__keys[key] = pygame.Rect(x_offset, y_offset, self.__key_size * width, self.__key_size)
