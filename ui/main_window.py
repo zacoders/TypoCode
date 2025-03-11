@@ -13,7 +13,7 @@ class MainWindow:
     def __init__(self):
         font_file_path = "fonts/UbuntuMono-Regular.ttf"
         self.__text_len = 64
-        self.__keyboard = Keyboard()
+        self.__keyboard = Keyboard(language="rus")
         self.__errors = Errors()
         self.__text_generator = RussianGenerator()
         self.__random_line = RandomLine(self.__text_len, self.__errors, self.__text_generator, font_file_path)
