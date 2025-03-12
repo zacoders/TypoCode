@@ -17,7 +17,7 @@
     ],
     "python.analysis.typeCheckingMode": "basic",
     "cSpell.language": "en,ru",
-    "cSpell.dictionaries": ["english"],
+    "cSpell.dictionaries": ["russian"],
     "cSpell.words": [
         "blit",
         "CAPSLOCK",

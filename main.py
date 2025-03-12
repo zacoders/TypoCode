@@ -1,7 +1,6 @@
 import pygame
 import sys
 from consts import BG_COLOR, FPS
-from generators.english import EnglishGenerator
 from ui.main_window import MainWindow
 
 
@@ -15,7 +14,6 @@ screen_size = info.current_w - info.current_w * 0.3, info.current_h - info.curre
 screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
 pygame.display.set_caption("TypoCode")
 
-text_generator = EnglishGenerator()
 main_window = MainWindow()
 
 clock = pygame.time.Clock()
