@@ -1,6 +1,8 @@
 
 import pygame
 
+from generators.keyboard_lang import KeyboardLanguage
+
 
 class Keyboard:
 
@@ -10,7 +12,7 @@ class Keyboard:
     LINE_KEYS_COUNT = 15
     SIZE = 0.7  # 70% of the screen
 
-    def __init__(self, language: str = "eng"):
+    def __init__(self, language: KeyboardLanguage):
         self.__x = 0
         self.__y = 0
         self.__keys = {}
@@ -58,10 +60,10 @@ class Keyboard:
     def __create_keys(self):
         y_offset = self.__y
 
-        if self.__language == "eng":
+        if self.__language == KeyboardLanguage.ENGLISH:
             self.__create_keys_from_layout(y_offset, self.__eng_layout)
 
-        elif self.__language == "rus":
+        elif self.__language == KeyboardLanguage.RUSSIAN:
             self.__create_keys_from_layout(y_offset, self.__rus_layout)
 
     def __create_keys_from_layout(self, y_offset, layout):
