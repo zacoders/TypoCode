@@ -1,4 +1,6 @@
+from typing import List
 import pygame
+from pygame.event import Event
 import sys
 from consts import BG_COLOR, FPS
 from game_state import GameState
@@ -19,12 +21,27 @@ game_state = GameState()
 
 clock = pygame.time.Clock()
 
+
+def update_events(events: List[Event], keys, screen: pygame.Surface):
+    screen = screen
+    for event in events:
+        if keys[pygame.K_ESCAPE] or event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.VIDEORESIZE:
+            new_width, new_height = event.w, event.h
+            screen = pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
+
+
 game_state.active_screen = MainMenu(game_state, screen)
 
 while game_state.active_screen is not None:
-    screen.fill(BG_COLOR)
+    screen.fill((0, 0, 0))
 
     events = pygame.event.get()
+    keys = pygame.key.get_pressed()
+
+    update_events(events, keys, screen)
 
     game_state.active_screen.draw()
     game_state.active_screen.update(events)
@@ -43,13 +60,7 @@ while True:
 
     events = pygame.event.get()
 
-    for event in events:
-        if keys[pygame.K_ESCAPE] or event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        elif event.type == pygame.VIDEORESIZE:
-            new_width, new_height = event.w, event.h
-            screen = pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
+    update_events(events, keys, screen)
 
     main_window.update(events, screen.get_height(), screen.get_width())
     main_window.draw(screen)

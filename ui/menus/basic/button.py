@@ -9,8 +9,8 @@ class Button:
         self.image = pygame.transform.scale(self.image, size)
         self.image.set_colorkey((0, 0, 0))
 
-        font = pygame.font.Font("fonts/UbuntuMono-Regular.ttf", round(25))  # Use `round` for exact size
-        self.text = font.render(text, False, (255, 255, 255))
+        font = pygame.font.Font("fonts/UbuntuMono-Regular.ttf", round(25))
+        self.text = font.render(text, True, (255, 255, 255))
 
         self.clicked = False
 
