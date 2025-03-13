@@ -64,7 +64,7 @@ class BaseGenerator(ABC):
         return random.choice(list(right_words))
 
     def _get_random_number(self, max_length: int) -> str:
-        if max_length > 10:
-            max_length = 10
+        if max_length > 5:
+            max_length = 5
         max_length = random.randint(1, max_length)
         return str(random.randint(0, 10 ** max_length - 1))
