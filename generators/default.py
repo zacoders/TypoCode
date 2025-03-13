@@ -10,10 +10,17 @@ class RandomGenerator(BaseGenerator):
 
     keyboard_lang = KeyboardLanguage.ENGLISH
 
-    def get_text(self, len: int) -> str:
-        result = ''
-        for _ in range(len):
-            random_char = random.choice(string.ascii_lowercase)
-            result += random_char
+    _words = []
 
-        return result
+    def __init__(self) -> None:
+        text = ""
+        word_len = random.randint(1, 10)
+        for _ in range(100):
+            random_char = random.choice(string.ascii_lowercase)
+
+            if len(text) < word_len:
+                text += random_char
+            else:
+                self._words.append(text)
+                word_len = random.randint(1, 10)
+                text = ""
