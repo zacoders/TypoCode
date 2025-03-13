@@ -4,12 +4,12 @@ from typing import Tuple
 
 
 class Button:
-    def __init__(self, size: float, text: str, action):
+    def __init__(self, size: Tuple[int, int], text: str, action):
         self.image = pygame.image.load('images/menus/button.png').convert()
-        self.image = pygame.transform.scale(self.image, (int(300 * size), int(70 * size)))
+        self.image = pygame.transform.scale(self.image, size)
         self.image.set_colorkey((0, 0, 0))
 
-        font = pygame.font.Font("fonts/UbuntuMono-Regular.ttf", round(24 * size))  # Use `round` for exact size
+        font = pygame.font.Font("fonts/UbuntuMono-Regular.ttf", round(25))  # Use `round` for exact size
         self.text = font.render(text, False, (255, 255, 255))
 
         self.clicked = False

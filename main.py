@@ -19,9 +19,9 @@ game_state = GameState()
 
 main_window = MainWindow(game_state)
 
-clock = pygame.time.Clock()
-
 game_state.active_screen = MainMenu(game_state, screen)
+
+clock = pygame.time.Clock()
 
 while True:
 
@@ -40,11 +40,8 @@ while True:
             screen = pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
 
     if game_state.active_screen is not None:
+        game_state.active_screen.draw()
         game_state.active_screen.update(events)
-        if hasattr(game_state.active_screen, "draw"):
-            game_state.active_screen.draw()
-        else:
-            print("Ошибка: active_screen стал None перед вызовом draw()")
     else:
         main_window.update(events, screen.get_height(), screen.get_width())
         main_window.draw(screen)

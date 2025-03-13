@@ -31,6 +31,7 @@ class ScreenABC(ABC):
                 button.update(event)
 
     def draw(self):
-        self.blur.draw()
-        for button in self.buttons:
-            button.draw(self.__screen)
+        if self:
+            self.blur.draw()
+            for button in self.buttons:
+                button.draw(self.__screen)
