@@ -27,9 +27,9 @@ class MainMenu(ScreenABC):
         self.add_button(Button(1, 'Start', action=self.start))
 
     def start(self):
-        GameState.active_screen = None
-        print(f"{GameState.active_screen=}")
-        print(f"{GameState.generator=}")
+        self.__game_state.active_screen = None
+        print(f"{self.__game_state.active_screen=}")
+        print(f"{self.__game_state.generator=}")
         print("Запуск игры...")
 
     def toggle_keyboard_lang(self):
