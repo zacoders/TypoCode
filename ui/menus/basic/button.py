@@ -1,10 +1,10 @@
 import pygame
 
-from typing import Tuple
+from typing import Callable, Tuple
 
 
 class Button:
-    def __init__(self, size: Tuple[int, int], text: str, action):
+    def __init__(self, size: Tuple[int, int], text: str, action: Callable[[], None]):
         self.image = pygame.image.load('images/menus/button.png').convert()
         self.image = pygame.transform.scale(self.image, size)
         self.image.set_colorkey((0, 0, 0))

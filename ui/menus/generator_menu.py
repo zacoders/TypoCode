@@ -18,8 +18,6 @@ class GeneratorMenu(ScreenABC):
 
         self.__game_state = game_state
 
-        self.__selected_generator = None
-
         generators = {
             "PythonGenerator": PythonGenerator,
             "CSharpGenerator": CSharpGenerator,
@@ -28,7 +26,9 @@ class GeneratorMenu(ScreenABC):
         }
 
         for name, generator_cls in generators.items():
-            self.add_button(Button((300, 70), name, action=lambda gen=generator_cls(): self.set_generator(gen)))
+            self.add_button(
+                Button((300, 70), name, action=lambda gen=generator_cls(): self.set_generator(gen))
+            )
 
         self.add_button(Button((300, 70), 'Back', action=self.go_parent_screen))
 
@@ -36,10 +36,5 @@ class GeneratorMenu(ScreenABC):
         self.__game_state.active_screen = self.__parent_screen
 
     def set_generator(self, generator):
-        self.__selected_generator = generator
-        self.change_text_generator()
-
-    def change_text_generator(self):
-        if self.__selected_generator is not None:
-            self.__game_state.generator = self.__selected_generator
-            print(f"Выбран генератор: {type(self.__game_state.generator).__name__}")
+        self.__game_state.generator = generator
+        print(f"Выбран генератор: {type(self.__game_state.generator).__name__}")

@@ -17,11 +17,23 @@ pygame.display.set_caption("TypoCode")
 
 game_state = GameState()
 
-main_window = MainWindow(game_state)
+clock = pygame.time.Clock()
 
 game_state.active_screen = MainMenu(game_state, screen)
 
-clock = pygame.time.Clock()
+while game_state.active_screen is not None:
+    screen.fill(BG_COLOR)
+
+    events = pygame.event.get()
+
+    game_state.active_screen.draw()
+    game_state.active_screen.update(events)
+
+    pygame.display.update()
+    pygame.display.flip()
+    clock.tick(FPS)
+
+main_window = MainWindow(game_state)
 
 while True:
 
@@ -39,12 +51,8 @@ while True:
             new_width, new_height = event.w, event.h
             screen = pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
 
-    if game_state.active_screen is not None:
-        game_state.active_screen.draw()
-        game_state.active_screen.update(events)
-    else:
-        main_window.update(events, screen.get_height(), screen.get_width())
-        main_window.draw(screen)
+    main_window.update(events, screen.get_height(), screen.get_width())
+    main_window.draw(screen)
 
     pygame.display.update()
     pygame.display.flip()
