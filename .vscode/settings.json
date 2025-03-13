@@ -37,6 +37,7 @@
         "pygame",
         "RCTRL",
         "respawn",
+        "Scancode",
         "SRCALPHA",
         "tankmap",
         "topleft",

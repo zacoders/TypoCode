@@ -1,4 +1,5 @@
 import pygame
+from pygame.key import ScancodeWrapper
 from common import update_events
 from consts import BG_COLOR, FPS
 from game_state import GameState
@@ -44,13 +45,13 @@ while True:
 
     screen.fill(BG_COLOR)
 
-    keys = pygame.key.get_pressed()
+    keys: ScancodeWrapper = pygame.key.get_pressed()
 
     events = pygame.event.get()
 
     update_events(events, keys, screen)
 
-    main_window.update(events, screen.get_height(), screen.get_width())
+    main_window.update(events, keys, screen.get_height(), screen.get_width())
     main_window.draw(screen)
 
     pygame.display.update()

@@ -1,5 +1,6 @@
 import pygame
 from pygame.event import Event
+from pygame.key import ScancodeWrapper
 from errors import Errors
 from game_state import GameState
 from ui.font_calc import FontCalc
@@ -20,9 +21,9 @@ class MainWindow:
         self.__input_line = InputLine(self.__random_line, self.__keyboard, self.__errors, font_file_path)
         self.__font_calc = FontCalc(font_file_path)
 
-    def update(self, events: list[Event], screen_height: int, screen_width: int):
+    def update(self, events: list[Event], keys: ScancodeWrapper, screen_height: int, screen_width: int):
         self.__font_calc.update(self.__text_len, screen_width)
-        self.__keyboard.update(screen_height, screen_width)
+        self.__keyboard.update(screen_height, screen_width, keys)
         self.__input_line.update(events)
 
     def draw(self, screen: pygame.Surface):
