@@ -1,7 +1,11 @@
 from generators.base import BaseGenerator
+from generators.keyboard_lang import KeyboardLanguage
 
 
 class EnglishGenerator(BaseGenerator):
+
+    keyboard_lang = KeyboardLanguage.ENGLISH
+
     _words = []
 
     def __init__(self) -> None:

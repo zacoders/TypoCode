@@ -3,9 +3,12 @@
 import random
 import string
 from generators.base import BaseGenerator
+from generators.keyboard_lang import KeyboardLanguage
 
 
 class RandomGenerator(BaseGenerator):
+
+    keyboard_lang = KeyboardLanguage.ENGLISH
 
     def get_text(self, len: int) -> str:
         result = ''

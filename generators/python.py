@@ -4,8 +4,8 @@ from generators.keyboard_lang import KeyboardLanguage
 
 
 class PythonGenerator(BaseGenerator):
-    
-    keyboard_lang = KeyboardLanguage.RUSSIAN
+
+    keyboard_lang = KeyboardLanguage.ENGLISH
 
     _words = [
         # Keywords
