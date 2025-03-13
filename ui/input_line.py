@@ -98,7 +98,6 @@ class InputLine:
             self.__prev_font_size = font_size
 
         text = self.__font.render(self.__text + self.__cursor_symbol, True, self.__text_color)
-
         char_width = self.__font.render("a", False, (255, 255, 255)).get_width()
         screen.blit(text, (line_rect.x + char_width, line_rect.y))
 

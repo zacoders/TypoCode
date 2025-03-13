@@ -21,7 +21,6 @@ class MainWindow:
         self.__font_calc = FontCalc(font_file_path)
 
     def update(self, events: list[Event], screen_height: int, screen_width: int):
-
         self.__font_calc.update(self.__text_len, screen_width)
         self.__keyboard.update(screen_height, screen_width)
         self.__input_line.update(events)
