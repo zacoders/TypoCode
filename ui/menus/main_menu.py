@@ -37,5 +37,6 @@ class MainMenu(ScreenABC):
 
         next_index = (current_index + 1) % len(self.__generators)
         self.__generator = self.__generators[next_index]
+        self.__game_state.generator = self.__generator
 
         print(self.__generator)

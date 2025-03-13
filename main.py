@@ -18,7 +18,6 @@ pygame.display.set_caption("TypoCode")
 game_state = GameState()
 
 main_window = MainWindow(game_state)
-main_window = MainWindow()
 
 clock = pygame.time.Clock()
 
@@ -44,10 +43,9 @@ while True:
         game_state.active_screen.update(events)
         if hasattr(game_state.active_screen, "draw"):
             game_state.active_screen.draw()
+        else:
+            print("Ошибка: active_screen стал None перед вызовом draw()")
     else:
-        print("Ошибка: active_screen стал None перед вызовом draw()")
-
-    if game_state.active_screen is None:
         main_window.update(events, screen.get_height(), screen.get_width())
         main_window.draw(screen)
 
