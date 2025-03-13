@@ -12,7 +12,7 @@ class MainWindow:
 
     def __init__(self, game_state: GameState):
         font_file_path = "fonts/UbuntuMono-Regular.ttf"
-        self.__text_len = 64
+        self.__text_len = 62
         self.__text_generator = game_state.generator
         self.__keyboard = Keyboard(language=self.__text_generator.keyboard_lang)
         self.__errors = Errors()

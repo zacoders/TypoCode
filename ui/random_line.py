@@ -25,13 +25,8 @@ class RandomLine:
         self.__font_file_path = font_file_path
         self.__font = Font(font_file_path, self.__prev_font_size)
 
-    def update(self, event: Event):
-        if event.key == pygame.K_BACKSPACE:
-            self.__text = self.__text[:-1]
-        elif event.key == pygame.K_RETURN:
-            self.__text = ""
-        else:
-            self.__input_text += event.unicode
+    def update(self):
+        ...
 
     def draw(self, screen: pygame.Surface, font_size: int):
         line_rect = pygame.Rect(
@@ -48,7 +43,9 @@ class RandomLine:
             self.__prev_font_size = font_size
 
         text = self.__font.render(self.__text, True, self.__text_color)
-        screen.blit(text, line_rect)
+
+        char_width = self.__font.render("a", False, (255, 255, 255)).get_width()
+        screen.blit(text, (line_rect.x + char_width, line_rect.y))
 
     def get_text(self) -> str:
         return self.__text
