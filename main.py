@@ -21,7 +21,7 @@ main_window = MainWindow(game_state)
 
 clock = pygame.time.Clock()
 
-game_state.active_screen = MainMenu(main_window.get_text_generator(), game_state, screen)
+game_state.active_screen = MainMenu(game_state, screen)
 
 while True:
 
