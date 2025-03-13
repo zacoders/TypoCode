@@ -3,8 +3,13 @@ from abc import ABC
 from errors import Errors
 import random
 
+from generators.keyboard_lang import KeyboardLanguage
+
 
 class BaseGenerator(ABC):
+
+    keyboard_lang = KeyboardLanguage.ENGLISH
+
     _words = []
 
     def get_text(self, length: int, errors: Errors) -> str:

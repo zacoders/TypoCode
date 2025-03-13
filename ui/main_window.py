@@ -30,6 +30,3 @@ class MainWindow:
         self.__input_line.draw(screen, self.__font_calc.current_font_size())
         self.__random_line.draw(screen, self.__font_calc.current_font_size())
         self.__keyboard.draw(screen)
-
-    def get_text_generator(self):
-        return self.__text_generator
