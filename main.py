@@ -1,3 +1,4 @@
+import sys
 import pygame
 import pygame_gui
 from common import update_events
@@ -6,6 +7,8 @@ from game_state import GameState
 from ui.main_window import MainWindow
 from ui.menus.main_menu import MainMenu
 
+print(f'{sys.executable=}')
+print(f'{pygame.__version__=}')
 
 pygame.init()
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=100)
@@ -26,7 +29,7 @@ clock = pygame.time.Clock()
 game_state.active_screen = MainMenu(game_state, manager, screen)
 
 while game_state.active_screen is not None:
-    screen.fill((0, 0, 0))
+    screen.fill(BG_COLOR)
 
     events = pygame.event.get()
     keys = pygame.key.get_pressed()
