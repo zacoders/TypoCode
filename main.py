@@ -4,8 +4,8 @@ import pygame_gui
 from common import update_events
 from consts import BG_COLOR, FPS
 from game_state import GameState
-from ui.main_window import MainWindow
-from ui.buttons_window import ButtonsWindow
+from ui.typing_window import TypingWindow
+from ui.start_window import StartWindow
 
 print(f'{sys.executable=}')
 print(f'{pygame.__version__=}')
@@ -27,7 +27,7 @@ game_state = GameState()
 clock = pygame.time.Clock()
 
 
-window = ButtonsWindow(game_state, manager)
+start_window = StartWindow(game_state, manager)
 
 while not game_state.is_started:
     screen.fill(BG_COLOR)
@@ -42,7 +42,7 @@ while not game_state.is_started:
 
     time_delta = clock.tick(FPS) / 1000.0
 
-    window.update(events)
+    start_window.update(events)
 
     manager.update(time_delta)
     manager.draw_ui(screen)
@@ -52,7 +52,7 @@ while not game_state.is_started:
     clock.tick(FPS)
 
 
-main_window = MainWindow(game_state)
+typing_window = TypingWindow(game_state)
 
 while True:
 
@@ -64,8 +64,8 @@ while True:
 
     update_events(events, keys, screen)
 
-    main_window.update(events, screen.get_height(), screen.get_width())
-    main_window.draw(screen)
+    typing_window.update(events, screen.get_height(), screen.get_width())
+    typing_window.draw(screen)
 
     pygame.display.update()
     pygame.display.flip()

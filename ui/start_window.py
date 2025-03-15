@@ -11,7 +11,7 @@ import generators
 from generators.base import GeneratorABC
 
 
-class ButtonsWindow:
+class StartWindow:
 
     def __init__(self, game_state: GameState, manager: UIManager):
 

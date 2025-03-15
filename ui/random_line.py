@@ -1,6 +1,5 @@
 
 from pygame.font import Font
-from pygame.event import Event
 import pygame
 
 from errors import Errors
