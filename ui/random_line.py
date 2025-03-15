@@ -17,7 +17,6 @@ class RandomLine:
 
         self.__text_generator = text_generator
         self.__text = self.__text_generator.get_text(self.__text_len, self.__errors)
-
         self.__text_color = (155, 255, 155)
         self.__text_line_color = (0, 0, 0)
 
@@ -28,7 +27,7 @@ class RandomLine:
     def update(self):
         ...
 
-    def draw(self, screen: pygame.Surface, font_size: int):
+    def draw(self, screen: pygame.Surface, font_size: int, text_width: int):
         line_rect = pygame.Rect(
             0,
             screen.get_height() // 3 - font_size,
@@ -43,8 +42,11 @@ class RandomLine:
             self.__prev_font_size = font_size
 
         text = self.__font.render(self.__text, True, self.__text_color)
-        char_width = self.__font.render("a", False, (255, 255, 255)).get_width()
-        screen.blit(text, (line_rect.x + char_width, line_rect.y))
+        diff_x = (screen.get_width() - text_width) / 2
+        print(f'{screen.get_width()=} {text_width=} {diff_x=}')
+        text_pos = (diff_x, line_rect.y)
+        # pygame.draw.rect(screen, (200, 200, 200), (diff_x, line_rect.y, text_width, text.get_height()))
+        screen.blit(text, text_pos)
 
     def get_text(self) -> str:
         return self.__text

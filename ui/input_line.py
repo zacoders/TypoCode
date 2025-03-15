@@ -84,7 +84,7 @@ class InputLine:
 
                 self.__error_sound.play()
 
-    def draw(self, screen: pygame.Surface, font_size: int):
+    def draw(self, screen: pygame.Surface, font_size: int, text_width: int):
         line_rect = pygame.Rect(
             0,
             screen.get_height() // 3,
@@ -98,8 +98,8 @@ class InputLine:
             self.__prev_font_size = font_size
 
         text = self.__font.render(self.__text + self.__cursor_symbol, True, self.__text_color)
-        char_width = self.__font.render("a", False, (255, 255, 255)).get_width()
-        screen.blit(text, (line_rect.x + char_width, line_rect.y))
+        text_pos = (screen.get_width() - text_width) / 2, line_rect.y
+        screen.blit(text, text_pos)
 
     def get_errors(self):
         return self.__errors

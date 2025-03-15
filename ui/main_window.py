@@ -12,7 +12,7 @@ class MainWindow:
 
     def __init__(self, game_state: GameState):
         font_file_path = "fonts/UbuntuMono-Regular.ttf"
-        self.__text_len = 62
+        self.__text_len = 64
         self.__text_generator = game_state.generator
         self.__keyboard = Keyboard(language=self.__text_generator.keyboard_lang)
         self.__errors = Errors()
@@ -26,6 +26,6 @@ class MainWindow:
         self.__input_line.update(events)
 
     def draw(self, screen: pygame.Surface):
-        self.__input_line.draw(screen, self.__font_calc.current_font_size())
-        self.__random_line.draw(screen, self.__font_calc.current_font_size())
+        self.__input_line.draw(screen, self.__font_calc.current_font_size(), self.__font_calc.current_text_width())
+        self.__random_line.draw(screen, self.__font_calc.current_font_size(), self.__font_calc.current_text_width())
         self.__keyboard.draw(screen)
