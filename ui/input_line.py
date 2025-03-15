@@ -98,7 +98,8 @@ class InputLine:
             self.__prev_font_size = font_size
 
         text = self.__font.render(self.__text + self.__cursor_symbol, True, self.__text_color)
-        text_pos = (screen.get_width() - text_width) / 2, line_rect.y
+        diff_x = (screen.get_width() - text_width) / 2
+        text_pos = (diff_x, line_rect.y)
         screen.blit(text, text_pos)
 
     def get_errors(self):

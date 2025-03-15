@@ -43,9 +43,7 @@ class RandomLine:
 
         text = self.__font.render(self.__text, True, self.__text_color)
         diff_x = (screen.get_width() - text_width) / 2
-        print(f'{screen.get_width()=} {text_width=} {diff_x=}')
         text_pos = (diff_x, line_rect.y)
-        # pygame.draw.rect(screen, (200, 200, 200), (diff_x, line_rect.y, text_width, text.get_height()))
         screen.blit(text, text_pos)
 
     def get_text(self) -> str:
