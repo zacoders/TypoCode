@@ -4,12 +4,12 @@ from pygame.event import Event
 import pygame
 
 from errors import Errors
-from generators.base import BaseGenerator
+from generators.base import GeneratorABC
 
 
 class RandomLine:
 
-    def __init__(self, text_len: int, errors: Errors, text_generator: BaseGenerator, font_file_path: str):
+    def __init__(self, text_len: int, errors: Errors, text_generator: GeneratorABC, font_file_path: str):
 
         self.__text_len = text_len
 

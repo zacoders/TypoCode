@@ -8,7 +8,7 @@ import pygame_gui
 from game_state import GameState
 from pygame_gui import UIManager
 import generators
-from generators.base import BaseGenerator
+from generators.base import GeneratorABC
 
 
 class ButtonsWindow:
@@ -55,7 +55,7 @@ class ButtonsWindow:
     def __gens_list_items(self):
         item = {}
         for name, generator_cls in inspect.getmembers(generators):
-            if inspect.isclass(generator_cls) and issubclass(generator_cls, BaseGenerator):
+            if inspect.isclass(generator_cls) and issubclass(generator_cls, GeneratorABC):
                 gen = generator_cls()
                 item[gen.display_name] = gen
         return item

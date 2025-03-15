@@ -2,11 +2,11 @@
 
 import random
 import string
-from generators.base import BaseGenerator
+from generators.base import GeneratorABC
 from generators.keyboard_lang import KeyboardLanguage
 
 
-class RandomGenerator(BaseGenerator):
+class RandomGenerator(GeneratorABC):
 
     @property
     def display_name(self): return "English Random"

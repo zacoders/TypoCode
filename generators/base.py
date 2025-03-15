@@ -6,7 +6,7 @@ import random
 from generators.keyboard_lang import KeyboardLanguage
 
 
-class BaseGenerator(ABC):
+class GeneratorABC(ABC):
 
     @property
     @abstractmethod
