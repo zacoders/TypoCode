@@ -1,4 +1,5 @@
 import pygame
+import pygame_gui
 from common import update_events
 from consts import BG_COLOR, FPS
 from game_state import GameState
@@ -15,12 +16,14 @@ screen_size = info.current_w - info.current_w * 0.3, info.current_h - info.curre
 screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
 pygame.display.set_caption("TypoCode")
 
+manager = pygame_gui.UIManager((400, 300))
+
 game_state = GameState()
 
 clock = pygame.time.Clock()
 
 
-game_state.active_screen = MainMenu(game_state, screen)
+game_state.active_screen = MainMenu(game_state, manager, screen)
 
 while game_state.active_screen is not None:
     screen.fill((0, 0, 0))
@@ -29,6 +32,9 @@ while game_state.active_screen is not None:
     keys = pygame.key.get_pressed()
 
     update_events(events, keys, screen)
+
+    for event in events:
+        manager.process_events(event)
 
     game_state.active_screen.draw()
     game_state.active_screen.update(events)
