@@ -5,8 +5,7 @@ from common import update_events
 from consts import BG_COLOR, FPS
 from game_state import GameState
 from ui.main_window import MainWindow
-from ui.menus.buttons_window import ButtonsWindow
-from ui.menus.main_menu import MainMenu
+from ui.buttons_window import ButtonsWindow
 
 print(f'{sys.executable=}')
 print(f'{pygame.__version__=}')
