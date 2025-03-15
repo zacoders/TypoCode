@@ -5,6 +5,7 @@ from common import update_events
 from consts import BG_COLOR, FPS
 from game_state import GameState
 from ui.main_window import MainWindow
+from ui.menus.buttons_window import ButtonsWindow
 from ui.menus.main_menu import MainMenu
 
 print(f'{sys.executable=}')
@@ -19,16 +20,16 @@ screen_size = info.current_w - info.current_w * 0.3, info.current_h - info.curre
 screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
 pygame.display.set_caption("TypoCode")
 
-manager = pygame_gui.UIManager((400, 300))
+manager = pygame_gui.UIManager((screen.get_width(), screen.get_height()))
 
 game_state = GameState()
 
 clock = pygame.time.Clock()
 
 
-game_state.active_screen = MainMenu(game_state, manager, screen)
+window = ButtonsWindow(game_state, manager, screen)
 
-while game_state.active_screen is not None:
+while True:
     screen.fill(BG_COLOR)
 
     events = pygame.event.get()
@@ -39,8 +40,10 @@ while game_state.active_screen is not None:
     for event in events:
         manager.process_events(event)
 
-    game_state.active_screen.draw()
-    game_state.active_screen.update(events)
+    time_delta = clock.tick(FPS) / 1000.0
+
+    manager.update(time_delta)
+    manager.draw_ui(screen)
 
     pygame.display.update()
     pygame.display.flip()
