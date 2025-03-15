@@ -29,7 +29,7 @@ clock = pygame.time.Clock()
 
 window = ButtonsWindow(game_state, manager, screen)
 
-while True:
+while not game_state.is_started:
     screen.fill(BG_COLOR)
 
     events = pygame.event.get()
@@ -41,6 +41,8 @@ while True:
         manager.process_events(event)
 
     time_delta = clock.tick(FPS) / 1000.0
+
+    window.update(events)
 
     manager.update(time_delta)
     manager.draw_ui(screen)

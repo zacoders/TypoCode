@@ -6,5 +6,5 @@ from ui.menus.basic.button_manager import ButtonManager
 
 class GameState:
     def __init__(self):
-        self.active_screen: ButtonManager | None
+        self.is_started: bool = False
         self.generator: BaseGenerator = PythonGenerator()
