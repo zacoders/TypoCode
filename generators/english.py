@@ -1,4 +1,4 @@
-from generators.base import GeneratorABC
+from generators.generator_abc import GeneratorABC
 from generators.keyboard_lang import KeyboardLanguage
 
 

@@ -3,7 +3,7 @@ from pygame.font import Font
 import pygame
 
 from errors import Errors
-from generators.base import GeneratorABC
+from generators.generator_abc import GeneratorABC
 
 
 class RandomLine:

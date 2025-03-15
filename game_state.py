@@ -1,5 +1,5 @@
 
-from generators.base import GeneratorABC
+from generators.generator_abc import GeneratorABC
 from generators.c_sharp import CSharpGenerator
 
 

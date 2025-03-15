@@ -8,7 +8,7 @@ import pygame_gui
 from game_state import GameState
 from pygame_gui import UIManager
 import generators
-from generators.base import GeneratorABC
+from generators.generator_abc import GeneratorABC
 
 
 class StartWindow:
