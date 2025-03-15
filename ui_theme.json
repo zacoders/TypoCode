@@ -1,0 +1,32 @@
+{
+    "button":
+    {
+        "font":
+        {
+            "name": "UbuntuMono-Regular",
+            "size": 22,            
+            "regular_resource": {
+                "package": "fonts",                  
+                "resource": "UbuntuMono-Regular.ttf"     
+            }
+        },
+        "colours":
+        {
+            "normal_border": "White",
+            "normal_bg": "SlateGray",
+            "normal_text": "White"
+        },
+        "misc":
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "10",
+            "border_width": "2"
+        }
+    },
+    "selection_list": {        
+        "misc":
+        {
+            "list_item_height": "40"
+        }
+    }
+}

@@ -2,28 +2,26 @@
 import inspect
 import sys
 from typing import List
-from pygame import Surface
 from pygame import Rect
 from pygame.event import Event
 import pygame_gui
 from game_state import GameState
 from pygame_gui import UIManager
-
 import generators
 from generators.base import BaseGenerator
 
 
 class ButtonsWindow:
 
-    def __init__(self, game_state: GameState, manager: UIManager, screen: Surface):
+    def __init__(self, game_state: GameState, manager: UIManager):
 
         self.__game_state = game_state
-        self.__manager = manager
 
         self.__start_button = pygame_gui.elements.UIButton(
             relative_rect=Rect((150, 450), (300, 70)),
             text="Start",
-            manager=manager)
+            manager=manager,
+        )
 
         self.__exit_button = pygame_gui.elements.UIButton(
             relative_rect=Rect((150, 550), (300, 70)),
@@ -32,10 +30,12 @@ class ButtonsWindow:
 
         self.__generators_list_items = self.__gens_list_items()
 
+        generator_names = list(self.__generators_list_items.keys())
         self.__selection_list = pygame_gui.elements.UISelectionList(
             relative_rect=Rect(100, 100, 500, 300),
-            item_list=list(self.__generators_list_items.keys()),
-            manager=manager
+            item_list=generator_names,
+            manager=manager,
+            default_selection=generator_names[0]
         )
 
     def update(self, events: List[Event]):
