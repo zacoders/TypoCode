@@ -4,8 +4,11 @@ from generators.keyboard_lang import KeyboardLanguage
 
 class RussianGenerator(BaseGenerator):
 
+    @property
+    def display_name(self): return "Русский"
+
     keyboard_lang = KeyboardLanguage.RUSSIAN
-    
+
     _words = []
 
     def __init__(self) -> None:

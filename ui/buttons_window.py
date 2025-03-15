@@ -26,7 +26,8 @@ class ButtonsWindow:
         self.__exit_button = pygame_gui.elements.UIButton(
             relative_rect=Rect((150, 550), (300, 70)),
             text="Exit",
-            manager=manager)
+            manager=manager
+        )
 
         self.__generators_list_items = self.__gens_list_items()
 
@@ -44,7 +45,7 @@ class ButtonsWindow:
                 selected_item = self.__selection_list.get_single_selection()
                 if selected_item:
                     if selected_item in self.__generators_list_items:
-                        self.__generators_list_items[selected_item]()
+                        self.__game_state.generator = self.__generators_list_items[selected_item]
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.__start_button:
                     self.__game_state.is_started = True
@@ -55,10 +56,6 @@ class ButtonsWindow:
         item = {}
         for name, generator_cls in inspect.getmembers(generators):
             if inspect.isclass(generator_cls) and issubclass(generator_cls, BaseGenerator):
-                name = generator_cls.__name__
-                item[name] = lambda gen = generator_cls: self.__set_generator(gen)
+                gen = generator_cls()
+                item[gen.display_name] = gen
         return item
-
-    def __set_generator(self, generator: type):
-        self.__game_state.generator = generator()
-        print(f"Выбран генератор: {generator.__name__}")

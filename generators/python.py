@@ -5,6 +5,9 @@ from generators.keyboard_lang import KeyboardLanguage
 
 class PythonGenerator(BaseGenerator):
 
+    @property
+    def display_name(self): return "Python"
+
     keyboard_lang = KeyboardLanguage.ENGLISH
 
     _words = [

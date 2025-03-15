@@ -8,6 +8,9 @@ from generators.keyboard_lang import KeyboardLanguage
 
 class RandomGenerator(BaseGenerator):
 
+    @property
+    def display_name(self): return "English Random"
+
     keyboard_lang = KeyboardLanguage.ENGLISH
 
     _words = []

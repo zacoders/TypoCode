@@ -4,6 +4,9 @@ from generators.keyboard_lang import KeyboardLanguage
 
 class CSharpGenerator(BaseGenerator):
 
+    @property
+    def display_name(self): return "C#"
+
     keyboard_lang = KeyboardLanguage.ENGLISH
 
     _words = [
