@@ -28,8 +28,8 @@ class InputLine:
 
         self.__errors = errors
 
-        self.__type_sound = pygame.mixer.Sound("sounds/typing-sound-02-229861.wav")
-        self.__error_sound = pygame.mixer.Sound("sounds/error.mp3")
+        self.__type_sound = pygame.mixer.Sound("src/_content/sounds/typing-sound-02-229861.wav")
+        self.__error_sound = pygame.mixer.Sound("src/_content/sounds/error.mp3")
 
         self.__interactive_buttons = [pygame.K_TAB,
                                       pygame.K_CAPSLOCK,

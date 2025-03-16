@@ -6,7 +6,7 @@
             "name": "UbuntuMono-Regular",
             "size": 22,            
             "regular_resource": {
-                "package": "fonts",                  
+                "package": "_content.fonts",                  
                 "resource": "UbuntuMono-Regular.ttf"     
             }
         },
