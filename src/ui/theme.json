@@ -4,7 +4,7 @@
         "font":
         {
             "name": "UbuntuMono-Regular",
-            "size": 22,            
+            "size": 54,            
             "regular_resource": {
                 "package": "_content.fonts",                  
                 "resource": "UbuntuMono-Regular.ttf"     
@@ -47,7 +47,7 @@
         },       
         "misc":
         {
-            "list_item_height": "40"
+            "list_item_height": "80"
         }
     }
 }
