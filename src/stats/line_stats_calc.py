@@ -6,24 +6,31 @@ from stats.line_stats import LineStats
 
 class LineStatsCalc:
 
-    def __init__(self, time_provider: TimeProvider = TimeProvider()):
+    def __init__(self, time_provider: TimeProvider):
         self.__success_count = 0
+        self.__error_count = 0
         self.__time_provider = time_provider
         self.__start_time_utc = None
         self.__end_time_utc = None
 
-    def symbol_typed(self, is_error: bool, max_len: int):
+    def start(self):
+        self.__start_time_utc = self.__time_provider.get_utc_time()
+        self.__success_count = 0
+        self.__error_count = 0
+        self.__end_time_utc = None
+
+    def stop(self):
+        self.__end_time_utc = self.__time_provider.get_utc_time()
+
+    def symbol_typed(self, is_error: bool):
 
         if not self.__start_time_utc:
-            self.__start_time_utc = self.__time_provider.get_utc_time()
+            raise Exception(f"Please call {LineStatsCalc.__name__}.{LineStatsCalc.start.__name__}() first.")
 
         if is_error:
             self.__error_count += 1
         else:
             self.__success_count += 1
-
-        if self.__success_count == max_len:
-            self.__end_time_utc = self.__time_provider.get_utc_time()
 
     def get_stats(self) -> LineStats:
         end_time = self.__end_time_utc if self.__end_time_utc else self.__time_provider.get_utc_time()

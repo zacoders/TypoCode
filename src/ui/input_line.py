@@ -1,19 +1,26 @@
-
 from pygame.font import Font
 from pygame.event import Event
 import pygame
-
-from errors import Errors
+from stats.line_stats_calc import LineStatsCalc
+from typing_errors import TypingErrors
 from ui.keyboard import Keyboard
 from ui.random_line import RandomLine
 
 
 class InputLine:
 
-    def __init__(self, random_line: RandomLine, keyboard: Keyboard, errors: Errors, font_file_path: str):
+    def __init__(
+        self,
+        random_line: RandomLine,
+        keyboard: Keyboard,
+        typing_errors: TypingErrors,
+        font_file_path: str,
+        line_stats_calc: LineStatsCalc
+    ):
 
         self.__random_line = random_line
         self.__keyboard = keyboard
+        self.__line_stats_calc = line_stats_calc
 
         self.__text = ''
         self.__cursor_symbol = "\u258F"
@@ -26,7 +33,7 @@ class InputLine:
         self.__font_file_path = font_file_path
         self.__font = Font(font_file_path, self.__prev_font_size)
 
-        self.__errors = errors
+        self.__typing_errors = typing_errors
 
         self.__type_sound = pygame.mixer.Sound("src/_content/sounds/typing-sound-02-229861.wav")
         self.__error_sound = pygame.mixer.Sound("src/_content/sounds/error.mp3")
@@ -71,18 +78,27 @@ class InputLine:
             if event.key == pygame.K_ESCAPE:
                 continue
 
+            if event.key in self.__interactive_buttons:
+                return
+
+            if not self.__text:
+                self.__line_stats_calc.start()
+
             if event.unicode == current_char:
                 self.__type_sound.play()
+                self.__line_stats_calc.symbol_typed(is_error=False)
                 self.__text += event.unicode
             else:
-                if event.key in self.__interactive_buttons:
-                    return
-
                 if event.unicode:
                     word = self.__get_word(current_char_pos)
-                    self.__errors.add_errors(current_char, word)
-
+                    self.__typing_errors.add_errors(current_char, word)
+                self.__line_stats_calc.symbol_typed(is_error=True)
                 self.__error_sound.play()
+
+            if len(self.__text) == self.__random_line.text_len:
+                self.__line_stats_calc.stop()
+
+        print(self.__line_stats_calc.get_stats())
 
     def draw(self, screen: pygame.Surface, font_size: int, text_width: int):
         line_rect = pygame.Rect(
@@ -103,4 +119,4 @@ class InputLine:
         screen.blit(text, text_pos)
 
     def get_errors(self):
-        return self.__errors
+        return self.__typing_errors

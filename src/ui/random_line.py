@@ -2,13 +2,13 @@
 from pygame.font import Font
 import pygame
 
-from errors import Errors
+from typing_errors import TypingErrors
 from generators.generator_abc import GeneratorABC
 
 
 class RandomLine:
 
-    def __init__(self, text_len: int, errors: Errors, text_generator: GeneratorABC, font_file_path: str):
+    def __init__(self, text_len: int, errors: TypingErrors, text_generator: GeneratorABC, font_file_path: str):
 
         self.__text_len = text_len
 
@@ -22,6 +22,10 @@ class RandomLine:
         self.__prev_font_size = 100
         self.__font_file_path = font_file_path
         self.__font = Font(font_file_path, self.__prev_font_size)
+
+    @property
+    def text_len(self):
+        return self.__text_len
 
     def update(self):
         ...
@@ -51,5 +55,5 @@ class RandomLine:
     def next_line(self):
         self.__text = self.__text_generator.get_text(self.__text_len, self.__errors)
 
-    def set_errors(self, errors: Errors):
+    def set_errors(self, errors: TypingErrors):
         self.__errors = errors
