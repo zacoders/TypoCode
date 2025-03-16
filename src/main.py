@@ -6,6 +6,10 @@ from consts import BG_COLOR, FPS
 from game_state import GameState
 from ui.typing_window import TypingWindow
 from ui.start_window import StartWindow
+import ctypes
+
+# Set process DPI awareness. Use 1 for "System DPI Awareness", or 2 for "Per-Monitor DPI Awareness"
+ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
 print(f'{sys.executable=}')
 print(f'{pygame.__version__=}')
