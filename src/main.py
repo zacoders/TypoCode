@@ -1,7 +1,7 @@
 import sys
 import pygame
 import pygame_gui
-from common import update_events
+from common.common import update_events
 from consts import BG_COLOR, FPS
 from game_state import GameState
 from ui.typing_window import TypingWindow
