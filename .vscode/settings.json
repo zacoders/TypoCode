@@ -35,6 +35,7 @@
         "ndenumerate",
         "NOFRAME",
         "pygame",
+        "pytest",
         "RCTRL",
         "respawn",
         "SRCALPHA",
