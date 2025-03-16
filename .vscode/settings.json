@@ -38,6 +38,7 @@
         "pytest",
         "RCTRL",
         "respawn",
+        "shcore",
         "SRCALPHA",
         "tankmap",
         "topleft",
