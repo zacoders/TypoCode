@@ -1,9 +1,12 @@
 
-from generators.base import BaseGenerator
+from generators.generator_abc import GeneratorABC
 from generators.keyboard_lang import KeyboardLanguage
 
 
-class PythonGenerator(BaseGenerator):
+class PythonGenerator(GeneratorABC):
+
+    @property
+    def display_name(self): return "Python"
 
     keyboard_lang = KeyboardLanguage.ENGLISH
 

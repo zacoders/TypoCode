@@ -1,10 +1,14 @@
+import sys
 import pygame
+import pygame_gui
 from common import update_events
 from consts import BG_COLOR, FPS
 from game_state import GameState
-from ui.main_window import MainWindow
-from ui.menus.main_menu import MainMenu
+from ui.typing_window import TypingWindow
+from ui.start_window import StartWindow
 
+print(f'{sys.executable=}')
+print(f'{pygame.__version__=}')
 
 pygame.init()
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=100)
@@ -15,30 +19,40 @@ screen_size = info.current_w - info.current_w * 0.3, info.current_h - info.curre
 screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
 pygame.display.set_caption("TypoCode")
 
+manager = pygame_gui.UIManager((screen.get_width(), screen.get_height()), theme_path="ui_theme.json")
+
+
 game_state = GameState()
 
 clock = pygame.time.Clock()
 
 
-game_state.active_screen = MainMenu(game_state, screen)
+start_window = StartWindow(game_state, manager)
 
-while game_state.active_screen is not None:
-    screen.fill((0, 0, 0))
+while not game_state.is_started:
+    screen.fill(BG_COLOR)
 
     events = pygame.event.get()
     keys = pygame.key.get_pressed()
 
     update_events(events, keys, screen)
 
-    game_state.active_screen.draw()
-    game_state.active_screen.update(events)
+    for event in events:
+        manager.process_events(event)
+
+    time_delta = clock.tick(FPS) / 1000.0
+
+    start_window.update(events)
+
+    manager.update(time_delta)
+    manager.draw_ui(screen)
 
     pygame.display.update()
     pygame.display.flip()
     clock.tick(FPS)
 
 
-main_window = MainWindow(game_state)
+typing_window = TypingWindow(game_state)
 
 while True:
 
@@ -50,8 +64,8 @@ while True:
 
     update_events(events, keys, screen)
 
-    main_window.update(events, screen.get_height(), screen.get_width())
-    main_window.draw(screen)
+    typing_window.update(events, screen.get_height(), screen.get_width())
+    typing_window.draw(screen)
 
     pygame.display.update()
     pygame.display.flip()

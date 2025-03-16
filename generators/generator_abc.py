@@ -1,12 +1,17 @@
 
-from abc import ABC
+from abc import ABC, abstractmethod
 from errors import Errors
 import random
 
 from generators.keyboard_lang import KeyboardLanguage
 
 
-class BaseGenerator(ABC):
+class GeneratorABC(ABC):
+
+    @property
+    @abstractmethod
+    def display_name(self):
+        pass
 
     keyboard_lang = KeyboardLanguage.ENGLISH
 

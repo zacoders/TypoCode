@@ -8,7 +8,7 @@ from ui.keyboard import Keyboard
 from ui.random_line import RandomLine
 
 
-class MainWindow:
+class TypingWindow:
 
     def __init__(self, game_state: GameState):
         font_file_path = "fonts/UbuntuMono-Regular.ttf"

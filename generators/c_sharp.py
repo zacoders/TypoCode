@@ -1,8 +1,11 @@
-from generators.base import BaseGenerator
+from generators.generator_abc import GeneratorABC
 from generators.keyboard_lang import KeyboardLanguage
 
 
-class CSharpGenerator(BaseGenerator):
+class CSharpGenerator(GeneratorABC):
+
+    @property
+    def display_name(self): return "C#"
 
     keyboard_lang = KeyboardLanguage.ENGLISH
 

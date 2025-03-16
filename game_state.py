@@ -1,10 +1,9 @@
 
-from generators.base import BaseGenerator
-from generators.python import PythonGenerator
-from ui.menus.basic.screen import ScreenABC
+from generators.generator_abc import GeneratorABC
+from generators.c_sharp import CSharpGenerator
 
 
 class GameState:
     def __init__(self):
-        self.active_screen: ScreenABC | None
-        self.generator: BaseGenerator = PythonGenerator()
+        self.is_started: bool = False
+        self.generator: GeneratorABC = CSharpGenerator()
