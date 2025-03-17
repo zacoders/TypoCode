@@ -28,8 +28,8 @@ class InputLine:
 
         self.__errors = errors
 
-        self.__type_sound = pygame.mixer.Sound("sounds/typing-sound-02-229861.wav")
-        self.__error_sound = pygame.mixer.Sound("sounds/error.mp3")
+        self.__type_sound = pygame.mixer.Sound("src/_content/sounds/typing-sound-02-229861.wav")
+        self.__error_sound = pygame.mixer.Sound("src/_content/sounds/error.mp3")
 
         self.__interactive_buttons = [pygame.K_TAB,
                                       pygame.K_CAPSLOCK,
@@ -84,7 +84,7 @@ class InputLine:
 
                 self.__error_sound.play()
 
-    def draw(self, screen: pygame.Surface, font_size: int):
+    def draw(self, screen: pygame.Surface, font_size: int, text_width: int):
         line_rect = pygame.Rect(
             0,
             screen.get_height() // 3,
@@ -98,8 +98,9 @@ class InputLine:
             self.__prev_font_size = font_size
 
         text = self.__font.render(self.__text + self.__cursor_symbol, True, self.__text_color)
-        char_width = self.__font.render("a", False, (255, 255, 255)).get_width()
-        screen.blit(text, (line_rect.x + char_width, line_rect.y))
+        diff_x = (screen.get_width() - text_width) / 2
+        text_pos = (diff_x, line_rect.y)
+        screen.blit(text, text_pos)
 
     def get_errors(self):
         return self.__errors

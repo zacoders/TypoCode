@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
 
-from errors import Errors
+from src.errors import Errors
 from generators.python import PythonGenerator
 
 
