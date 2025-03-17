@@ -41,15 +41,14 @@ while not game_state.is_started:
 
     update_events(events, keys, screen)
 
-    for event in events:
-        manager.process_events(event)
-
     time_delta = clock.tick(FPS) / 1000.0
 
     start_window.update(events, screen.get_width(), screen.get_height())
 
-    manager.update(time_delta)
+    for event in events:
+        manager.process_events(event)
     manager.draw_ui(screen)
+    manager.update(time_delta)
 
     pygame.display.update()
     pygame.display.flip()

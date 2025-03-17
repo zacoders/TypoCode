@@ -1,7 +1,7 @@
 
 import inspect
 import sys
-from typing import List
+from typing import List, Tuple
 from pygame import Rect, Surface
 from pygame.event import Event
 import pygame_gui
@@ -48,27 +48,43 @@ class StartWindow:
             manager=self.__manager,
             default_selection=self.__generator_names[0]
         )
+        self.__objects_zip = list(zip(
+            [self.__start_button_rel_rect, self.__exit_button_rel_rect, self.__select_list_rel_rect],
+            [self.__start_button, self.__exit_button, self.__selection_list],
+            [
+                (self.BUTTON_WIDTH, self.BUTTON_HEIGHT),
+                (self.BUTTON_WIDTH, self.BUTTON_HEIGHT),
+                (self.BUTTON_WIDTH, self.BUTTON_HEIGHT)
+            ]
+        ))
 
-        self.__rel_rects = [self.__start_button_rel_rect, self.__exit_button_rel_rect, self.__select_list_rel_rect]
-        self.__objects = [self.__start_button, self.__exit_button, self.__selection_list]
-
-    def __set_buttons(self, screen_width: int, screen_height: int, rel_rect: Rect, object: UIButton | UISelectionList):
-
-        button_width = screen_width * self.BUTTON_WIDTH
-        button_height = screen_height * self.BUTTON_HEIGHT
+    def __set_object_size(
+        self,
+        screen_width: int,
+        screen_height: int,
+        rel_rect: Rect,
+        object: UIButton | UISelectionList,
+        size: Tuple[float, float]
+    ):
+        width = screen_width * size[0]
+        height = screen_height * size[1]
+        print(f'{width=}, {height=}')
 
         rel_rect.centerx = screen_width // 2
-        object.set_dimensions((int(button_width), int(button_height)))
+        object.set_dimensions((int(width), int(height)))
         object.set_position(rel_rect.topleft)
+        object.rebuild()
 
     def update(self, events: List[Event], screen_width: int, screen_height: int):
 
         if self.__screen_height != screen_height or self.__screen_width != screen_width:
+            print('screen size changed.')
             self.__screen_height = screen_height
             self.__screen_width = screen_width
 
-            for rect, object in zip(self.__rel_rects, self.__objects):
-                self.__set_buttons(screen_width, screen_height, rect, object)
+            print(f'{self.__objects_zip=}')
+            for rect, object, size in self.__objects_zip:
+                self.__set_object_size(screen_width, screen_height, rect, object, size)
 
         for event in events:
             if event.type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
