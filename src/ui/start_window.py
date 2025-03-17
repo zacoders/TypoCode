@@ -3,6 +3,7 @@ import inspect
 import sys
 from typing import List, Tuple
 from pygame import Rect, Surface
+import pygame
 from pygame.event import Event
 import pygame_gui
 from pygame_gui.elements import UIButton, UISelectionList
@@ -15,6 +16,9 @@ from generators.generator_abc import GeneratorABC
 class StartWindow:
     BUTTON_WIDTH = 0.2
     BUTTON_HEIGHT = 0.08
+
+    SELECTION_LIST_WIDTH = 0.4
+    SELECTION_LIST_HEIGHT = 0.4
 
     def __init__(self, game_state: GameState, manager: UIManager):
 
@@ -54,7 +58,7 @@ class StartWindow:
             [
                 (self.BUTTON_WIDTH, self.BUTTON_HEIGHT),
                 (self.BUTTON_WIDTH, self.BUTTON_HEIGHT),
-                (self.BUTTON_WIDTH, self.BUTTON_HEIGHT)
+                (self.SELECTION_LIST_WIDTH, self.SELECTION_LIST_HEIGHT)
             ]
         ))
 
@@ -68,9 +72,8 @@ class StartWindow:
     ):
         width = screen_width * size[0]
         height = screen_height * size[1]
-        print(f'{width=}, {height=}')
-
-        rel_rect.centerx = screen_width // 2
+        rel_rect.x = screen_width // 2 - width // 2
+        
         object.set_dimensions((int(width), int(height)))
         object.set_position(rel_rect.topleft)
         object.rebuild()
@@ -78,11 +81,9 @@ class StartWindow:
     def update(self, events: List[Event], screen_width: int, screen_height: int):
 
         if self.__screen_height != screen_height or self.__screen_width != screen_width:
-            print('screen size changed.')
             self.__screen_height = screen_height
             self.__screen_width = screen_width
 
-            print(f'{self.__objects_zip=}')
             for rect, object, size in self.__objects_zip:
                 self.__set_object_size(screen_width, screen_height, rect, object, size)
 

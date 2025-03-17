@@ -7,6 +7,10 @@ from game_state import GameState
 from ui.typing_window import TypingWindow
 from ui.start_window import StartWindow
 import ctypes
+import logging
+
+# Настройка логирования
+logging.basicConfig(level=logging.DEBUG)
 
 # Set process DPI awareness. Use 1 for "System DPI Awareness", or 2 for "Per-Monitor DPI Awareness"
 ctypes.windll.shcore.SetProcessDpiAwareness(1)
@@ -23,7 +27,11 @@ screen_size = info.current_w - info.current_w * 0.3, info.current_h - info.curre
 screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
 pygame.display.set_caption("TypoCode")
 
-manager = pygame_gui.UIManager((screen.get_width(), screen.get_height()), theme_path="src/ui/theme.json")
+manager = pygame_gui.UIManager(
+    (screen.get_width(), screen.get_height()),
+    enable_live_theme_updates=True,
+    theme_path="src/ui/theme.json"
+)
 
 
 game_state = GameState()
