@@ -156,6 +156,10 @@ class Keyboard:
     def highlight_key(self, key: str):
         if key in self.__keys:
             self.__highlighted_key = key
+        elif key.upper() in self.__keys:
+            self.__highlighted_key = key.upper()
+        elif key.lower() in self.__keys:
+            self.__highlighted_key = key.lower()
         if key == " ":
             self.__highlighted_key = "Space"
 
