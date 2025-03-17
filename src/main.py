@@ -46,7 +46,7 @@ while not game_state.is_started:
 
     time_delta = clock.tick(FPS) / 1000.0
 
-    start_window.update(events, screen)
+    start_window.update(events, screen.get_width(), screen.get_height())
 
     manager.update(time_delta)
     manager.draw_ui(screen)

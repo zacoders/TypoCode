@@ -13,20 +13,25 @@ from generators.generator_abc import GeneratorABC
 
 
 class StartWindow:
+    BUTTON_WIDTH = 0.2
+    BUTTON_HEIGHT = 0.08
 
     def __init__(self, game_state: GameState, manager: UIManager):
 
         self.__game_state = game_state
         self.__manager = manager
 
-        self.__start_button_rel_rect = Rect((300, 900), (600, 140))
+        self.__screen_width = 0
+        self.__screen_height = 0
+
+        self.__start_button_rel_rect = Rect((300, 900), (300, 140))
         self.__start_button = UIButton(
             relative_rect=self.__start_button_rel_rect,
             text="Start",
             manager=self.__manager,
         )
 
-        self.__exit_button_rel_rect = Rect((300, 1100), (600, 140))
+        self.__exit_button_rel_rect = Rect((300, 1100), (300, 140))
         self.__exit_button = UIButton(
             relative_rect=self.__exit_button_rel_rect,
             text="Exit",
@@ -47,10 +52,23 @@ class StartWindow:
         self.__rel_rects = [self.__start_button_rel_rect, self.__exit_button_rel_rect, self.__select_list_rel_rect]
         self.__objects = [self.__start_button, self.__exit_button, self.__selection_list]
 
-    def update(self, events: List[Event], screen: Surface):
+    def __set_buttons(self, screen_width: int, screen_height: int, rel_rect: Rect, object: UIButton | UISelectionList):
 
-        for rect, object in zip(self.__rel_rects, self.__objects):
-            self.__set_buttons_to_center(rect, object, screen)
+        button_width = screen_width * self.BUTTON_WIDTH
+        button_height = screen_height * self.BUTTON_HEIGHT
+
+        rel_rect.centerx = screen_width // 2
+        object.set_dimensions((int(button_width), int(button_height)))
+        object.set_position(rel_rect.topleft)
+
+    def update(self, events: List[Event], screen_width: int, screen_height: int):
+
+        if self.__screen_height != screen_height or self.__screen_width != screen_width:
+            self.__screen_height = screen_height
+            self.__screen_width = screen_width
+
+            for rect, object in zip(self.__rel_rects, self.__objects):
+                self.__set_buttons(screen_width, screen_height, rect, object)
 
         for event in events:
             if event.type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
@@ -63,11 +81,6 @@ class StartWindow:
                     self.__game_state.is_started = True
                 if event.ui_element == self.__exit_button:
                     sys.exit()
-
-    def __set_buttons_to_center(self, rel_rect: Rect, object: UIButton | UISelectionList, screen: Surface):
-        rel_rect.centerx = screen.get_width() // 2
-        object.set_dimensions(rel_rect.size)
-        object.set_position(rel_rect.topleft)
 
     def __gens_list_items(self):
         item = {}
