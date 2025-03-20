@@ -37,6 +37,7 @@
         "pygame",
         "pytest",
         "RCTRL",
+        "rects",
         "respawn",
         "shcore",
         "SRCALPHA",
