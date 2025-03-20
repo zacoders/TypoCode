@@ -40,7 +40,7 @@ game_state = GameState()
 clock = pygame.time.Clock()
 
 
-start_window = StartWindow(game_state, manager)
+start_window = StartWindow(game_state, manager, start_screen_size)
 
 while not game_state.is_started:
     screen.fill(BG_COLOR)
