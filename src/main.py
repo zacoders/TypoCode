@@ -23,7 +23,7 @@ screen_size = info.current_w - info.current_w * 0.3, info.current_h - info.curre
 screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
 pygame.display.set_caption("TypoCode")
 
-start_screen_size = screen.get_width(), screen.get_height()
+start_screen_size = screen.size
 
 manager = pygame_gui.UIManager(
     start_screen_size,
