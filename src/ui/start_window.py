@@ -39,14 +39,14 @@ class StartWindow:
         self.__selection_list_diff = int(self.__selection_list.relative_rect.y - center_y)
 
         self.__start_button = UIButton(
-            relative_rect=Rect((500, 900), (300, 140)),
+            relative_rect=Rect(500, 900, 300, 140),
             text="Start",
             manager=self.__manager,
         )
         self.__start_button_diff = int(self.__start_button.relative_rect.y - center_y)
 
         self.__exit_button = UIButton(
-            relative_rect=Rect((500, 1100), (300, 140)),
+            relative_rect=Rect(500, 1100, 300, 140),
             text="Exit",
             manager=self.__manager
         )
