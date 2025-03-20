@@ -98,7 +98,7 @@ class InputLine:
             if len(self.__text) == self.__random_line.text_len:
                 self.__line_stats_calc.stop()
 
-        print(self.__line_stats_calc.get_stats())
+        # print(self.__line_stats_calc.get_stats())
 
     def draw(self, screen: pygame.Surface, font_size: int, text_width: int):
         line_rect = pygame.Rect(

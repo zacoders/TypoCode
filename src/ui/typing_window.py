@@ -18,7 +18,7 @@ class TypingWindow:
 
         text_generator = game_state.generator
         time_provider = TimeProvider()
-        line_stats_calc = LineStatsCalc(time_provider)
+        self.__line_stats_calc = LineStatsCalc(time_provider)
         typing_errors = TypingErrors()
 
         self.__keyboard = Keyboard(language=text_generator.keyboard_lang)
@@ -28,7 +28,7 @@ class TypingWindow:
             keyboard=self.__keyboard,
             typing_errors=typing_errors,
             font_file_path=font_file_path,
-            line_stats_calc=line_stats_calc
+            line_stats_calc=self.__line_stats_calc
         )
         self.__font_calc = FontCalc(font_file_path)
 
@@ -36,8 +36,10 @@ class TypingWindow:
         self.__font_calc.update(self.__text_len, screen_width)
         self.__keyboard.update(screen_height, screen_width)
         self.__input_line.update(events)
+        self.__line_stats_calc.update(screen_height, screen_width)
 
     def draw(self, screen: pygame.Surface):
         self.__input_line.draw(screen, self.__font_calc.current_font_size(), self.__font_calc.current_text_width())
         self.__random_line.draw(screen, self.__font_calc.current_font_size(), self.__font_calc.current_text_width())
         self.__keyboard.draw(screen)
+        self.__line_stats_calc.draw(screen)
