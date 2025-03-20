@@ -1,7 +1,7 @@
 import sys
 import pygame
 import pygame_gui
-from common import update_events
+from common.common import update_events
 from consts import BG_COLOR, FPS
 from game_state import GameState
 from ui.typing_window import TypingWindow
@@ -18,7 +18,7 @@ pygame.init()
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=100)
 
 info = pygame.display.Info()
-screen_size = info.current_w - info.current_w * 0.3, info.current_h - info.current_h * 0.3
+screen_size = info.current_w * 0.7, info.current_h * 0.7
 
 screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
 pygame.display.set_caption("TypoCode")

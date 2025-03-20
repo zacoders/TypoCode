@@ -2,7 +2,7 @@ from collections import defaultdict
 from typing import List
 
 
-class Errors:
+class TypingErrors:
 
     def __init__(self):
         self.__error_letters = defaultdict(int)
