@@ -1,6 +1,6 @@
 import inspect
 import sys
-from typing import List, Tuple
+from typing import List
 from pygame import Rect
 from pygame.event import Event
 import pygame_gui
@@ -13,14 +13,12 @@ from generators.generator_abc import GeneratorABC
 
 class StartWindow:
 
-    def __init__(self, game_state: GameState, manager: UIManager, screen_size: Tuple[int, int]):
+    def __init__(self, game_state: GameState, manager: UIManager):
         self.__game_state = game_state
         self.__manager = manager
 
-        self.__screen_width = screen_size[0]
-        self.__screen_height = screen_size[1]
-
-        center_y = self.__screen_height // 2 - 55
+        self.__screen_width = 0
+        self.__screen_height = 0
 
         self.__generators_list_items = self.__gens_list_items()
         self.__generator_names = list(self.__generators_list_items.keys())
@@ -31,34 +29,29 @@ class StartWindow:
             manager=self.__manager,
             default_selection=self.__generator_names[0]
         )
-        self.__selection_list_diff = int(self.__selection_list.relative_rect.y - center_y)
 
         self.__start_button = UIButton(
             relative_rect=Rect(500, 900, 350, 100),
             text="Start",
             manager=self.__manager,
         )
-        self.__start_button_diff = int(self.__start_button.relative_rect.y - center_y)
 
         self.__exit_button = UIButton(
             relative_rect=Rect(500, 1100, 350, 100),
             text="Exit",
             manager=self.__manager
         )
-        self.__exit_button_diff = int(self.__exit_button.relative_rect.y - center_y)
 
         self.__objects_zip = list(zip(
             [self.__selection_list, self.__start_button, self.__exit_button],
-            [self.__selection_list_diff, self.__start_button_diff, self.__exit_button_diff]
+            [0, 700, 850]
         ))
-
-        self.__update_positions()
 
     def __set_object_pos(self, screen_width: int, screen_height: int,
                          object: UIButton | UISelectionList, y_offset: int):
 
         pos_x = screen_width // 2 - object.relative_rect.width // 2
-        pos_y = screen_height // 2 + y_offset
+        pos_y = screen_height // 2 - 475 + y_offset
 
         object.set_position((pos_x, pos_y))
         object.rebuild()
