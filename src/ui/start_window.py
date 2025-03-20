@@ -25,7 +25,7 @@ class StartWindow:
         self.__screen_width = screen_size[0]
         self.__screen_height = screen_size[1]
 
-        center_y = self.__screen_height // 2
+        center_y = self.__screen_height // 2 - 55
 
         self.__generators_list_items = self.__gens_list_items()
         self.__generator_names = list(self.__generators_list_items.keys())
@@ -39,14 +39,14 @@ class StartWindow:
         self.__selection_list_diff = int(self.__selection_list.relative_rect.y - center_y)
 
         self.__start_button = UIButton(
-            relative_rect=Rect(500, 900, 300, 140),
+            relative_rect=Rect(500, 900, 350, 100),
             text="Start",
             manager=self.__manager,
         )
         self.__start_button_diff = int(self.__start_button.relative_rect.y - center_y)
 
         self.__exit_button = UIButton(
-            relative_rect=Rect(500, 1100, 300, 140),
+            relative_rect=Rect(500, 1100, 350, 100),
             text="Exit",
             manager=self.__manager
         )
