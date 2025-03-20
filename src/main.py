@@ -7,10 +7,6 @@ from game_state import GameState
 from ui.typing_window import TypingWindow
 from ui.start_window import StartWindow
 import ctypes
-import logging
-
-# Настройка логирования
-logging.basicConfig(level=logging.DEBUG)
 
 # Set process DPI awareness. Use 1 for "System DPI Awareness", or 2 for "Per-Monitor DPI Awareness"
 ctypes.windll.shcore.SetProcessDpiAwareness(1)

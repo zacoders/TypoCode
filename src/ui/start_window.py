@@ -12,11 +12,6 @@ from generators.generator_abc import GeneratorABC
 
 
 class StartWindow:
-    BUTTON_WIDTH = 0.2
-    BUTTON_HEIGHT = 0.08
-
-    SELECTION_LIST_WIDTH = 0.4
-    SELECTION_LIST_HEIGHT = 0.4
 
     def __init__(self, game_state: GameState, manager: UIManager, screen_size: Tuple[int, int]):
         self.__game_state = game_state
