@@ -1,5 +1,6 @@
 
 from abc import ABC, abstractmethod
+from generators.typing_level import TypingLevel
 from typing_errors import TypingErrors
 import random
 
@@ -17,7 +18,7 @@ class GeneratorABC(ABC):
 
     _words = []
 
-    def get_text(self, length: int, errors: TypingErrors) -> str:
+    def get_text(self, length: int, errors: TypingErrors, typing_level: int) -> str:
         text = ''
         while True:
             total_len = len(text)
@@ -31,17 +32,17 @@ class GeneratorABC(ABC):
             error_letters = errors.get_error_letters()
 
             if max_word_len == 0:
-                word = self._get_random_word(words=self._words, max_length=1)
+                word = self._get_random_word(words=self._words, max_length=1, typing_level)
                 text += word
                 continue
-            elif word_type < 0.1:
+            elif word_type < 0.1 and typing_level >= TypingLevel.NUMBERS_5.value:
                 word = self._get_random_number(max_word_len)
             elif word_type < 0.5 and len(error_words) > 0:
                 word = self._get_random_word(words=error_words, max_length=max_word_len)
                 if not word:
                     continue
                 errors.del_word(word)
-            elif word_type < 0.75 and len(error_words) == 0 and len(error_letters) > 0:
+            elif word_type < 0.75 and len(error_letters) > 0:
                 rand_letter = random.choice(error_letters)
                 word = self._get_random_word_with_letter(words=self._words, max_length=max_word_len)
                 if not word:
@@ -55,13 +56,13 @@ class GeneratorABC(ABC):
 
         return text
 
-    def _get_random_word(self, words: list[str], max_length: int = 999):
+    def _get_random_word(self, words: list[str], max_length: int, typing_level: int):
         right_words = list(filter(lambda w: len(w) <= max_length, words))
         if len(right_words) == 0:
             return ''
         return random.choice(list(right_words))
 
-    def _get_random_word_with_letter(self, words: list[str], max_length: int = 999, letter: str = ''):
+    def _get_random_word_with_letter(self, words: list[str], max_length: int, letter: str = ''):
         right_words = filter(
             lambda w: len(w) <= max_length and letter in w,
             words
