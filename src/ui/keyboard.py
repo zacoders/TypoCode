@@ -15,6 +15,17 @@ class Keyboard:
     LINE_KEYS_COUNT = 15
     SIZE = 0.7  # 70% of the screen
 
+    RED = (180, 100, 102)
+    YELLOW = (190, 190, 100)
+    GREEN = (100, 180, 105)
+    BLUE = (110, 190, 190)
+    PINK = (190, 130, 185)
+    PURPLE = (130, 125, 190)
+    GREY = (115, 115, 115)
+
+    REGULAR_BG_KEY_COLOR = (30, 30, 30)
+    HIGHLIGHTED_BG_KEY_COLOR = (0, 117, 45)
+
     def __init__(self, language: KeyboardLanguage):
         self.__x = 0
         self.__y = 0
@@ -24,6 +35,22 @@ class Keyboard:
         self.__screen_width = -1
         self.__language = language
         self.__is_upper_case = False
+
+        self.__color_layout = [
+            self.RED, self.RED, self.RED, self.YELLOW, self.GREEN, self.BLUE, self.BLUE,
+            self.PINK, self.PINK, self.RED, self.YELLOW, self.GREEN, self.GREEN, self.GREEN,  # First row
+
+            self.RED, self.RED, self.YELLOW, self.GREEN, self.BLUE, self.BLUE, self.PINK,
+            self.PINK, self.RED, self.YELLOW, self.GREEN, self.GREEN, self.GREEN, self.GREEN,  # Second row
+
+            self.RED, self.RED, self.YELLOW, self.GREEN, self.BLUE, self.BLUE, self.PINK,
+            self.PINK, self.RED, self.YELLOW, self.GREEN, self.GREEN, self.GREEN,  # Third row
+
+            self.RED, self.RED, self.YELLOW, self.GREEN, self.BLUE, self.BLUE,
+            self.PINK, self.PINK, self.RED, self.YELLOW, self.GREEN, self.GREEN,  # Fourth row
+
+            self.GREY, self.GREY, self.GREY, self.PURPLE, self.GREY, self.GREY, self.GREY, self.GREY  # Space bar row
+        ]
 
         self.__eng_layout_uppercase = [
             [("~", 1), ("!", 1), ("@", 1), ("#", 1), ("$", 1), ("%", 1), ("^", 1),
@@ -170,9 +197,10 @@ class Keyboard:
 
         is_upper = is_capslock ^ is_shift
 
-        for key, rect in self.__keys.items():
-            bg_color = (30, 30, 30) if key != self.__highlighted_key else (35, 56, 35)
+        for (key, rect), color in zip(self.__keys.items(), self.__color_layout):
+            bg_color = self.REGULAR_BG_KEY_COLOR if key != self.__highlighted_key else self.HIGHLIGHTED_BG_KEY_COLOR
             pygame.draw.rect(screen, bg_color, rect, border_radius=5)
+            pygame.draw.rect(screen, color, rect, 4)
 
             if is_upper and len(key) == 1 and key.isalpha():
                 key_str = key.upper()
