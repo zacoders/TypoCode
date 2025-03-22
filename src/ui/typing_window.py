@@ -3,6 +3,7 @@ from pygame.event import Event
 from common.time_provider import TimeProvider
 from stats.line_stats_calc import LineStatsCalc
 from typing_errors import TypingErrors
+from pygame.key import ScancodeWrapper
 from game_state import GameState
 from ui.font_calc import FontCalc
 from ui.input_line import InputLine
@@ -32,9 +33,9 @@ class TypingWindow:
         )
         self.__font_calc = FontCalc(font_file_path)
 
-    def update(self, events: list[Event], screen_height: int, screen_width: int):
+    def update(self, events: list[Event], keys: ScancodeWrapper, screen_height: int, screen_width: int):
         self.__font_calc.update(self.__text_len, screen_width)
-        self.__keyboard.update(screen_height, screen_width)
+        self.__keyboard.update(screen_height, screen_width, keys)
         self.__input_line.update(events)
         self.__line_stats_calc.update(screen_height, screen_width)
 
