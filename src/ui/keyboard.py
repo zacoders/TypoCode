@@ -2,7 +2,7 @@
 import pygame
 from pygame.event import Event
 from pygame.key import ScancodeWrapper
-from common import is_capslock_on, is_shift_pressed
+from common.common import is_capslock_on, is_shift_pressed
 from generators.keyboard_lang import KeyboardLanguage
 from random import randint
 
@@ -43,7 +43,7 @@ class Keyboard:
         ]
 
         self.__eng_layout_lowercase = [
-            [("~", 1), ("1", 1), ("2", 1), ("3", 1), ("4", 1), ("5", 1), ("6", 1),
+            [("`", 1), ("1", 1), ("2", 1), ("3", 1), ("4", 1), ("5", 1), ("6", 1),
              ("7", 1), ("8", 1), ("9", 1), ("0", 1), ("-", 1), ("=", 1), ("<--", 2)],
 
             [("Tab", 1.5), ("q", 1), ("w", 1), ("e", 1), ("r", 1), ("t", 1), ("y", 1),
@@ -60,7 +60,7 @@ class Keyboard:
         ]
 
         self.__rus_layout_uppercase = [
-            [("~", 1), ("!", 1), ('"', 1), ("№", 1), (";", 1), ("%", 1), (":", 1),
+            [("ё", 1), ("!", 1), ('"', 1), ("№", 1), (";", 1), ("%", 1), (":", 1),
              ("?", 1), ("*", 1), ("(", 1), (")", 1), ("_", 1), ("+", 1), ("<--", 2)],
 
             [("Tab", 1.5), ("й", 1), ("ц", 1), ("у", 1), ("к", 1), ("е", 1), ("н", 1),
@@ -77,7 +77,7 @@ class Keyboard:
         ]
 
         self.__rus_layout_lowercase = [
-            [("~", 1), ("1", 1), ("2", 1), ("3", 1), ("4", 1), ("5", 1), ("6", 1),
+            [("ё", 1), ("1", 1), ("2", 1), ("3", 1), ("4", 1), ("5", 1), ("6", 1),
              ("7", 1), ("8", 1), ("9", 1), ("0", 1), ("-", 1), ("=", 1), ("<--", 2)],
 
             [("Tab", 1.5), ("й", 1), ("ц", 1), ("у", 1), ("к", 1), ("е", 1), ("н", 1),

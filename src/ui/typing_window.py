@@ -4,7 +4,6 @@ from common.time_provider import TimeProvider
 from stats.line_stats_calc import LineStatsCalc
 from typing_errors import TypingErrors
 from pygame.key import ScancodeWrapper
-from errors import Errors
 from game_state import GameState
 from ui.font_calc import FontCalc
 from ui.input_line import InputLine
