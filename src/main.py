@@ -2,7 +2,7 @@ import sys
 import pygame
 from pygame.key import ScancodeWrapper
 import pygame_gui
-from common import update_events
+from common.common import update_events
 from consts import BG_COLOR, FPS
 from game_state import GameState
 from ui.typing_window import TypingWindow
@@ -19,13 +19,18 @@ pygame.init()
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=100)
 
 info = pygame.display.Info()
-screen_size = info.current_w - info.current_w * 0.3, info.current_h - info.current_h * 0.3
+screen_size = info.current_w * 0.7, info.current_h * 0.7
 
 screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
 pygame.display.set_caption("TypoCode")
 
-manager = pygame_gui.UIManager((screen.get_width(), screen.get_height()), theme_path="src/ui/theme.json")
+start_screen_size = screen.size
 
+manager = pygame_gui.UIManager(
+    start_screen_size,
+    enable_live_theme_updates=True,
+    theme_path="src/ui/theme.json"
+)
 
 game_state = GameState()
 
@@ -42,15 +47,18 @@ while not game_state.is_started:
 
     update_events(events, keys, screen)
 
+    time_delta = clock.tick(FPS) / 1000.0
+
+    start_window.update(events, screen.get_width(), screen.get_height())
+
+    if start_screen_size != screen.size:
+        manager.set_window_resolution(screen.size)
+
     for event in events:
         manager.process_events(event)
 
-    time_delta = clock.tick(FPS) / 1000.0
-
-    start_window.update(events)
-
-    manager.update(time_delta)
     manager.draw_ui(screen)
+    manager.update(time_delta)
 
     pygame.display.update()
     pygame.display.flip()

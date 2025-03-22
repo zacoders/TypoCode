@@ -1,6 +1,6 @@
 
 from abc import ABC, abstractmethod
-from errors import Errors
+from typing_errors import TypingErrors
 import random
 
 from generators.keyboard_lang import KeyboardLanguage
@@ -17,7 +17,7 @@ class GeneratorABC(ABC):
 
     _words = []
 
-    def get_text(self, length: int, errors: Errors) -> str:
+    def get_text(self, length: int, errors: TypingErrors) -> str:
         text = ''
         while True:
             total_len = len(text)
