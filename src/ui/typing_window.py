@@ -1,7 +1,8 @@
 import pygame
 from pygame.event import Event
 from common.time_provider import TimeProvider
-from stats.line_stats_calc import LineStatsCalc
+from services.line_stats_calc import LineStatsCalc
+from services.mentor import Mentor
 from typing_errors import TypingErrors
 from pygame.key import ScancodeWrapper
 from game_state import GameState
@@ -21,15 +22,16 @@ class TypingWindow:
         time_provider = TimeProvider()
         self.__line_stats_calc = LineStatsCalc(time_provider)
         typing_errors = TypingErrors()
-
+        mentor = Mentor()
         self.__keyboard = Keyboard(language=text_generator.keyboard_lang)
-        self.__random_line = RandomLine(self.__text_len, typing_errors, text_generator, font_file_path)
+        self.__random_line = RandomLine(self.__text_len, typing_errors, text_generator, font_file_path, mentor)
         self.__input_line = InputLine(
             random_line=self.__random_line,
             keyboard=self.__keyboard,
             typing_errors=typing_errors,
             font_file_path=font_file_path,
             line_stats_calc=self.__line_stats_calc,
+            mentor=mentor,
             game_state=game_state
         )
         self.__font_calc = FontCalc(font_file_path)
