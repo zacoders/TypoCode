@@ -1,6 +1,7 @@
 from pygame.font import Font
 from pygame.event import Event
 import pygame
+from services.keyboard_service import KeyboardService
 from stats.line_stats_calc import LineStatsCalc
 from typing_errors import TypingErrors
 from ui.keyboard import Keyboard
@@ -49,6 +50,8 @@ class InputLine:
                                       pygame.K_RETURN,
                                       pygame.K_BACKSPACE]
 
+        self.__keyboard_service = KeyboardService()
+
     def __get_word(self, pos: int) -> str:
         words = self.__random_line.get_text().split()
         count = 0
@@ -84,12 +87,15 @@ class InputLine:
             if not self.__text:
                 self.__line_stats_calc.start()
 
-            if event.unicode == current_char:
+            unicode_char = self.__keyboard_service.get_char_from_key(event.scancode)
+            print(unicode_char)
+
+            if unicode_char == current_char:
                 self.__type_sound.play()
                 self.__line_stats_calc.symbol_typed(is_error=False)
-                self.__text += event.unicode
+                self.__text += unicode_char
             else:
-                if event.unicode:
+                if unicode_char:
                     word = self.__get_word(current_char_pos)
                     self.__typing_errors.add_errors(current_char, word)
                 self.__line_stats_calc.symbol_typed(is_error=True)
