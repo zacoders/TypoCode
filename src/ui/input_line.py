@@ -1,7 +1,8 @@
 from pygame.font import Font
 from pygame.event import Event
 import pygame
-from stats.line_stats_calc import LineStatsCalc
+from services.line_stats_calc import LineStatsCalc
+from services.mentor import Mentor
 from typing_errors import TypingErrors
 from ui.keyboard import Keyboard
 from ui.random_line import RandomLine
@@ -15,12 +16,14 @@ class InputLine:
         keyboard: Keyboard,
         typing_errors: TypingErrors,
         font_file_path: str,
-        line_stats_calc: LineStatsCalc
+        line_stats_calc: LineStatsCalc,
+        mentor: Mentor
     ):
 
         self.__random_line = random_line
         self.__keyboard = keyboard
         self.__line_stats_calc = line_stats_calc
+        self.__mentor = mentor
 
         self.__text = ''
         self.__cursor_symbol = "\u258F"
@@ -97,6 +100,7 @@ class InputLine:
 
             if len(self.__text) == self.__random_line.text_len:
                 self.__line_stats_calc.stop()
+                self.__mentor.update_stats(self.__line_stats_calc.get_stats())
 
         # print(self.__line_stats_calc.get_stats())
 

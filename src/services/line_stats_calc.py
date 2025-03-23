@@ -2,7 +2,7 @@
 
 import pygame
 from common.time_provider import TimeProvider
-from stats.line_stats import LineStats
+from services.line_stats import LineStats
 from pygame.typing import RectLike
 
 

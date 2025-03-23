@@ -2,20 +2,27 @@
 from pygame.font import Font
 import pygame
 
+from services.mentor import Mentor
 from typing_errors import TypingErrors
 from generators.generator_abc import GeneratorABC
 
 
 class RandomLine:
 
-    def __init__(self, text_len: int, errors: TypingErrors, text_generator: GeneratorABC, font_file_path: str):
-
+    def __init__(
+        self,
+        text_len: int,
+        errors: TypingErrors,
+        text_generator: GeneratorABC,
+        font_file_path: str,
+        mentor: Mentor
+    ):
         self.__text_len = text_len
-
         self.__errors = errors
+        self.__mentor = mentor
 
         self.__text_generator = text_generator
-        self.__text = self.__text_generator.get_text(self.__text_len, self.__errors)
+        self.__text = ''
         self.__text_color = (155, 255, 155)
         self.__text_line_color = (0, 0, 0)
 
@@ -53,7 +60,7 @@ class RandomLine:
         return self.__text
 
     def next_line(self):
-        self.__text = self.__text_generator.get_text(self.__text_len, self.__errors)
+        self.__text = self.__text_generator.get_text(self.__text_len, self.__errors, self.__mentor.typing_level)
 
     def set_errors(self, errors: TypingErrors):
         self.__errors = errors
