@@ -95,7 +95,6 @@ class InputLine:
                 self.__line_stats_calc.start()
 
             unicode_char = self.__keyboard_service.get_char_from_key(event.scancode, self.__game_state.generator.keyboard_lang)
-            print(unicode_char)
 
             if unicode_char == current_char:
                 self.__type_sound.play()
@@ -111,8 +110,6 @@ class InputLine:
             if len(self.__text) == self.__random_line.text_len:
                 self.__line_stats_calc.stop()
                 self.__mentor.update_stats(self.__line_stats_calc.get_stats())
-
-        # print(self.__line_stats_calc.get_stats())
 
     def draw(self, screen: pygame.Surface, font_size: int, text_width: int):
         line_rect = pygame.Rect(
