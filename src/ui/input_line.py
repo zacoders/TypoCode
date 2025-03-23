@@ -1,6 +1,7 @@
 from pygame.font import Font
 from pygame.event import Event
 import pygame
+from game_state import GameState
 from services.keyboard_service import KeyboardService
 from stats.line_stats_calc import LineStatsCalc
 from typing_errors import TypingErrors
@@ -16,8 +17,11 @@ class InputLine:
         keyboard: Keyboard,
         typing_errors: TypingErrors,
         font_file_path: str,
-        line_stats_calc: LineStatsCalc
+        line_stats_calc: LineStatsCalc,
+        game_state: GameState
     ):
+
+        self.__game_state = game_state
 
         self.__random_line = random_line
         self.__keyboard = keyboard
@@ -87,7 +91,7 @@ class InputLine:
             if not self.__text:
                 self.__line_stats_calc.start()
 
-            unicode_char = self.__keyboard_service.get_char_from_key(event.scancode)
+            unicode_char = self.__keyboard_service.get_char_from_key(event.scancode, self.__game_state.generator.keyboard_lang)
             print(unicode_char)
 
             if unicode_char == current_char:

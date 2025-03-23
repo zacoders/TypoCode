@@ -29,7 +29,8 @@ class TypingWindow:
             keyboard=self.__keyboard,
             typing_errors=typing_errors,
             font_file_path=font_file_path,
-            line_stats_calc=self.__line_stats_calc
+            line_stats_calc=self.__line_stats_calc,
+            game_state=game_state
         )
         self.__font_calc = FontCalc(font_file_path)
 

@@ -2,6 +2,7 @@
 
 import pygame
 from common.common import is_capslock_on, is_shift_pressed
+from generators.keyboard_lang import KeyboardLanguage
 
 
 class KeyboardService:
@@ -43,27 +44,24 @@ class KeyboardService:
         56: ('.', ','), 44: (' ', ' '), 53: ('ё', 'Ё')
     }
 
-    def get_char_from_key(self, scancode: int) -> str:
-        """
-            Преобразует код клавиши в символ в зависимости от языка раскладки.
-
-            :param event: pygame.KEYDOWN или pygame.KEYUP событие
-            :param lang: 'en' для английского, 'ru' для русского
-            :return: символ нажатой клавиши
-            """
-        print(f'{scancode=}')
+    def get_char_from_key(self, scancode: int, keyboard_lang: KeyboardLanguage) -> str:
         is_capslock = is_capslock_on()
         is_shift = is_shift_pressed()
-
         is_upper = is_capslock ^ is_shift
 
         char = ''
-        if scancode in self.KEYMAP_EN:
+        keymap = {}
+
+        if keyboard_lang == KeyboardLanguage.ENGLISH:
+            keymap = self.KEYMAP_EN
+        elif keyboard_lang == KeyboardLanguage.RUSSIAN:
+            keymap = self.KEYMAP_RU
+
+        if scancode in keymap:
             if is_shift:
-                char = self.KEYMAP_EN[scancode][1]
+                char = keymap[scancode][1]
             else:
-                char = self.KEYMAP_EN[scancode][0]
-            print(f'{char.upper()=}, {char.lower()=}')
+                char = keymap[scancode][0]
             if is_upper:
                 return char.upper()
             else:
