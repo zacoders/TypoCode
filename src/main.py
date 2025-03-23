@@ -2,7 +2,7 @@ import sys
 import pygame
 from pygame.key import ScancodeWrapper
 import pygame_gui
-from common.common import update_events
+from common.common import get_resource_path, update_events
 from consts import BG_COLOR, FPS
 from game_state import GameState
 from ui.typing_window import TypingWindow
@@ -29,7 +29,7 @@ start_screen_size = screen.size
 manager = pygame_gui.UIManager(
     start_screen_size,
     enable_live_theme_updates=True,
-    theme_path="src/ui/theme.json"
+    theme_path=get_resource_path("src/_content/theme.json")
 )
 
 game_state = GameState()

@@ -3,7 +3,9 @@
         "**/__pycache__": true,
         "**/.pytest_cache": true,
         "**/.vs": true,
-        "**/.venv": true
+        "**/.venv": true,
+        "**/build": true,
+        "**/dist": true
     },
     "[python]": {
         "editor.defaultFormatter": "ms-python.autopep8",

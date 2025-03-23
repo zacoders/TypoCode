@@ -1,5 +1,6 @@
 import pygame
 from pygame.event import Event
+from common.common import get_resource_path
 from common.time_provider import TimeProvider
 from services.line_stats_calc import LineStatsCalc
 from services.mentor import Mentor
@@ -15,7 +16,7 @@ from ui.random_line import RandomLine
 class TypingWindow:
 
     def __init__(self, game_state: GameState):
-        font_file_path = "src/_content/fonts/UbuntuMono-Regular.ttf"
+        font_file_path = get_resource_path("src/_content/fonts/UbuntuMono-Regular.ttf")
         self.__text_len = 64
 
         text_generator = game_state.generator

@@ -1,3 +1,4 @@
+from common.common import get_resource_path
 from generators.generator_abc import GeneratorABC
 from generators.keyboard_lang import KeyboardLanguage
 
@@ -21,5 +22,6 @@ class RussianGenerator(GeneratorABC):
     ]
 
     def __init__(self) -> None:
-        with open("src/_content/dictionaries/russian.txt", "r", encoding="utf-8") as f:
+        file_name = get_resource_path("src/_content/dictionaries/russian.txt")
+        with open(file_name, "r", encoding="utf-8") as f:
             self._words = f.read().split()
