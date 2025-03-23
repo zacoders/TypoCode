@@ -1,6 +1,8 @@
 from pygame.font import Font
 from pygame.event import Event
 import pygame
+from game_state import GameState
+from services.keyboard_service import KeyboardService
 from services.line_stats_calc import LineStatsCalc
 from services.mentor import Mentor
 from typing_errors import TypingErrors
@@ -17,8 +19,11 @@ class InputLine:
         typing_errors: TypingErrors,
         font_file_path: str,
         line_stats_calc: LineStatsCalc,
+        game_state: GameState,
         mentor: Mentor
     ):
+
+        self.__game_state = game_state
 
         self.__random_line = random_line
         self.__keyboard = keyboard
@@ -51,6 +56,8 @@ class InputLine:
                                       pygame.K_RSHIFT,
                                       pygame.K_RETURN,
                                       pygame.K_BACKSPACE]
+
+        self.__keyboard_service = KeyboardService()
 
     def __get_word(self, pos: int) -> str:
         words = self.__random_line.get_text().split()
@@ -87,12 +94,14 @@ class InputLine:
             if not self.__text:
                 self.__line_stats_calc.start()
 
-            if event.unicode == current_char:
+            unicode_char = self.__keyboard_service.get_char_from_key(event.scancode, self.__game_state.generator.keyboard_lang)
+
+            if unicode_char == current_char:
                 self.__type_sound.play()
                 self.__line_stats_calc.symbol_typed(is_error=False)
-                self.__text += event.unicode
+                self.__text += unicode_char
             else:
-                if event.unicode:
+                if unicode_char:
                     word = self.__get_word(current_char_pos)
                     self.__typing_errors.add_errors(current_char, word)
                 self.__line_stats_calc.symbol_typed(is_error=True)
@@ -101,8 +110,6 @@ class InputLine:
             if len(self.__text) == self.__random_line.text_len:
                 self.__line_stats_calc.stop()
                 self.__mentor.update_stats(self.__line_stats_calc.get_stats())
-
-        # print(self.__line_stats_calc.get_stats())
 
     def draw(self, screen: pygame.Surface, font_size: int, text_width: int):
         line_rect = pygame.Rect(
