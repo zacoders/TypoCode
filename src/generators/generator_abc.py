@@ -19,12 +19,12 @@ class GeneratorABC(ABC):
     _words = []
 
     _level_symbols = [
-        set('asdfghjkl '),
-        set('asdfghjkl qwertyuiop'),
-        set('asdfghjkl qwertyuiop zxcvbnm'),
-        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM'),
-        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM 1234567890'),
-        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM 1234567890 `~!@#$%^&*()-_=+[]{}\\|;:",<.>/?' + "'")
+        set('asdfghjkl '),  # level 0
+        set('asdfghjkl qwertyuiop'),  # level 1
+        set('asdfghjkl qwertyuiop zxcvbnm'),  # level 2
+        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM'),  # level 3
+        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM 1234567890'),  # level 4
+        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM 1234567890 `~!@#$%^&*()-_=+[]{}\\|;:",<.>/?' + "'")  # level 5
     ]
 
     def get_text(self, length: int, errors: TypingErrors, typing_level: int) -> str:
@@ -44,7 +44,7 @@ class GeneratorABC(ABC):
                 word = self._get_random_word(words=self._words, max_length=1, typing_level=typing_level)
                 text += word
                 continue
-            elif word_type < 0.1 and typing_level >= TypingLevel.NUMBERS_5.value:
+            elif word_type < 0.1 and typing_level >= TypingLevel.NUMBERS_4.value:
                 word = self._get_random_number(max_word_len)
             elif word_type < 0.5 and len(error_words) > 0:
                 word = self._get_random_word(words=error_words, max_length=max_word_len, typing_level=typing_level)

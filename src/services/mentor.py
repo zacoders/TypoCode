@@ -12,7 +12,20 @@ class Mentor:
 
     def update_stats(self, stats: LineStats):
 
-        if self.__typing_level >= 5:
+        if stats.error_count > 3:
             return
 
-        self.__typing_level += 1
+        if self.__typing_level >= 5:
+            self.__typing_level = 5
+            return
+
+        if self.__typing_level == 0:
+            if stats.speed_symbols_per_minute < 100:
+                return
+            if stats.speed_symbols_per_minute < 150:
+                self.__typing_level += 1
+                return
+            self.__typing_level += 2
+        else:
+            if stats.speed_symbols_per_minute >= 100:
+                self.__typing_level += 1
