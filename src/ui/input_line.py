@@ -31,7 +31,8 @@ class InputLine:
         self.__mentor = mentor
 
         self.__text = ''
-        self.__cursor_symbol = "\u258F"
+        self.__error_symbol = ''
+        self.__cursor_symbol = "_"
 
         self.__prev_font_size = 100
 
@@ -94,18 +95,21 @@ class InputLine:
             if not self.__text:
                 self.__line_stats_calc.start()
 
-            unicode_char = self.__keyboard_service.get_char_from_key(event.scancode, self.__game_state.generator.keyboard_lang)
+            unicode_char = self.__keyboard_service.get_char_from_key(
+                event.scancode, self.__game_state.generator.keyboard_lang)
 
             if unicode_char == current_char:
                 self.__type_sound.play()
                 self.__line_stats_calc.symbol_typed(is_error=False)
                 self.__text += unicode_char
+                self.__error_symbol = ''
             else:
                 if unicode_char:
                     word = self.__get_word(current_char_pos)
                     self.__typing_errors.add_errors(current_char, word)
                 self.__line_stats_calc.symbol_typed(is_error=True)
                 self.__error_sound.play()
+                self.__error_symbol = unicode_char
 
             if len(self.__text) == self.__random_line.text_len:
                 self.__line_stats_calc.stop()
@@ -124,10 +128,14 @@ class InputLine:
             self.__font = Font(self.__font_file_path, font_size)
             self.__prev_font_size = font_size
 
-        text = self.__font.render(self.__text + self.__cursor_symbol, True, self.__text_color)
         diff_x = (screen.get_width() - text_width) / 2
         text_pos = (diff_x, line_rect.y)
-        screen.blit(text, text_pos)
-
-    def get_errors(self):
-        return self.__typing_errors
+        if self.__error_symbol:
+            cursor = self.__error_symbol if self.__error_symbol != ' ' else self.__cursor_symbol
+            text = self.__font.render(self.__text + cursor, True, (200, 0, 0))
+            screen.blit(text, text_pos)
+            text2 = self.__font.render(self.__text, True, self.__text_color)
+            screen.blit(text2, text_pos)
+        else:
+            text = self.__font.render(self.__text + self.__cursor_symbol, True, self.__text_color)
+            screen.blit(text, text_pos)
