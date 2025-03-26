@@ -23,7 +23,7 @@ class RandomLine:
 
         self.__text_generator = text_generator
         self.__text = ''
-        self.__text_color = (75, 207, 81)
+        self.__text_color = (155, 255, 155)
         self.__text_line_color = (0, 0, 0)
 
         self.__prev_font_size = 100
