@@ -59,7 +59,7 @@ class StartWindow:
                 item[gen.display_name] = gen
         return item
 
-    def show(self, screen: Surface, start_screen_size: Tuple[int, int], clock: Clock):
+    def show(self, screen: Surface, start_screen_size: Tuple[int, int], clock: Clock, min_screen_size: Tuple[int, int]):
 
         while not self.__game_state.is_started:
             screen.fill(BG_COLOR)
@@ -67,7 +67,7 @@ class StartWindow:
             events = pygame.event.get()
             keys = pygame.key.get_pressed()
 
-            update_events(events, self.__game_state, keys, screen)
+            update_events(events, self.__game_state, keys, screen, min_screen_size)
 
             time_delta = clock.tick(FPS) / 1000.0
 

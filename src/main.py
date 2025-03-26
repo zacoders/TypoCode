@@ -28,6 +28,7 @@ icon = pygame.image.load("./src/_content/icons/keyboard_32x32.png")
 pygame.display.set_icon(icon)
 
 start_screen_size = screen.size
+min_screen_size = (1280, 800)
 
 manager = pygame_gui.UIManager(
     start_screen_size,
@@ -42,10 +43,10 @@ clock = pygame.time.Clock()
 
 while True:
     start_window = StartWindow(game_state, manager)
-    start_window.show(screen, start_screen_size, clock)
+    start_window.show(screen, start_screen_size, clock, min_screen_size)
 
     typing_window = TypingWindow(game_state)
-    typing_window.show(screen, clock)
+    typing_window.show(screen, clock, min_screen_size)
 
     pygame.display.update()
     pygame.display.flip()

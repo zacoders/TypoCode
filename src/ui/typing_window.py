@@ -1,3 +1,4 @@
+from typing import Tuple
 import pygame
 from pygame.time import Clock
 from pygame.event import Event
@@ -51,7 +52,7 @@ class TypingWindow:
         self.__keyboard.draw(screen)
         self.__line_stats_calc.draw(screen)
 
-    def show(self, screen: pygame.Surface, clock: Clock):
+    def show(self, screen: pygame.Surface, clock: Clock, min_screen_size: Tuple[int, int]):
 
         while self.__game_state.is_started:
             screen.fill(BG_COLOR)
@@ -60,7 +61,7 @@ class TypingWindow:
 
             events = pygame.event.get()
 
-            update_events(events, self.__game_state, keys, screen)
+            update_events(events, self.__game_state, keys, screen, min_screen_size)
 
             self.update(events, keys, screen.get_height(), screen.get_width())
             self.draw(screen)
