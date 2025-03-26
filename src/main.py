@@ -24,6 +24,9 @@ screen_size = info.current_w * 0.7, info.current_h * 0.7
 screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
 pygame.display.set_caption("TypoCode")
 
+icon = pygame.image.load("./src/_content/icons/keyboard_32x32.png")
+pygame.display.set_icon(icon)
+
 start_screen_size = screen.size
 
 manager = pygame_gui.UIManager(
