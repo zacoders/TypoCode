@@ -9,16 +9,14 @@ from pygame_gui.elements import UISelectionList
 from common.common import update_events
 from consts import BG_COLOR, FPS
 from game_state import GameState
-from pygame_gui import UIManager
 import generators
 from generators.generator_abc import GeneratorABC
 
 
 class StartWindow:
 
-    def __init__(self, game_state: GameState, manager: UIManager):
+    def __init__(self, game_state: GameState):
         self.__game_state = game_state
-        self.__manager = manager
 
         self.__screen_width = 0
         self.__screen_height = 0
@@ -26,8 +24,20 @@ class StartWindow:
         self.__generators_list_items = self.__gens_list_items()
         self.__generator_names = list(self.__generators_list_items.keys())
 
+        self.__reload_objects((self.__screen_width, self.__screen_height))
+
+    def __reload_objects(self, screen_size: Tuple[int, int]):
+        self.__manager = pygame_gui.UIManager(
+            screen_size,
+            enable_live_theme_updates=True,
+            theme_path="src/ui/theme.json"
+        )
+
+        pos_x = screen_size[0] // 2 - 600  # selection_list_width // 2
+        pos_y = screen_size[1] // 2 - 360  # selection_list_height // 2
+
         self.__selection_list = UISelectionList(
-            relative_rect=Rect(200, 200, 1200, 720),
+            relative_rect=Rect(pos_x, pos_y, 1200, 720),
             item_list=self.__generator_names,
             manager=self.__manager,
             default_selection=self.__generator_names[0]
@@ -37,12 +47,7 @@ class StartWindow:
         if self.__screen_height != screen_height or self.__screen_width != screen_width:
             self.__screen_height = screen_height
             self.__screen_width = screen_width
-
-            pos_x = screen_width // 2 - self.__selection_list.relative_rect.width // 2
-            pos_y = screen_height // 2 - self.__selection_list.relative_rect.height // 2
-
-            self.__selection_list.set_position((pos_x, pos_y))
-            self.__selection_list.rebuild()
+            self.__reload_objects((self.__screen_width, self.__screen_height))
 
         for event in events:
             if event.type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
@@ -69,8 +74,6 @@ class StartWindow:
 
             update_events(events, self.__game_state, keys, screen, min_screen_size)
 
-            time_delta = clock.tick(FPS) / 1000.0
-
             self.__update(events, screen.get_width(), screen.get_height())
 
             if start_screen_size != screen.size:
@@ -80,6 +83,8 @@ class StartWindow:
                 self.__manager.process_events(event)
 
             self.__manager.draw_ui(screen)
+
+            time_delta = clock.tick(FPS) / 1000.0
             self.__manager.update(time_delta)
 
             pygame.display.update()

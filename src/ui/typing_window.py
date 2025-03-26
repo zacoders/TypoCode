@@ -57,8 +57,7 @@ class TypingWindow:
         while self.__game_state.is_started:
             screen.fill(BG_COLOR)
 
-            keys: ScancodeWrapper = pygame.key.get_pressed()
-
+            keys = pygame.key.get_pressed()
             events = pygame.event.get()
 
             update_events(events, self.__game_state, keys, screen, min_screen_size)

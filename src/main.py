@@ -30,19 +30,13 @@ pygame.display.set_icon(icon)
 start_screen_size = screen.size
 min_screen_size = (1280, 800)
 
-manager = pygame_gui.UIManager(
-    start_screen_size,
-    enable_live_theme_updates=True,
-    theme_path="src/ui/theme.json"
-)
-
 game_state = GameState()
 
 clock = pygame.time.Clock()
 
 
 while True:
-    start_window = StartWindow(game_state, manager)
+    start_window = StartWindow(game_state)
     start_window.show(screen, start_screen_size, clock, min_screen_size)
 
     typing_window = TypingWindow(game_state)
