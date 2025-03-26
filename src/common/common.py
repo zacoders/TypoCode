@@ -4,13 +4,18 @@ from pygame.event import Event
 from pygame import Surface
 import pygame
 
+from game_state import GameState
 
-def update_events(events: List[Event], keys, screen: Surface):
+
+def update_events(events: List[Event], game_state: GameState, keys, screen: Surface):
     screen = screen
     for event in events:
-        if keys[pygame.K_ESCAPE] or event.type == pygame.QUIT:
+        if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        elif keys[pygame.K_ESCAPE]:
+            if game_state.is_started:
+                game_state.is_started = False
         elif event.type == pygame.VIDEORESIZE:
             new_width, new_height = event.w, event.h
             screen = pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
