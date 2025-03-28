@@ -26,7 +26,7 @@ jobs:
 
     - name: Build executable
       run: |
-        pyinstaller --onefile --add-data "_content;src/_content" main.py
+        pyinstaller --onefile --noconsole --add-data "_content;src/_content" --icon=main.ico main.py
       shell: bash
 
     - name: Upload artifact
