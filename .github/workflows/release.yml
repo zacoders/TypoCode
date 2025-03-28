@@ -22,11 +22,11 @@ jobs:
         python-version: '3.11.x'
 
     - name: Install dependencies
-      run: pip install -r requirements.txt pyinstaller
+      run: pip install -r requirements.txt
 
     - name: Build executable
       run: |
-        pyinstaller --onefile --windowed your_script.py
+        pyinstaller --onefile --add-data "_content;src/_content" main.py
       shell: bash
 
     - name: Upload artifact
