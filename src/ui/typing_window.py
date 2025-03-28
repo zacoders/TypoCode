@@ -54,13 +54,16 @@ class TypingWindow:
 
     def show(self, screen: pygame.Surface, clock: Clock, min_screen_size: Tuple[int, int]):
 
-        while self.__game_state.is_started:
+        while True:
             screen.fill(BG_COLOR)
 
             keys = pygame.key.get_pressed()
             events = pygame.event.get()
 
-            update_events(events, self.__game_state, keys, screen, min_screen_size)
+            update_events(events, screen, min_screen_size)
+
+            if keys[pygame.K_ESCAPE]:
+                return
 
             self.update(events, keys, screen.get_height(), screen.get_width())
             self.draw(screen)

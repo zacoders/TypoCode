@@ -1,9 +1,5 @@
 import sys
 import pygame
-from pygame.key import ScancodeWrapper
-import pygame_gui
-from common.common import update_events
-from consts import BG_COLOR, FPS
 from game_state import GameState
 from ui.typing_window import TypingWindow
 from ui.start_window import StartWindow
@@ -41,7 +37,3 @@ while True:
 
     typing_window = TypingWindow(game_state)
     typing_window.show(screen, clock, min_screen_size)
-
-    pygame.display.update()
-    pygame.display.flip()
-    clock.tick(FPS)

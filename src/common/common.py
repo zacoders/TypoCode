@@ -1,38 +1,27 @@
 import sys
 from typing import List, Tuple
 from pygame.event import Event
-from pygame.key import ScancodeWrapper
 from pygame import Surface
 import pygame
-
-from game_state import GameState
 
 
 def update_events(
     events: List[Event],
-    game_state: GameState,
-    keys: ScancodeWrapper,
     screen: Surface,
     min_screen_size: Tuple[int, int]
 ):
     screen = screen
+    min_width = min_screen_size[0]
+    min_height = min_screen_size[1]
+
     for event in events:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        elif keys[pygame.K_ESCAPE]:
-            if game_state.is_started:
-                game_state.is_started = False
         elif event.type == pygame.VIDEORESIZE:
-            new_width, new_height = event.w, event.h
-            if new_width >= min_screen_size[0] and new_height >= min_screen_size[1]:
-                screen = pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
-            elif new_width < min_screen_size[0] and new_height >= min_screen_size[1]:
-                screen = pygame.display.set_mode((min_screen_size[0], new_height), pygame.RESIZABLE)
-            elif new_height < min_screen_size[1] and new_width >= min_screen_size[0]:
-                screen = pygame.display.set_mode((new_width, min_screen_size[1]), pygame.RESIZABLE)
-            else:
-                screen = pygame.display.set_mode((min_screen_size[0], min_screen_size[1]), pygame.RESIZABLE)
+            new_width = event.w if event.w > min_width else min_width
+            new_height = event.h if event.h > min_height else min_height
+            screen = pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
 
 
 def is_capslock_on():

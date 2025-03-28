@@ -1,4 +1,5 @@
 import inspect
+import sys
 from typing import List, Tuple
 from pygame import Rect, Surface
 import pygame
@@ -52,7 +53,6 @@ class StartWindow:
         for event in events:
             if event.type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
                 selected_item = self.__selection_list.get_single_selection()
-                self.__game_state.is_started = True
                 if selected_item and selected_item in self.__generators_list_items:
                     self.__game_state.generator = self.__generators_list_items[selected_item]
 
@@ -66,15 +66,19 @@ class StartWindow:
 
     def show(self, screen: Surface, start_screen_size: Tuple[int, int], clock: Clock, min_screen_size: Tuple[int, int]):
 
-        while not self.__game_state.is_started:
+        while True:
             screen.fill(BG_COLOR)
 
-            events = pygame.event.get()
             keys = pygame.key.get_pressed()
+            events = pygame.event.get()
 
-            update_events(events, self.__game_state, keys, screen, min_screen_size)
+            update_events(events, screen, min_screen_size)
 
             self.__update(events, screen.get_width(), screen.get_height())
+
+            for event in events:
+                if event.type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
+                    return
 
             if start_screen_size != screen.size:
                 self.__manager.set_window_resolution(screen.size)
