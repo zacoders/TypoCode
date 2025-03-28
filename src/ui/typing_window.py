@@ -1,7 +1,10 @@
+from typing import Tuple
 import pygame
+from pygame.time import Clock
 from pygame.event import Event
-from common.common import get_resource_path
+from common.common import update_events, get_resource_path
 from common.time_provider import TimeProvider
+from consts import BG_COLOR, FPS
 from services.line_stats_calc import LineStatsCalc
 from services.mentor import Mentor
 from typing_errors import TypingErrors
@@ -16,10 +19,10 @@ from ui.random_line import RandomLine
 class TypingWindow:
 
     def __init__(self, game_state: GameState):
+        self.__game_state = game_state
         font_file_path = get_resource_path("src/_content/fonts/UbuntuMono-Regular.ttf")
         self.__text_len = 64
-
-        text_generator = game_state.generator
+        text_generator = self.__game_state.generator
         time_provider = TimeProvider()
         self.__line_stats_calc = LineStatsCalc(time_provider)
         typing_errors = TypingErrors()
@@ -33,7 +36,7 @@ class TypingWindow:
             font_file_path=font_file_path,
             line_stats_calc=self.__line_stats_calc,
             mentor=mentor,
-            game_state=game_state
+            game_state=self.__game_state
         )
         self.__font_calc = FontCalc(font_file_path)
 
@@ -48,3 +51,23 @@ class TypingWindow:
         self.__random_line.draw(screen, self.__font_calc.current_font_size(), self.__font_calc.current_text_width())
         self.__keyboard.draw(screen)
         self.__line_stats_calc.draw(screen)
+
+    def show(self, screen: pygame.Surface, clock: Clock, min_screen_size: Tuple[int, int]):
+
+        while True:
+            screen.fill(BG_COLOR)
+
+            keys = pygame.key.get_pressed()
+            events = pygame.event.get()
+
+            update_events(events, screen, min_screen_size)
+
+            if keys[pygame.K_ESCAPE]:
+                return
+
+            self.update(events, keys, screen.get_height(), screen.get_width())
+            self.draw(screen)
+
+            pygame.display.update()
+            pygame.display.flip()
+            clock.tick(FPS)

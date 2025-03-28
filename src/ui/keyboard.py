@@ -1,10 +1,8 @@
 
 import pygame
-from pygame.event import Event
 from pygame.key import ScancodeWrapper
 from common.common import is_capslock_on, is_shift_pressed
 from generators.keyboard_lang import KeyboardLanguage
-from random import randint
 
 
 class Keyboard:

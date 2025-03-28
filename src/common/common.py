@@ -1,19 +1,27 @@
 import os
 import sys
-from typing import List
+from typing import List, Tuple
 from pygame.event import Event
 from pygame import Surface
 import pygame
 
 
-def update_events(events: List[Event], keys, screen: Surface):
+def update_events(
+    events: List[Event],
+    screen: Surface,
+    min_screen_size: Tuple[int, int]
+):
     screen = screen
+    min_width = min_screen_size[0]
+    min_height = min_screen_size[1]
+
     for event in events:
-        if keys[pygame.K_ESCAPE] or event.type == pygame.QUIT:
+        if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
         elif event.type == pygame.VIDEORESIZE:
-            new_width, new_height = event.w, event.h
+            new_width = event.w if event.w > min_width else min_width
+            new_height = event.h if event.h > min_height else min_height
             screen = pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
 
 
