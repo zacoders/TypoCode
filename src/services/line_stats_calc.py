@@ -88,22 +88,22 @@ class LineStatsCalc:
             return
 
         stats = self.get_stats()
-        window_width = 400 * self.__scale
+        window_width = 450 * self.__scale
         diff_x = int(screen.get_width() - window_width)
 
         line_rect = pygame.Rect(
             diff_x,
             100 * self.__scale,
             window_width,
-            self.FONT_SIZE * 1.5 * 2 * self.__scale
+            self.FONT_SIZE * 1.3 * 3 * self.__scale
         )
 
         pygame.draw.rect(screen, (0, 0, 0), line_rect)
 
-        self.__draw_text(screen, (diff_x, line_rect.y), f'Speed: {int(stats.speed_symbols_per_minute)}')
-        self.__draw_text(screen, (diff_x, line_rect.y + self.FONT_SIZE * 1.5 *
+        self.__draw_text(screen, (diff_x * 1.01, line_rect.y * 1.1), f'Speed: {int(stats.speed_symbols_per_minute)}')
+        self.__draw_text(screen, (diff_x * 1.01, line_rect.y * 1.1 + self.FONT_SIZE * 1.2 *
                          self.__scale), f'Errors: {int(stats.error_count)}')
-        self.__draw_text(screen, (diff_x, line_rect.y + 2 * self.FONT_SIZE * 1.5 *
+        self.__draw_text(screen, (diff_x * 1.01, line_rect.y * 1.1 + 2 * self.FONT_SIZE * 1.2 *
                                   self.__scale), f'Rythm: {int(stats.rhythm_percentage)}')
 
     def __draw_text(self, screen: pygame.Surface, pos: RectLike, text: str):
