@@ -1,5 +1,3 @@
-
-
 import pygame
 from common.time_provider import TimeProvider
 from services.line_stats import LineStats
@@ -27,6 +25,8 @@ class LineStatsCalc:
         self.__success_count = 0
         self.__error_count = 0
         self.__end_time_utc = None
+        self.__intervals = []
+        self.__pref_key_press_time = self.__start_time_utc
 
     def stop(self):
         self.__end_time_utc = self.__time_provider.get_utc_time()
@@ -40,16 +40,37 @@ class LineStatsCalc:
             self.__error_count += 1
         else:
             self.__success_count += 1
+            key_press_time = self.__time_provider.get_utc_time()
+            self.__intervals.append((key_press_time - self.__pref_key_press_time).total_seconds())
+            self.__pref_key_press_time = key_press_time
 
     def get_stats(self) -> LineStats:
         end_time = self.__end_time_utc if self.__end_time_utc else self.__time_provider.get_utc_time()
         start_time = self.__start_time_utc if self.__start_time_utc else end_time
         duration_minutes: float = (end_time - start_time).total_seconds() / 60.0
+
+        # Идеальный интервал
+        mean_interval = sum(self.__intervals) / len(self.__intervals)
+
+        # Вычисляем отклонение от идеального интервала для каждого интервала
+        deviations = [abs(interval - mean_interval) / mean_interval for interval in self.__intervals]
+
+        # Рассчитываем среднее отклонение
+        avg_deviation = sum(deviations) / len(deviations)
+
+        # Ритм в процентах (меньше отклонение - выше процент)
+        rhythm_percentage = (1 - avg_deviation) * 100
+
         if duration_minutes == 0:
             speed_symbols_per_minute = 0
         else:
             speed_symbols_per_minute: float = self.__success_count / duration_minutes
-        return LineStats(error_count=self.__error_count, speed_symbols_per_minute=speed_symbols_per_minute)
+
+        return LineStats(
+            error_count=self.__error_count,
+            speed_symbols_per_minute=speed_symbols_per_minute,
+            rhythm_percentage=rhythm_percentage
+        )
 
     def update(self, screen_height: int, screen_width: int):
         if self.__screen_height != screen_height or self.__screen_width != screen_width:
@@ -82,6 +103,8 @@ class LineStatsCalc:
         self.__draw_text(screen, (diff_x, line_rect.y), f'Speed: {int(stats.speed_symbols_per_minute)}')
         self.__draw_text(screen, (diff_x, line_rect.y + self.FONT_SIZE * 1.5 *
                          self.__scale), f'Errors: {int(stats.error_count)}')
+        self.__draw_text(screen, (diff_x, line_rect.y + 2 * self.FONT_SIZE * 1.5 *
+                                  self.__scale), f'Rythm: {int(stats.rhythm_percentage)}')
 
     def __draw_text(self, screen: pygame.Surface, pos: RectLike, text: str):
         speed_text = self.__font.render(text, True, (200, 200, 200))

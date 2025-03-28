@@ -7,3 +7,4 @@ from dataclasses import dataclass
 class LineStats:
     error_count: int
     speed_symbols_per_minute: float
+    rhythm_percentage: float
