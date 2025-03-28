@@ -1,9 +1,5 @@
 import sys
 import pygame
-from pygame.key import ScancodeWrapper
-import pygame_gui
-from common.common import update_events
-from consts import BG_COLOR, FPS
 from game_state import GameState
 from ui.typing_window import TypingWindow
 from ui.start_window import StartWindow
@@ -28,61 +24,16 @@ icon = pygame.image.load("./src/_content/icons/keyboard_32x32.png")
 pygame.display.set_icon(icon)
 
 start_screen_size = screen.size
-
-manager = pygame_gui.UIManager(
-    start_screen_size,
-    enable_live_theme_updates=True,
-    theme_path="src/ui/theme.json"
-)
+min_screen_size = (1280, 800)
 
 game_state = GameState()
 
 clock = pygame.time.Clock()
 
 
-start_window = StartWindow(game_state, manager)
-
-while not game_state.is_started:
-    screen.fill(BG_COLOR)
-
-    events = pygame.event.get()
-    keys = pygame.key.get_pressed()
-
-    update_events(events, keys, screen)
-
-    time_delta = clock.tick(FPS) / 1000.0
-
-    start_window.update(events, screen.get_width(), screen.get_height())
-
-    if start_screen_size != screen.size:
-        manager.set_window_resolution(screen.size)
-
-    for event in events:
-        manager.process_events(event)
-
-    manager.draw_ui(screen)
-    manager.update(time_delta)
-
-    pygame.display.update()
-    pygame.display.flip()
-    clock.tick(FPS)
-
-
-typing_window = TypingWindow(game_state)
-
 while True:
+    start_window = StartWindow(game_state)
+    start_window.show(screen, start_screen_size, clock, min_screen_size)
 
-    screen.fill(BG_COLOR)
-
-    keys: ScancodeWrapper = pygame.key.get_pressed()
-
-    events = pygame.event.get()
-
-    update_events(events, keys, screen)
-
-    typing_window.update(events, keys, screen.get_height(), screen.get_width())
-    typing_window.draw(screen)
-
-    pygame.display.update()
-    pygame.display.flip()
-    clock.tick(FPS)
+    typing_window = TypingWindow(game_state)
+    typing_window.show(screen, clock, min_screen_size)
