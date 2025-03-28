@@ -1,7 +1,6 @@
 
 from pygame.font import Font
 import pygame
-
 from services.mentor import Mentor
 from typing_errors import TypingErrors
 from generators.generator_abc import GeneratorABC

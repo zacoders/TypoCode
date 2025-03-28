@@ -1,6 +1,5 @@
 
 
-import pygame
 from common.common import is_capslock_on, is_shift_pressed
 from generators.keyboard_lang import KeyboardLanguage
 

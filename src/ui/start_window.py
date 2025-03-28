@@ -1,5 +1,4 @@
 import inspect
-import sys
 from typing import List, Tuple
 from pygame import Rect, Surface
 import pygame
@@ -40,8 +39,7 @@ class StartWindow:
         self.__selection_list = UISelectionList(
             relative_rect=Rect(pos_x, pos_y, 1200, 720),
             item_list=self.__generator_names,
-            manager=self.__manager,
-            default_selection=self.__generator_names[0]
+            manager=self.__manager
         )
 
     def __update(self, events: List[Event], screen_width: int, screen_height: int):
@@ -58,7 +56,7 @@ class StartWindow:
 
     def __gens_list_items(self):
         item = {}
-        for name, generator_cls in inspect.getmembers(generators):
+        for _, generator_cls in inspect.getmembers(generators):
             if inspect.isclass(generator_cls) and issubclass(generator_cls, GeneratorABC):
                 gen = generator_cls()
                 item[gen.display_name] = gen
@@ -69,7 +67,6 @@ class StartWindow:
         while True:
             screen.fill(BG_COLOR)
 
-            keys = pygame.key.get_pressed()
             events = pygame.event.get()
 
             update_events(events, screen, min_screen_size)
