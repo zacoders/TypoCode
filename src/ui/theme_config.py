@@ -1,17 +1,16 @@
-{
-    "button":
-    {
-        "font":
-        {
+
+import json
+from common.common import get_resource_path
+
+
+theme_config = {
+    "button": {
+        "font": {
             "name": "UbuntuMono-Regular",
-            "size": 66,            
-            "regular_resource": {
-                "package": "_content.fonts",                  
-                "resource": "UbuntuMono-Regular.ttf"     
-            }
+            "size": 66,
+            "regular_path": get_resource_path("src/_content/fonts/UbuntuMono-Regular.ttf")
         },
-        "colours":
-        {
+        "colours": {
             "normal_bg": "#003514",
             "hovered_bg": "#004F1E",
             "disabled_bg": "#66BB6A",
@@ -33,21 +32,28 @@
             "selected_text_shadow": "#10101070",
             "active_text_shadow": "#10101070"
         },
-        "misc":
-        {
+        "misc": {
             "shape": "rounded_rectangle",
             "shape_corner_radius": "10",
             "border_width": "2"
         }
     },
-    "selection_list": { 
-        "colours":
-        {
+    "selection_list": {
+        "colours": {
             "dark_bg": "#141414"
-        },       
-        "misc":
-        {
+        },
+        "misc": {
             "list_item_height": "115"
         }
     }
 }
+
+theme_path = get_resource_path("src/_content/theme.uitheme")
+
+
+def get_theme_path(): return theme_path
+
+
+def save_theme():
+    with open(theme_path, "w", encoding="utf-8") as file:
+        json.dump(theme_config, file, indent=4)

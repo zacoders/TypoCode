@@ -49,6 +49,7 @@
         "SRCALPHA",
         "tankmap",
         "topleft",
+        "uitheme",
         "VIDEORESIZE",
         "WINDOWRESIZED"
     ],

@@ -2,6 +2,7 @@ import sys
 import pygame
 from common.common import get_resource_path
 from game_state import GameState
+from ui.theme_config import save_theme
 from ui.typing_window import TypingWindow
 from ui.start_window import StartWindow
 import ctypes
@@ -26,6 +27,8 @@ pygame.display.set_icon(icon)
 
 start_screen_size = screen.size
 min_screen_size = (1280, 800)
+
+save_theme()
 
 game_state = GameState()
 
