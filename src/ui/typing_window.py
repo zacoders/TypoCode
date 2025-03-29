@@ -1,8 +1,7 @@
-from typing import Tuple
 import pygame
 from pygame.time import Clock
 from pygame.event import Event
-from common.common import update_events, get_resource_path
+from common.common import get_resource_path
 from common.time_provider import TimeProvider
 from consts import BG_COLOR, FPS
 from services.line_stats_calc import LineStatsCalc
@@ -14,11 +13,15 @@ from ui.font_calc import FontCalc
 from ui.input_line import InputLine
 from ui.keyboard import Keyboard
 from ui.random_line import RandomLine
+from ui.window_abc import WindowABC
+from pygame.typing import Point
 
 
-class TypingWindow:
+class TypingWindow(WindowABC):
 
     def __init__(self, game_state: GameState):
+        super().__init__()
+
         self.__game_state = game_state
         font_file_path = get_resource_path("src/_content/fonts/UbuntuMono-Regular.ttf")
         self.__text_len = 64
@@ -52,7 +55,13 @@ class TypingWindow:
         self.__keyboard.draw(screen)
         self.__line_stats_calc.draw(screen)
 
-    def show(self, screen: pygame.Surface, clock: Clock, min_screen_size: Tuple[int, int]):
+    def show(
+        self,
+        screen: pygame.Surface,
+        clock: Clock,
+        min_screen_size: Point,
+        max_screen_size: Point
+    ):
 
         while True:
             screen.fill(BG_COLOR)
@@ -60,7 +69,7 @@ class TypingWindow:
             keys = pygame.key.get_pressed()
             events = pygame.event.get()
 
-            update_events(events, screen, min_screen_size)
+            self.update_events(keys, events, screen, min_screen_size, max_screen_size)
 
             if keys[pygame.K_ESCAPE]:
                 return
