@@ -26,6 +26,7 @@ jobs:
 
     - name: Build executable
       run: |
+        cd src
         pyinstaller --onefile --noconsole --add-data "_content;src/_content" --icon=main.ico main.py
       shell: bash
 
