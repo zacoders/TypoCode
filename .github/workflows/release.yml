@@ -30,7 +30,7 @@ jobs:
     - name: Build executable
       run: |
         cd src
-        pyinstaller --onefile --noconsole --add-data "_content;src/_content" --icon=main.ico main.py
+        pyinstaller --onefile --noconsole --add-data "_content;src/_content" --icon=main.ico --name TypoCode main.py
       shell: bash
 
     - name: Upload artifact
