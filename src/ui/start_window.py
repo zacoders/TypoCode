@@ -6,17 +6,19 @@ from pygame.time import Clock
 from pygame.event import Event
 import pygame_gui
 from pygame_gui.elements import UISelectionList
-from common.common import update_events
 from consts import BG_COLOR, FPS
 from game_state import GameState
 import generators
 from generators.generator_abc import GeneratorABC
 from ui.theme_config import get_theme_path
+from ui.window_abc import WindowABC
 
 
-class StartWindow:
+class StartWindow(WindowABC):
 
     def __init__(self, game_state: GameState):
+        super().__init__()
+
         self.__game_state = game_state
 
         self.__screen_width = 0
@@ -63,14 +65,22 @@ class StartWindow:
                 item[gen.display_name] = gen
         return item
 
-    def show(self, screen: Surface, start_screen_size: Tuple[int, int], clock: Clock, min_screen_size: Tuple[int, int]):
+    def show(
+        self,
+        screen: Surface,
+        start_screen_size: Tuple[int, int],
+        clock: Clock,
+        min_screen_size: Tuple[int, int],
+        max_screen_size: Tuple[int, int]
+    ):
 
         while True:
             screen.fill(BG_COLOR)
 
             events = pygame.event.get()
+            keys = pygame.key.get_pressed()
 
-            update_events(events, screen, min_screen_size)
+            self.update_events(keys, events, screen, min_screen_size, max_screen_size)
 
             self.__update(events, screen.get_width(), screen.get_height())
 
