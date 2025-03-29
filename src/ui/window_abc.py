@@ -1,10 +1,11 @@
 
 from abc import ABC
 import sys
-from typing import List, Tuple
+from typing import List
 import pygame
 from pygame import Event, Surface
 from pygame.key import ScancodeWrapper
+from pygame.typing import Point
 
 
 class WindowABC(ABC):
@@ -18,8 +19,8 @@ class WindowABC(ABC):
         keys: ScancodeWrapper,
         events: List[Event],
         screen: Surface,
-        min_screen_size: Tuple[int, int],
-        max_screen_size: Tuple[int, int]
+        min_screen_size: Point,
+        max_screen_size: Point
     ):
         min_width, min_height = min_screen_size
 

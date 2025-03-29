@@ -12,6 +12,7 @@ import generators
 from generators.generator_abc import GeneratorABC
 from ui.theme_config import get_theme_path
 from ui.window_abc import WindowABC
+from pygame.typing import Point
 
 
 class StartWindow(WindowABC):
@@ -68,10 +69,10 @@ class StartWindow(WindowABC):
     def show(
         self,
         screen: Surface,
-        start_screen_size: Tuple[int, int],
+        start_screen_size: Point,
         clock: Clock,
-        min_screen_size: Tuple[int, int],
-        max_screen_size: Tuple[int, int]
+        min_screen_size: Point,
+        max_screen_size: Point
     ):
 
         while True:

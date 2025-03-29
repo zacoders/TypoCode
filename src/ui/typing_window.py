@@ -1,4 +1,3 @@
-from typing import Tuple
 import pygame
 from pygame.time import Clock
 from pygame.event import Event
@@ -15,6 +14,7 @@ from ui.input_line import InputLine
 from ui.keyboard import Keyboard
 from ui.random_line import RandomLine
 from ui.window_abc import WindowABC
+from pygame.typing import Point
 
 
 class TypingWindow(WindowABC):
@@ -59,8 +59,8 @@ class TypingWindow(WindowABC):
         self,
         screen: pygame.Surface,
         clock: Clock,
-        min_screen_size: Tuple[int, int],
-        max_screen_size: Tuple[int, int]
+        min_screen_size: Point,
+        max_screen_size: Point
     ):
 
         while True:
