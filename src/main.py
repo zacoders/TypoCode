@@ -1,6 +1,8 @@
 import sys
 import pygame
+from common.common import get_resource_path
 from game_state import GameState
+from ui.theme_config import save_theme
 from ui.typing_window import TypingWindow
 from ui.start_window import StartWindow
 import ctypes
@@ -20,11 +22,13 @@ screen_size = info.current_w * 0.7, info.current_h * 0.7
 screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
 pygame.display.set_caption("TypoCode")
 
-icon = pygame.image.load("./src/_content/icons/keyboard_32x32.png")
+icon = pygame.image.load(get_resource_path("./src/_content/icons/keyboard_32x32.png"))
 pygame.display.set_icon(icon)
 
 start_screen_size = screen.size
 min_screen_size = (1280, 800)
+
+save_theme()
 
 game_state = GameState()
 

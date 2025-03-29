@@ -11,6 +11,7 @@ from consts import BG_COLOR, FPS
 from game_state import GameState
 import generators
 from generators.generator_abc import GeneratorABC
+from ui.theme_config import get_theme_path
 
 
 class StartWindow:
@@ -30,7 +31,7 @@ class StartWindow:
         self.__manager = pygame_gui.UIManager(
             screen_size,
             enable_live_theme_updates=True,
-            theme_path="src/ui/theme.json"
+            theme_path=get_theme_path()
         )
 
         pos_x = screen_size[0] // 2 - 600  # selection_list_width // 2

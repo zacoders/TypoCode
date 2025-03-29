@@ -1,3 +1,4 @@
+import os
 import sys
 from typing import List, Tuple
 from pygame.event import Event
@@ -62,3 +63,14 @@ def is_shift_pressed():
 
     else:
         raise NotImplementedError("Поддерживаются только Windows и Linux")
+
+
+def get_resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and PyInstaller """
+    if getattr(sys, 'frozen', False):
+        # Running in a PyInstaller bundle
+        base_path = sys._MEIPASS
+    else:
+        # Running in a normal Python environment
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)

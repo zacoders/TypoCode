@@ -1,6 +1,7 @@
 from pygame.font import Font
 from pygame.event import Event
 import pygame
+from common.common import get_resource_path
 from game_state import GameState
 from services.keyboard_service import KeyboardService
 from services.line_stats_calc import LineStatsCalc
@@ -44,8 +45,8 @@ class InputLine:
 
         self.__typing_errors = typing_errors
 
-        self.__type_sound = pygame.mixer.Sound("src/_content/sounds/typing-sound-02-229861.wav")
-        self.__error_sound = pygame.mixer.Sound("src/_content/sounds/error.mp3")
+        self.__type_sound = pygame.mixer.Sound(get_resource_path("src/_content/sounds/typing-sound-02-229861.wav"))
+        self.__error_sound = pygame.mixer.Sound(get_resource_path("src/_content/sounds/error.mp3"))
 
         self.__interactive_buttons = [pygame.K_TAB,
                                       pygame.K_CAPSLOCK,

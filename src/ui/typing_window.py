@@ -2,7 +2,7 @@ from typing import Tuple
 import pygame
 from pygame.time import Clock
 from pygame.event import Event
-from common.common import update_events
+from common.common import update_events, get_resource_path
 from common.time_provider import TimeProvider
 from consts import BG_COLOR, FPS
 from services.line_stats_calc import LineStatsCalc
@@ -20,7 +20,7 @@ class TypingWindow:
 
     def __init__(self, game_state: GameState):
         self.__game_state = game_state
-        font_file_path = "src/_content/fonts/UbuntuMono-Regular.ttf"
+        font_file_path = get_resource_path("src/_content/fonts/UbuntuMono-Regular.ttf")
         self.__text_len = 64
         text_generator = self.__game_state.generator
         time_provider = TimeProvider()
