@@ -5,12 +5,15 @@ on:
     tags:
       - 'v*'  # Triggers only on versioned tags like v1.0, v2.1
 
+permissions:
+  contents: write  # This allows modifying releases
+  
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [windows-latest]
 
     steps:
     - name: Checkout repository
@@ -26,14 +29,15 @@ jobs:
 
     - name: Build executable
       run: |
-        pyinstaller --onefile --noconsole --add-data "_content;src/_content" --icon=main.ico main.py
+        cd src
+        pyinstaller --onefile --noconsole --add-data "_content;src/_content" --icon=main.ico --name TypoCode main.py
       shell: bash
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: my-app-${{ runner.os }}
-        path: dist/*
+        path: src/dist/*
 
   release:
     needs: build
