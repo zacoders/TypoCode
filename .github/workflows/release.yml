@@ -34,7 +34,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: my-app-${{ runner.os }}
-        path: dist/*
+        path: src/dist/*
 
   release:
     needs: build
