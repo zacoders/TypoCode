@@ -21,7 +21,7 @@ class WindowABC(ABC):
         screen: Surface,
         min_screen_size: Point,
         max_screen_size: Point
-    ) -> Surface:
+    ):
         min_width, min_height = min_screen_size
 
         for event in events:
@@ -47,5 +47,3 @@ class WindowABC(ABC):
                     new_screen_size,
                     pygame.FULLSCREEN if self.__is_fullscreen else pygame.RESIZABLE
                 )
-
-        return screen
