@@ -38,7 +38,7 @@ def test_get1():
     gen = PythonGenerator()
     gen._get_random_word = MagicMock(side_effect=["333", "55555", "22", "333"])
 
-    text = gen.get_text(16, TypingErrors(), 5)
+    text = gen.get_text(16, TypingErrors(), 1)
 
     assert text == '333 55555 22 333'
     assert len(text) == 16
