@@ -1,4 +1,5 @@
 import inspect
+import sys
 from typing import List, Tuple
 from pygame import Rect, Surface
 import pygame
@@ -88,6 +89,9 @@ class StartWindow(WindowABC):
             for event in events:
                 if event.type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
                     return
+                if event.type == pygame.KEYDOWN and keys[pygame.K_ESCAPE]:
+                    pygame.quit()
+                    sys.exit()
 
             if start_screen_size != screen.size:
                 self.__manager.set_window_resolution(screen.size)
