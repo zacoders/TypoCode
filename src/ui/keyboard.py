@@ -29,7 +29,7 @@ class Keyboard:
     def __init__(self, language: KeyboardLanguage):
         self.__x = 0
         self.__y = 0
-        self.__keys = {}
+        self.__keys = []
         self.__highlighted_key = None
         self.__screen_height = -1
         self.__screen_width = -1
@@ -151,11 +151,9 @@ class Keyboard:
             self.__is_upper_case = False
             self.__create_keys()  # Recreate keys with lowercase layout
             print('lower')
-        # print('.....')
 
     def __create_keys_from_layout(self, y_offset, layout):
         print('call __create_keys_from_layout')
-        self.__keys = []
         for row in layout:
             x_offset = self.__x
             for key, width in row:
@@ -185,11 +183,12 @@ class Keyboard:
         self.__create_keys()
 
     def highlight_key(self, key: str):
-        if key in self.__keys:
+        keys_only = [k for k, _ in self.__keys]
+        if key in keys_only:
             self.__highlighted_key = key
-        elif key.upper() in self.__keys:
+        elif key.upper() in keys_only:
             self.__highlighted_key = key.upper()
-        elif key.lower() in self.__keys:
+        elif key.lower() in keys_only:
             self.__highlighted_key = key.lower()
         if key == " ":
             self.__highlighted_key = "Space"
