@@ -47,20 +47,20 @@ class LineStatsCalc:
             self.__pref_key_press_time = key_press_time
 
     def get_rhythm(self, intervals: list[float]) -> float:
+        if len(intervals) < 2:
+            return 100.0  # Если одно нажатие, то ритм идеален
 
-        # Идеальный интервал
+        # Идеальный интервал – среднее значение
         mean_interval = sum(intervals) / len(intervals)
 
-        # Вычисляем отклонение от идеального интервала для каждого интервала
-        deviations = [abs(interval - mean_interval) / mean_interval for interval in intervals]
+        # Вычисляем отклонение в процентах
+        deviations = [abs(interval - mean_interval) / mean_interval * 100 for interval in intervals]
 
-        # Рассчитываем среднее отклонение
+        # Среднее отклонение в процентах
         avg_deviation = sum(deviations) / len(deviations)
-        print(avg_deviation)
 
-        # std_dev = statistics.stdev(self.__intervals)
-        # Ритм в процентах (меньше отклонение - выше процент)
-        rhythm_percentage = mean_interval / avg_deviation * 100
+        # Оценка ритма (чем ниже отклонение, тем выше процент)
+        rhythm_percentage = max(100 - avg_deviation, 0)  # Чтобы не было отрицательных значений
 
         return rhythm_percentage
 

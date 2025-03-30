@@ -16,3 +16,11 @@ def test_rhythm_50_percent():
     intervals = [1.0, 3, 1, 3, 1, 3, 1, 3, 1, 3]
     rhythm_percentage = calc.get_rhythm(intervals)
     assert rhythm_percentage == 50
+
+
+def test_rhythm_with_long_delay():
+    time_provider = TimeProvider()
+    calc = LineStatsCalc(time_provider)
+    intervals = [1.0, 1.0, 1.0, 10.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    rhythm_percentage = calc.get_rhythm(intervals)
+    assert rhythm_percentage > 14 and rhythm_percentage < 15
