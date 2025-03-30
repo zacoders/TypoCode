@@ -68,7 +68,7 @@ jobs:
       run: |
         cd src/dist
         appimage-builder --recipe ../appimage.yml
-        mv typocode-x86_64.AppImage artifacts/
+        mv typocode--x86_64.AppImage artifacts/
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
