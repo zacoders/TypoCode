@@ -2,6 +2,7 @@ import pygame
 from common.time_provider import TimeProvider
 from services.line_stats import LineStats
 from pygame.typing import RectLike
+import statistics
 
 
 class LineStatsCalc:
@@ -25,7 +26,7 @@ class LineStatsCalc:
         self.__success_count = 0
         self.__error_count = 0
         self.__end_time_utc = None
-        self.__intervals = []
+        self.__intervals: list[float] = []
         self.__pref_key_press_time = self.__start_time_utc
 
     def stop(self):
@@ -42,24 +43,31 @@ class LineStatsCalc:
             self.__success_count += 1
             key_press_time = self.__time_provider.get_utc_time()
             self.__intervals.append((key_press_time - self.__pref_key_press_time).total_seconds())
+            print(key_press_time - self.__pref_key_press_time)
             self.__pref_key_press_time = key_press_time
+
+    def get_rhythm(self, intervals: list[float]) -> float:
+
+        # Идеальный интервал
+        mean_interval = sum(intervals) / len(intervals)
+
+        # Вычисляем отклонение от идеального интервала для каждого интервала
+        deviations = [abs(interval - mean_interval) / mean_interval for interval in intervals]
+
+        # Рассчитываем среднее отклонение
+        avg_deviation = sum(deviations) / len(deviations)
+        print(avg_deviation)
+
+        # std_dev = statistics.stdev(self.__intervals)
+        # Ритм в процентах (меньше отклонение - выше процент)
+        rhythm_percentage = mean_interval / avg_deviation * 100
+
+        return rhythm_percentage
 
     def get_stats(self) -> LineStats:
         end_time = self.__end_time_utc if self.__end_time_utc else self.__time_provider.get_utc_time()
         start_time = self.__start_time_utc if self.__start_time_utc else end_time
         duration_minutes: float = (end_time - start_time).total_seconds() / 60.0
-
-        # Идеальный интервал
-        mean_interval = sum(self.__intervals) / len(self.__intervals)
-
-        # Вычисляем отклонение от идеального интервала для каждого интервала
-        deviations = [abs(interval - mean_interval) / mean_interval for interval in self.__intervals]
-
-        # Рассчитываем среднее отклонение
-        avg_deviation = sum(deviations) / len(deviations)
-
-        # Ритм в процентах (меньше отклонение - выше процент)
-        rhythm_percentage = (1 - avg_deviation) * 100
 
         if duration_minutes == 0:
             speed_symbols_per_minute = 0
@@ -69,7 +77,7 @@ class LineStatsCalc:
         return LineStats(
             error_count=self.__error_count,
             speed_symbols_per_minute=speed_symbols_per_minute,
-            rhythm_percentage=rhythm_percentage
+            rhythm_percentage=self.get_rhythm(self.__intervals)
         )
 
     def update(self, screen_height: int, screen_width: int):
