@@ -48,21 +48,22 @@ class LineStatsCalc:
 
     def get_rhythm(self, intervals: list[float]) -> float:
         if len(intervals) < 2:
-            return 100.0  # Если одно нажатие, то ритм идеален
+            return 100.0
 
-        # Идеальный интервал – среднее значение
         mean_interval = sum(intervals) / len(intervals)
 
-        # Вычисляем отклонение в процентах
-        deviations = [abs(interval - mean_interval) / mean_interval * 100 for interval in intervals]
+        deviations = []
+        for interval in intervals:
+            if interval <= mean_interval:
+                deviations.append(interval / mean_interval)
+            elif interval > 2 * mean_interval:
+                deviations.append(1)
+            else:
+                deviations.append((mean_interval * 2 - interval) / mean_interval)
 
-        # Среднее отклонение в процентах
         avg_deviation = sum(deviations) / len(deviations)
 
-        # Оценка ритма (чем ниже отклонение, тем выше процент)
-        rhythm_percentage = max(100 - avg_deviation, 0)  # Чтобы не было отрицательных значений
-
-        return rhythm_percentage
+        return avg_deviation * 100
 
     def get_stats(self) -> LineStats:
         end_time = self.__end_time_utc if self.__end_time_utc else self.__time_provider.get_utc_time()
