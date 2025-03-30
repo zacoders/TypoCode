@@ -56,11 +56,17 @@ jobs:
         tar -czvf typocode-linux.tar.gz typocode
         mv typocode-linux.tar.gz artifacts/
 
-    - name: Create Linux AppImage
+    - name: Install appimage-builder
       if: runner.os == 'Linux'
       run: |
         sudo apt update
-        sudo apt install -y appimage-builder
+        sudo apt install -y curl
+        curl -Lo appimage-builder.deb https://github.com/AppImageCrafters/appimage-builder/releases/latest/download/appimage-builder-x86_64.deb
+        sudo apt install -y ./appimage-builder.deb
+
+    - name: Create Linux AppImage
+      if: runner.os == 'Linux'
+      run: |
         cd src/dist
         appimage-builder --recipe ../appimage.yml
         mv typocode-x86_64.AppImage artifacts/
