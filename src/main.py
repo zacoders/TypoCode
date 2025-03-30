@@ -1,14 +1,14 @@
 import os
 import sys
 import pygame
-from common.common import get_resource_path, is_windows
+from common.common import get_resource_path, is_linux, is_windows
 from game_state import GameState
 from ui.theme_config import save_theme
 from ui.typing_window import TypingWindow
 from ui.start_window import StartWindow
 import ctypes
 
-if "SDL_AUDIODRIVER" not in os.environ:
+if is_linux() and "SDL_AUDIODRIVER" not in os.environ:
     os.environ["SDL_AUDIODRIVER"] = "dummy"  # Set only if not defined
 
 # Set process DPI awareness. Use 1 for "System DPI Awareness", or 2 for "Per-Monitor DPI Awareness"
