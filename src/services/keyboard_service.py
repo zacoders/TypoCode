@@ -65,5 +65,5 @@ class KeyboardService:
                 return char.upper()
             else:
                 return char.lower()
-
-        raise Exception("Symbol is not found in the KEYMAP.")
+        else:
+            return ''
