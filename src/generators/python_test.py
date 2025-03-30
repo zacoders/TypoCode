@@ -1,8 +1,7 @@
-import pytest
 from unittest.mock import MagicMock
-
 from typing_errors import TypingErrors
 from generators.python import PythonGenerator
+from common.time_provider import TimeProvider
 
 
 def test_get_random_word():

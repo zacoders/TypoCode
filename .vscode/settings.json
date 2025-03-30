@@ -56,7 +56,8 @@
         "Xlib"
     ],
     "python.testing.pytestArgs": [
-        "."
+        ".",    // path to search unit tests
+        "-rP",  // additional output for unit tests
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true
