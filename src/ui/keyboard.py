@@ -11,7 +11,9 @@ class Keyboard:
     KEY_SPACING = 6.0
     FONT_SIZE = 24.0
     LINE_KEYS_COUNT = 15
-    SIZE = 0.7  # 70% of the screen
+    LINES_COUNT = 5
+    WIDTH_SCALE = 0.7  # 70% of the screen
+    HEIGHT_SCALE = 0.45  # 45% of the screen
 
     RED = (180, 100, 102)
     YELLOW = (190, 190, 100)
@@ -165,9 +167,11 @@ class Keyboard:
         if self.__screen_height != screen_height or self.__screen_width != screen_width:
             self.__screen_height = screen_height
             self.__screen_width = screen_width
-            scale_w = (screen_width * Keyboard.SIZE / Keyboard.LINE_KEYS_COUNT) / \
+            scale_w = (screen_width * Keyboard.WIDTH_SCALE / Keyboard.LINE_KEYS_COUNT) / \
                 (Keyboard.KEY_SIZE + Keyboard.KEY_SPACING)
-            self.__set_scale(scale_w)
+            scale_h = (screen_height * Keyboard.HEIGHT_SCALE / Keyboard.LINES_COUNT) / \
+                (Keyboard.KEY_SIZE + Keyboard.KEY_SPACING)
+            self.__set_scale(min(scale_w, scale_h))
         self._switch_layout(keys)
 
     def __set_scale(self, scale: float):
