@@ -79,11 +79,14 @@ class InputLine:
             if event.key == pygame.K_ESCAPE:
                 continue
 
-            if not self.__text:
-                self.__line_stats_calc.start()
-
             unicode_char = self.__keyboard_service.get_char_from_key(
                 event.scancode, self.__game_state.generator.keyboard_lang)
+
+            if unicode_char == '':
+                continue
+
+            if not self.__text:
+                self.__line_stats_calc.start()
 
             if unicode_char == current_char:
                 self.__type_sound.play()
@@ -91,8 +94,6 @@ class InputLine:
                 self.__text += unicode_char
                 self.__error_symbol = ''
             else:
-                if unicode_char == '':
-                    return
                 if unicode_char:
                     word = self.__get_word(current_char_pos)
                     self.__typing_errors.add_errors(current_char, word)

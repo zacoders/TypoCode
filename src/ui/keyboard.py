@@ -29,7 +29,7 @@ class Keyboard:
     def __init__(self, language: KeyboardLanguage):
         self.__x = 0
         self.__y = 0
-        self.__keys = {}
+        self.__keys = []
         self.__highlighted_key = None
         self.__screen_height = -1
         self.__screen_width = -1
@@ -59,13 +59,13 @@ class Keyboard:
             [("Tab", 1.5), ("q", 1), ("w", 1), ("e", 1), ("r", 1), ("t", 1), ("y", 1),
              ("u", 1), ("i", 1), ("o", 1), ("p", 1), ("{", 1), ("}", 1), ("|", 1.5)],
 
-            [("CAPS", 1.8), ("a", 1), ("s", 1), ("d", 1), ("f", 1), ("g", 1),
-             ("h", 1), ("j", 1), ("k", 1), ("l", 1), (":", 1), ('"', 1), ("ENTER", 2.35)],
+            [("Caps", 1.8), ("a", 1), ("s", 1), ("d", 1), ("f", 1), ("g", 1),
+             ("h", 1), ("j", 1), ("k", 1), ("l", 1), (":", 1), ('"', 1), ("Enter", 2.35)],
 
-            [("SHIFT", 2.30), ("z", 1), ("x", 1), ("c", 1), ("v", 1), ("b", 1),
+            [("Shift", 2.30), ("z", 1), ("x", 1), ("c", 1), ("v", 1), ("b", 1),
              ("n", 1), ("m", 1), ("<", 1), (">", 1), ("?", 1), ("Shift", 3.0)],
 
-            [("CTRL", 1.25), ("Win", 1.25), ("ALT", 1.25), ("Space", 7.15),
+            [("Ctrl", 1.25), ("Win", 1.25), ("Alt", 1.25), ("Space", 7.15),
              ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
         ]
 
@@ -76,13 +76,13 @@ class Keyboard:
             [("Tab", 1.5), ("q", 1), ("w", 1), ("e", 1), ("r", 1), ("t", 1), ("y", 1),
              ("u", 1), ("i", 1), ("o", 1), ("p", 1), ("[", 1), ("]", 1), ("\\", 1.5)],
 
-            [("CAPS", 1.8), ("a", 1), ("s", 1), ("d", 1), ("f", 1), ("g", 1),
-             ("h", 1), ("j", 1), ("k", 1), ("l", 1), (";", 1), ("'", 1), ("ENTER", 2.35)],
+            [("Caps", 1.8), ("a", 1), ("s", 1), ("d", 1), ("f", 1), ("g", 1),
+             ("h", 1), ("j", 1), ("k", 1), ("l", 1), (";", 1), ("'", 1), ("Enter", 2.35)],
 
-            [("SHIFT", 2.30), ("z", 1), ("x", 1), ("c", 1), ("v", 1), ("b", 1),
+            [("Shift", 2.30), ("z", 1), ("x", 1), ("c", 1), ("v", 1), ("b", 1),
              ("n", 1), ("m", 1), (",", 1), (".", 1), ("/", 1), ("Shift", 3.0)],
 
-            [("CTRL", 1.25), ("Win", 1.25), ("ALT", 1.25), ("Space", 7.15),
+            [("Ctrl", 1.25), ("Win", 1.25), ("Alt", 1.25), ("Space", 7.15),
              ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
         ]
 
@@ -93,13 +93,13 @@ class Keyboard:
             [("Tab", 1.5), ("й", 1), ("ц", 1), ("у", 1), ("к", 1), ("е", 1), ("н", 1),
              ("г", 1), ("ш", 1), ("щ", 1), ("з", 1), ("х", 1), ("ъ", 1), ("/", 1.5)],
 
-            [("CAPS", 1.8), ("ф", 1), ("ы", 1), ("в", 1), ("а", 1), ("п", 1),
-             ("р", 1), ("о", 1), ("л", 1), ("д", 1), ("ж", 1), ("э", 1), ("ENTER", 2.35)],
+            [("Caps", 1.8), ("ф", 1), ("ы", 1), ("в", 1), ("а", 1), ("п", 1),
+             ("р", 1), ("о", 1), ("л", 1), ("д", 1), ("ж", 1), ("э", 1), ("Enter", 2.35)],
 
-            [("SHIFT", 2.30), ("я", 1), ("ч", 1), ("с", 1), ("м", 1), ("и", 1),
+            [("Shift", 2.30), ("я", 1), ("ч", 1), ("с", 1), ("м", 1), ("и", 1),
              ("т", 1), ("ь", 1), ("б", 1), ("ю", 1), (",", 1), ("Shift", 3.0)],
 
-            [("CTRL", 1.25), ("Win", 1.25), ("ALT", 1.25), ("Space", 7.15),
+            [("Ctrl", 1.25), ("Win", 1.25), ("Alt", 1.25), ("Space", 7.15),
              ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
         ]
 
@@ -110,13 +110,13 @@ class Keyboard:
             [("Tab", 1.5), ("й", 1), ("ц", 1), ("у", 1), ("к", 1), ("е", 1), ("н", 1),
              ("г", 1), ("ш", 1), ("щ", 1), ("з", 1), ("х", 1), ("ъ", 1), ("\\", 1.5)],
 
-            [("CAPS", 1.8), ("ф", 1), ("ы", 1), ("в", 1), ("а", 1), ("п", 1),
-             ("р", 1), ("о", 1), ("л", 1), ("д", 1), ("ж", 1), ("э", 1), ("ENTER", 2.35)],
+            [("Caps", 1.8), ("ф", 1), ("ы", 1), ("в", 1), ("а", 1), ("п", 1),
+             ("р", 1), ("о", 1), ("л", 1), ("д", 1), ("ж", 1), ("э", 1), ("Enter", 2.35)],
 
-            [("SHIFT", 2.30), ("я", 1), ("ч", 1), ("с", 1), ("м", 1), ("и", 1),
+            [("Shift", 2.30), ("я", 1), ("ч", 1), ("с", 1), ("м", 1), ("и", 1),
              ("т", 1), ("ь", 1), ("б", 1), ("ю", 1), (".", 1), ("Shift", 3.0)],
 
-            [("CTRL", 1.25), ("Win", 1.25), ("ALT", 1.25), ("Space", 7.15),
+            [("Ctrl", 1.25), ("Win", 1.25), ("Alt", 1.25), ("Space", 7.15),
              ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
         ]
 
@@ -139,7 +139,7 @@ class Keyboard:
 
     def _switch_layout(self, keys: ScancodeWrapper):
         # Detect if shift has been pressed or released
-        shift_pressed = keys[pygame.K_LSHIFT]
+        shift_pressed = keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]
 
         # Only change case if the state is different
         if shift_pressed and not self.__is_upper_case:
@@ -151,15 +151,15 @@ class Keyboard:
             self.__is_upper_case = False
             self.__create_keys()  # Recreate keys with lowercase layout
             print('lower')
-        # print('.....')
 
     def __create_keys_from_layout(self, y_offset, layout):
         print('call __create_keys_from_layout')
-        self.__keys = {}
+        self.__keys = []
         for row in layout:
             x_offset = self.__x
             for key, width in row:
-                self.__keys[key] = pygame.Rect(x_offset, y_offset, self.__key_size * width, self.__key_size)
+                rect = pygame.Rect(x_offset, y_offset, self.__key_size * width, self.__key_size)
+                self.__keys.append((key, rect))
                 x_offset += self.__key_size * width + self.__spacing
             y_offset += self.__key_size + self.__spacing
 
@@ -184,11 +184,12 @@ class Keyboard:
         self.__create_keys()
 
     def highlight_key(self, key: str):
-        if key in self.__keys:
+        keys_only = [k for k, _ in self.__keys]
+        if key in keys_only:
             self.__highlighted_key = key
-        elif key.upper() in self.__keys:
+        elif key.upper() in keys_only:
             self.__highlighted_key = key.upper()
-        elif key.lower() in self.__keys:
+        elif key.lower() in keys_only:
             self.__highlighted_key = key.lower()
         if key == " ":
             self.__highlighted_key = "Space"
@@ -199,7 +200,7 @@ class Keyboard:
 
         is_upper = is_capslock ^ is_shift
 
-        for (key, rect), color in zip(self.__keys.items(), self.__color_layout):
+        for (key, rect), color in zip(self.__keys, self.__color_layout):
             bg_color = self.REGULAR_BG_KEY_COLOR if key != self.__highlighted_key else self.HIGHLIGHTED_BG_KEY_COLOR
             pygame.draw.rect(screen, bg_color, rect, border_radius=5)
             pygame.draw.rect(screen, color, rect, 4)
