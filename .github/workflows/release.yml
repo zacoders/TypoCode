@@ -60,9 +60,8 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt update
-        sudo apt install -y curl
-        curl -Lo appimage-builder.deb https://github.com/AppImageCrafters/appimage-builder/releases/latest/download/appimage-builder-x86_64.deb
-        sudo apt install -y ./appimage-builder.deb
+        sudo apt install -y python3-pip
+        pip install appimage-builder --break-system-packages
 
     - name: Create Linux AppImage
       if: runner.os == 'Linux'
