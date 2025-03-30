@@ -51,7 +51,8 @@
         "topleft",
         "uitheme",
         "VIDEORESIZE",
-        "WINDOWRESIZED"
+        "WINDOWRESIZED",
+        "Xlib"
     ],
     "python.testing.pytestArgs": [
         "."
