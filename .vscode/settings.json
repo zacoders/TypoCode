@@ -39,6 +39,7 @@
         "ndenumerate",
         "NOFRAME",
         "pygame",
+        "pyinstaller",
         "pytest",
         "RCTRL",
         "rects",

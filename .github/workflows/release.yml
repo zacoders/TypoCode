@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [ubuntu-latest, windows-latest]
 
     steps:
     - name: Checkout repository
@@ -30,7 +30,7 @@ jobs:
     - name: Build executable
       run: |
         cd src
-        pyinstaller --onefile --noconsole --add-data "_content;src/_content" --icon=main.ico --name TypoCode main.py
+        pyinstaller --onefile --noconsole --add-data="_content:src/_content" --icon=main.ico --name TypoCode main.py
       shell: bash
 
     - name: Upload artifact
