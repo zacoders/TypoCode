@@ -28,20 +28,20 @@ jobs:
       run: pip install -r requirements.txt
 
     - name: Build Windows executable
-    if: runner.os == 'Windows'
-    run: |
-      cd src
-      pyinstaller --onefile --noconsole --add-data "_content;_content" --icon=main.ico --name TypoCode main.py
-    shell: cmd
-    
-    - name: Upload Windows artifact
-    if: runner.os == 'Windows'
-    uses: actions/upload-artifact@v4
-    with:
-      name: my-app-${{ runner.os }}
-      path: src/dist/*
+      if: runner.os == 'Windows'
+      run: |
+        cd src
+        pyinstaller --onefile --noconsole --add-data "_content;_content" --icon=main.ico --name TypoCode main.py
+      shell: cmd
 
-    - name: Build executable (Linux)
+    - name: Upload Windows artifact
+      if: runner.os == 'Windows'
+      uses: actions/upload-artifact@v4
+      with:
+        name: my-app-${{ runner.os }}
+        path: src/dist/*
+
+    - name: Build Linux executable
       if: runner.os == 'Linux'
       run: |
         cd src
@@ -52,24 +52,24 @@ jobs:
       if: runner.os == 'Linux'
       run: |      
         cd src/dist
-        mkdir artifacts
+        mkdir -p artifacts
         tar -czvf typocode-linux.tar.gz typocode
-        mv typoCode-linux.tar.gz artifacts
+        mv typocode-linux.tar.gz artifacts/
 
     - name: Create Linux AppImage
       if: runner.os == 'Linux'
       run: |
+        sudo apt update
         sudo apt install -y appimage-builder
         cd src/dist
         appimage-builder --recipe ../appimage.yml
-        mv typocode-x86_64.AppImage artifacts
+        mv typocode-x86_64.AppImage artifacts/
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: my-app-${{ runner.os }}
-        path: |
-          path: src/dist/artifacts/*
+        path: src/dist/artifacts/*
 
   release:
     needs: build
