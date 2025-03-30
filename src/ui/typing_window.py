@@ -15,6 +15,7 @@ from ui.keyboard import Keyboard
 from ui.random_line import RandomLine
 from ui.window_abc import WindowABC
 from pygame.typing import Point
+from pygame import Surface
 
 
 class TypingWindow(WindowABC):
@@ -23,15 +24,30 @@ class TypingWindow(WindowABC):
         super().__init__()
 
         self.__game_state = game_state
+
         font_file_path = get_resource_path("src/_content/fonts/UbuntuMono-Regular.ttf")
+        self.__font_calc = FontCalc(font_file_path)
+
         self.__text_len = 64
         text_generator = self.__game_state.generator
+
         time_provider = TimeProvider()
         self.__line_stats_calc = LineStatsCalc(time_provider)
+
         typing_errors = TypingErrors()
+
         mentor = Mentor()
+
         self.__keyboard = Keyboard(language=text_generator.keyboard_lang)
-        self.__random_line = RandomLine(self.__text_len, typing_errors, text_generator, font_file_path, mentor)
+
+        self.__random_line = RandomLine(
+            text_len=self.__text_len,
+            errors=typing_errors,
+            text_generator=text_generator,
+            font_file_path=font_file_path,
+            mentor=mentor
+        )
+
         self.__input_line = InputLine(
             random_line=self.__random_line,
             keyboard=self.__keyboard,
@@ -41,7 +57,6 @@ class TypingWindow(WindowABC):
             mentor=mentor,
             game_state=self.__game_state
         )
-        self.__font_calc = FontCalc(font_file_path)
 
     def update(self, events: list[Event], keys: ScancodeWrapper, screen_height: int, screen_width: int):
         self.__font_calc.update(self.__text_len, screen_width)
@@ -49,7 +64,7 @@ class TypingWindow(WindowABC):
         self.__input_line.update(events)
         self.__line_stats_calc.update(screen_height, screen_width)
 
-    def draw(self, screen: pygame.Surface):
+    def draw(self, screen: Surface):
         self.__input_line.draw(screen, self.__font_calc.current_font_size(), self.__font_calc.current_text_width())
         self.__random_line.draw(screen, self.__font_calc.current_font_size(), self.__font_calc.current_text_width())
         self.__keyboard.draw(screen)
@@ -57,7 +72,7 @@ class TypingWindow(WindowABC):
 
     def show(
         self,
-        screen: pygame.Surface,
+        screen: Surface,
         clock: Clock,
         min_screen_size: Point,
         max_screen_size: Point
