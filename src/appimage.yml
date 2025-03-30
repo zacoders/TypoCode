@@ -1,0 +1,28 @@
+version: 1
+
+script:
+  - rm -r ./AppDir || true
+  - mkdir -p ./AppDir/usr/bin
+  - cp ./typocode ./AppDir/usr/bin/
+  - cp ./typocode ./AppDir/AppRun
+  - chmod +x ./AppDir/AppRun
+  - mkdir -p ./AppDir/usr/share/icons
+  - cp ../main.png ./AppDir/usr/share/icons
+
+AppDir:
+  path: ./AppDir
+
+  app_info:
+    id: typocode
+    name: typocode
+    icon: main # searching for main.png file
+    version: "" # todo: populate version later.
+    exec: usr/bin/typocode
+    exec_args: "$@"
+
+  runtime:
+    env:
+      PATH: "$APPDIR/usr/bin:$PATH"
+
+AppImage:
+  arch: x86_64

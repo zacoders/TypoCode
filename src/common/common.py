@@ -2,6 +2,14 @@ import os
 import sys
 
 
+def is_windows() -> bool:
+    return sys.platform.startswith("win")
+
+
+def is_linux() -> bool:
+    return sys.platform.startswith("linux")
+
+
 def is_capslock_on():
     if sys.platform.startswith("win"):
         import ctypes
@@ -11,7 +19,7 @@ def is_capslock_on():
         try:
             from Xlib import display
             d = display.Display()
-            return bool(d.get_keyboard_control().leds & 1)
+            return bool(d.get_keyboard_control().led_mask & 1)
         except ImportError:
             raise RuntimeError(
                 "Для работы на Linux требуется пакет python-xlib. Установите его: pip install python-xlib")
@@ -27,11 +35,12 @@ def is_shift_pressed():
 
     elif sys.platform.startswith("linux"):
         try:
-            from Xlib import display, X
+            from Xlib import display
+            from Xlib.XK import XK_Shift_L, XK_Shift_R
             d = display.Display()
             state = d.query_keymap()
-            shift_keycode = d.keysym_to_keycode(X.XK_Shift_L)  # Левая Shift
-            shift_r_keycode = d.keysym_to_keycode(X.XK_Shift_R)  # Правая Shift
+            shift_keycode = d.keysym_to_keycode(XK_Shift_L)  # Левая Shift
+            shift_r_keycode = d.keysym_to_keycode(XK_Shift_R)  # Правая Shift
             return bool(state[shift_keycode // 8] & (1 << (shift_keycode % 8))) or \
                 bool(state[shift_r_keycode // 8] & (1 << (shift_r_keycode % 8)))
         except ImportError:
