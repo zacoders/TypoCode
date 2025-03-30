@@ -1,0 +1,9 @@
+app: TypoCode
+version: "1.0"
+arch: x86_64
+exec: TypoCode
+files:
+  - path: TypoCode
+    destination: usr/bin/
+script:
+  - chmod +x usr/bin/TypoCode
