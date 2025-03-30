@@ -154,6 +154,7 @@ class Keyboard:
 
     def __create_keys_from_layout(self, y_offset, layout):
         print('call __create_keys_from_layout')
+        self.__keys = []
         for row in layout:
             x_offset = self.__x
             for key, width in row:
