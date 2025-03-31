@@ -31,7 +31,7 @@ jobs:
       if: runner.os == 'Windows'
       run: |
         cd src
-        pyinstaller --onefile --noconsole --add-data "_content;_content" --icon=main.ico --name TypoCode main.py
+        pyinstaller --onefile --noconsole --add-data "_content;src/_content" --icon=main.ico --name TypoCode main.py
       shell: cmd
 
     - name: Upload Windows artifact
@@ -45,7 +45,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         cd src
-        pyinstaller --onefile --noconsole --add-data "_content:_content" --name typocode main.py
+        pyinstaller --onefile --noconsole --add-data "_content:src/_content" --name typocode main.py
       shell: bash
 
     - name: Package Linux App as .tar.gz
