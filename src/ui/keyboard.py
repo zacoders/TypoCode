@@ -24,7 +24,6 @@ class Keyboard:
     GREY = (115, 115, 115)
 
     REGULAR_BG_KEY_COLOR = (30, 30, 30)
-    HIGHLIGHTED_BG_KEY_COLOR = (0, 117, 45)
 
     def __init__(self, language: KeyboardLanguage):
         self.__x = 0
@@ -182,6 +181,13 @@ class Keyboard:
         self.__spacing = Keyboard.KEY_SPACING * scale
         self.__font = pygame.font.Font(None, int(Keyboard.FONT_SIZE * scale))
         self.__create_keys()
+        
+    def change_color(self, color, factor=0.5):
+        r, g, b = color
+        r = min(int(r * factor), 255)
+        g = min(int(g * factor), 255)
+        b = min(int(b * factor), 255)
+        return (r, g, b)
 
     def highlight_key(self, key: str):
         keys_only = [k for k, _ in self.__keys]
@@ -201,7 +207,7 @@ class Keyboard:
         is_upper = is_capslock ^ is_shift
 
         for (key, rect), color in zip(self.__keys, self.__color_layout):
-            bg_color = self.REGULAR_BG_KEY_COLOR if key != self.__highlighted_key else self.HIGHLIGHTED_BG_KEY_COLOR
+            bg_color = self.REGULAR_BG_KEY_COLOR if key != self.__highlighted_key else self.change_color(color)
             pygame.draw.rect(screen, bg_color, rect, border_radius=5)
             pygame.draw.rect(screen, color, rect, 4)
 
