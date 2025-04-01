@@ -24,7 +24,6 @@ class Keyboard:
     GREY = (115, 115, 115)
 
     REGULAR_BG_KEY_COLOR = (30, 30, 30)
-    HIGHLIGHTED_BG_KEY_COLOR = (0, 117, 45)
 
     def __init__(self, language: KeyboardLanguage):
         self.__x = 0
