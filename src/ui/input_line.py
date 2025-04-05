@@ -2,6 +2,7 @@ from pygame.font import Font
 from pygame.event import Event
 import pygame
 from common.common import get_resource_path
+from consts import BG_COLOR
 from game_state import GameState
 from services.keyboard_service import KeyboardService
 from services.line_stats_calc import LineStatsCalc
@@ -120,12 +121,22 @@ class InputLine:
 
         diff_x = (screen.get_width() - text_width) / 2
         text_pos = (diff_x, line_rect.y)
-        if self.__error_symbol:
-            cursor = self.__error_symbol if self.__error_symbol != ' ' else self.__cursor_symbol
-            text = self.__font.render(self.__text + cursor, True, (200, 0, 0))
+
+        font_text_width, _ = self.__font.size(self.__text)
+
+        cursor_rect = pygame.Rect(
+            text_pos[0] + font_text_width,
+            line_rect.y,
+            5,
+            line_rect.height
+        )
+
+        if self.__error_symbol and self.__error_symbol != ' ':
+            text = self.__font.render(self.__text + self.__error_symbol, True, (200, 0, 0))
             screen.blit(text, text_pos)
             text2 = self.__font.render(self.__text, True, self.__text_color)
             screen.blit(text2, text_pos)
         else:
-            text = self.__font.render(self.__text + self.__cursor_symbol, True, self.__text_color)
+            text = self.__font.render(self.__text, True, self.__text_color)
             screen.blit(text, text_pos)
+            pygame.draw.rect(screen, self.__text_color, cursor_rect)
