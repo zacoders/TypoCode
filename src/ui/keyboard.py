@@ -181,7 +181,7 @@ class Keyboard:
         self.__spacing = Keyboard.KEY_SPACING * scale
         self.__font = pygame.font.Font(None, int(Keyboard.FONT_SIZE * scale))
         self.__create_keys()
-        
+
     def change_color(self, color, factor=0.5):
         r, g, b = color
         r = min(int(r * factor), 255)
@@ -209,7 +209,7 @@ class Keyboard:
         for (key, rect), color in zip(self.__keys, self.__color_layout):
             bg_color = self.REGULAR_BG_KEY_COLOR if key != self.__highlighted_key else self.change_color(color)
             pygame.draw.rect(screen, bg_color, rect, border_radius=5)
-            pygame.draw.rect(screen, color, rect, 4)
+            pygame.draw.rect(screen, color, rect, int(1.5 * self.__scale))
 
             if is_upper and len(key) == 1 and key.isalpha():
                 key_str = key.upper()
