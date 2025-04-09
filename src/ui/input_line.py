@@ -136,6 +136,10 @@ class InputLine:
             screen.blit(text, text_pos)
             text2 = self.__font.render(self.__text, True, self.__text_color)
             screen.blit(text2, text_pos)
+        elif self.__error_symbol == ' ':
+            text = self.__font.render(self.__text, True, self.__text_color)
+            screen.blit(text, text_pos)
+            pygame.draw.rect(screen, (200, 0, 0), cursor_rect)
         else:
             text = self.__font.render(self.__text, True, self.__text_color)
             screen.blit(text, text_pos)
