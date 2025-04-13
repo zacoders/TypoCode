@@ -38,7 +38,7 @@ class TypingWindow(WindowABC):
 
         mentor = Mentor()
 
-        self.__keyboard = Keyboard(language=text_generator.keyboard_lang)
+        self.__keyboard = Keyboard(language=text_generator.keyboard_lang, relative_y_pos=0.4)
 
         self.__random_line = RandomLine(
             text_len=self.__text_len,

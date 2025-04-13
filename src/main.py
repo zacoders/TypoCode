@@ -3,6 +3,7 @@ import sys
 import pygame
 from common.common import get_resource_path, is_linux, is_windows
 from game_state import GameState
+from ui.help_window import HelpWindow
 from ui.theme_config import save_theme
 from ui.typing_window import TypingWindow
 from ui.start_window import StartWindow
@@ -43,6 +44,9 @@ game_state = GameState()
 clock = pygame.time.Clock()
 
 while True:
+    help_window = HelpWindow()
+    help_window.show(screen, clock, min_screen_size, max_screen_size)
+    
     start_window = StartWindow(game_state)
     start_window.show(screen, start_screen_size, clock, min_screen_size, max_screen_size)
 
