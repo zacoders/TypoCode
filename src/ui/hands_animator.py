@@ -1,6 +1,5 @@
 
 
-from typing import List
 import pygame
 from pygame import Surface
 
@@ -8,8 +7,13 @@ from common.common import get_resource_path
 from ui.fingers_enum import FingersEnum
 
 
-class FingerAnimator:
+class HandsAnimator:
     def __init__(self):
+        hands_image = pygame.image.load(
+            get_resource_path("src/_content/images/arms/arms.png"))
+        self.__hands_image = pygame.transform.scale(
+            hands_image, (hands_image.width // 1.1, hands_image.height // 1.1))
+
         images = [
             "src/_content/images/arms/left_thumb.png",
             "src/_content/images/arms/right_thumb.png",
@@ -72,17 +76,24 @@ class FingerAnimator:
                 self.__drew_fingers += 1
                 self.__is_visible = True
 
-    def draw(self, screen: Surface, arms_image_size: tuple[int, int]) -> FingersEnum:
+    def draw(self, screen: Surface):
+        screen.blit(
+            self.__hands_image,
+            (
+                screen.get_width() // 2 - self.__hands_image.width // 2,
+                screen.get_height() - self.__hands_image.height
+            )
+        )
+
         if self.__drew_fingers < len(self.__fingers_enums) and self.__is_visible:
             finger_image, self.__finger_enum = self.__fingers_enums[self.__drew_fingers]
             screen.blit(
                 finger_image,
                 (
-                    screen.get_width() // 2 - arms_image_size[0] // 2,
-                    screen.get_height() - arms_image_size[1]
+                    screen.get_width() // 2 - self.__hands_image.width // 2,
+                    screen.get_height() - self.__hands_image.height
                 )
             )
-        return self.__finger_enum
-    
+
     def get_finger_enum(self):
         return self.__finger_enum

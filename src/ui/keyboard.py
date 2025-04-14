@@ -204,12 +204,39 @@ class Keyboard:
             self.__highlighted_key = "Space"
 
     def highlight_fingers_key(self, finger_enum: FingersEnum):
-        def filter_keys_by_color(target_color):
-            return [key for key, color in zip(keys_only, self.__color_layout) if color == target_color]
+        def filter_keys_by_color(target_color, finger_enum: FingersEnum):
+            finger_side = finger_enum.name.split('_')[0]  # "LEFT" или "RIGHT"
+            filtered_keys = []
+
+            keys_only = [k for k, _ in self.__keys]
+            row_lengths = [14, 14, 13, 12, 8]
+            start_index = 0
+
+            for row_len in row_lengths:
+                end_index = start_index + row_len
+
+                row_colors = self.__color_layout[start_index:end_index]
+                row_keys = keys_only[start_index:end_index]
+
+                middle = row_len // 2
+
+                if finger_side == "LEFT":
+                    zone_colors = row_colors[:middle]
+                    zone_keys = row_keys[:middle]
+                elif finger_side == "RIGHT":
+                    zone_colors = row_colors[-middle - 1:]
+                    zone_keys = row_keys[-middle - 1:]
+
+                for key, color in zip(zone_keys, zone_colors):
+                    if color == target_color:
+                        filtered_keys.append(key)
+
+                start_index = end_index  # Переход к следующей строке
+
+            return filtered_keys
 
         keys_only = [k for k, _ in self.__keys]
 
-        # Все ключи — кортежи!
         finger_color_map = {
             (FingersEnum.LEFT_THUMB, FingersEnum.RIGHT_THUMB): self.PURPLE,
             (FingersEnum.LEFT_INDEX,): self.BLUE,
@@ -221,7 +248,7 @@ class Keyboard:
 
         for fingers, color in finger_color_map.items():
             if finger_enum in fingers:
-                self.__highlighted_finger_keys = filter_keys_by_color(color)
+                self.__highlighted_finger_keys = filter_keys_by_color(color, finger_enum)
                 return
 
         if finger_enum == FingersEnum.START_BUTTONS:
@@ -229,8 +256,6 @@ class Keyboard:
                 self.__highlighted_finger_keys = [k for k in keys_only if k in ("f", "F", "j", "J")]
             elif self.__language == KeyboardLanguage.RUSSIAN:
                 self.__highlighted_finger_keys = [k for k in keys_only if k in ("а", "А", "о", "О")]
-
-
 
     def draw(self, screen: pygame.Surface):
         is_capslock = is_capslock_on()
