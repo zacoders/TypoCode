@@ -39,7 +39,7 @@ class HelpWindow(WindowABC):
             self.__keyboard.highlight_fingers_key(fingers_enum)
 
             self.__hands_animator.draw(screen)
-            self.__keyboard.draw(screen, fingers_enum)
+            self.__keyboard.draw(screen)
 
             pygame.display.update()
             pygame.display.flip()
