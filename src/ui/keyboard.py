@@ -257,7 +257,7 @@ class Keyboard:
             elif self.__language == KeyboardLanguage.RUSSIAN:
                 self.__highlighted_finger_keys = [k for k in keys_only if k in ("а", "А", "о", "О")]
 
-    def draw(self, screen: pygame.Surface):
+    def draw(self, screen: pygame.Surface, finger_enum: FingersEnum):
         is_capslock = is_capslock_on()
         is_shift = is_shift_pressed()
 
@@ -267,7 +267,10 @@ class Keyboard:
             if key != self.__highlighted_key and key not in self.__highlighted_finger_keys:
                 bg_color = self.REGULAR_BG_KEY_COLOR
             else:
-                bg_color = self.change_color(color)
+                if finger_enum == FingersEnum.START_BUTTONS:
+                    bg_color = self.change_color(self.RED)
+                else:
+                    bg_color = self.change_color(color)
 
             pygame.draw.rect(screen, bg_color, rect, border_radius=5)
             pygame.draw.rect(screen, color, rect, int(1.5 * self.__scale))
