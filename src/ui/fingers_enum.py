@@ -1,17 +1,17 @@
 
-
-from enum import Enum
+from enum import Enum, auto
 
 
 class FingersEnum(Enum):
-    LEFT_THUMB = 1
-    RIGHT_THUMB = 2
-    LEFT_INDEX = 3
-    RIGHT_INDEX = 4
-    LEFT_MIDDLE = 5
-    RIGHT_MIDDLE = 6
-    LEFT_RING = 7
-    RIGHT_RING = 8
-    LEFT_LITTLE = 9
-    RIGHT_LITTLE = 10
-    START_BUTTONS = 11
+    LEFT_THUMB = auto()
+    RIGHT_THUMB = auto()
+    LEFT_INDEX = auto()
+    RIGHT_INDEX = auto()
+    LEFT_MIDDLE = auto()
+    RIGHT_MIDDLE = auto()
+    LEFT_RING = auto()
+    RIGHT_RING = auto()
+    LEFT_LITTLE = auto()
+    RIGHT_LITTLE = auto()
+    BOTH_THUMBS = auto()
+    BOTH_INDEXES = auto()
