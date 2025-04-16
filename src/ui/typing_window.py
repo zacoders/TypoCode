@@ -84,7 +84,7 @@ class TypingWindow(WindowABC):
             keys = pygame.key.get_pressed()
             events = pygame.event.get()
 
-            self.update_events(keys, events, screen, min_screen_size, max_screen_size)
+            self.update_events(events, screen, min_screen_size, max_screen_size)
 
             if keys[pygame.K_ESCAPE]:
                 return

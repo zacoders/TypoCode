@@ -46,7 +46,7 @@ clock = pygame.time.Clock()
 while True:
     help_window = HelpWindow()
     help_window.show(screen, clock, min_screen_size, max_screen_size)
-    
+
     start_window = StartWindow(game_state)
     start_window.show(screen, start_screen_size, clock, min_screen_size, max_screen_size)
 

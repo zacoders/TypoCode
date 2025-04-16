@@ -16,7 +16,6 @@ class WindowABC(ABC):
 
     def update_events(
         self,
-        keys: ScancodeWrapper,
         events: List[Event],
         screen: Surface,
         min_screen_size: Point,

@@ -59,7 +59,7 @@ class HandsAnimator:
         self.__blinks_num = 0
         self.__is_visible = True
         self.__last_blink_time = pygame.time.get_ticks()
-        self.__blink_delay = 500  # 0.5 секунды
+        self.__blink_delay = 500
 
     def __get_scale(self, image_size: Tuple[int, int], screen_size: Tuple[int, int]):
         scale_w = image_size[0] / screen_size[0] / self.WIDTH_SCALE
@@ -86,12 +86,14 @@ class HandsAnimator:
             (self.__original_hands_image.get_size()),
             (screen.get_size())
         )
+        
+        scale = max(scale_w, scale_h)
 
         self.__hands_image = pygame.transform.scale(
             self.__original_hands_image,
             (
-                int(self.__original_hands_image.get_width() / scale_w),
-                int(self.__original_hands_image.get_height() / scale_h)
+                int(self.__original_hands_image.get_width() / scale),
+                int(self.__original_hands_image.get_height() / scale)
             )
         )
 
@@ -105,11 +107,14 @@ class HandsAnimator:
             finger_image = pygame.transform.scale(
                 finger_image,
                 (
-                    int(finger_image.get_width() / scale_w),
-                    int(finger_image.get_height() / scale_h)
+                    int(finger_image.get_width() / scale),
+                    int(finger_image.get_height() / scale)
                 )
             )
             screen.blit(finger_image, (hands_x, hands_y))
 
     def get_finger_enum(self):
         return self.__finger_enum
+    
+    def get_hands_image(self):
+        return self.__hands_image
