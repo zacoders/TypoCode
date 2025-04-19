@@ -28,7 +28,7 @@ class HelpWindow(WindowABC):
             self.update_events(events, screen, min_screen_size, max_screen_size)
 
             for event in events:
-                if event.type == pygame.KEYDOWN:
+                if event.type == pygame.KEYDOWN and event.key != pygame.K_F11:
                     return
 
             self.__hands_animator.update()
