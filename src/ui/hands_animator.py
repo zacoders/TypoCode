@@ -104,6 +104,3 @@ class HandsAnimator:
 
     def get_finger_enum(self):
         return self.__finger_enum
-
-    def get_hands_image(self):
-        return self.__hands_image
