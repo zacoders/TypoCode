@@ -38,7 +38,7 @@ class TypingWindow(WindowABC):
 
         mentor = Mentor()
 
-        self.__keyboard = Keyboard(language=text_generator.keyboard_lang)
+        self.__keyboard = Keyboard(language=text_generator.keyboard_lang, relative_y_pos=0.4)
 
         self.__random_line = RandomLine(
             text_len=self.__text_len,
@@ -84,7 +84,7 @@ class TypingWindow(WindowABC):
             keys = pygame.key.get_pressed()
             events = pygame.event.get()
 
-            self.update_events(keys, events, screen, min_screen_size, max_screen_size)
+            self.update_events(events, screen, min_screen_size, max_screen_size)
 
             if keys[pygame.K_ESCAPE]:
                 return

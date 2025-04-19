@@ -3,6 +3,7 @@ import pygame
 from pygame.key import ScancodeWrapper
 from common.common import is_capslock_on, is_shift_pressed
 from generators.keyboard_lang import KeyboardLanguage
+from ui.fingers_enum import FingersEnum
 
 
 class Keyboard:
@@ -25,7 +26,8 @@ class Keyboard:
 
     REGULAR_BG_KEY_COLOR = (30, 30, 30)
 
-    def __init__(self, language: KeyboardLanguage):
+    def __init__(self, language: KeyboardLanguage, relative_y_pos: float = 0):
+        self.__relative_y_pos = relative_y_pos
         self.__x = 0
         self.__y = 0
         self.__keys = []
@@ -34,6 +36,8 @@ class Keyboard:
         self.__screen_width = -1
         self.__language = language
         self.__is_upper_case = False
+        self.__highlighted_finger_keys = []
+        self.__start_button_keys = []
 
         self.__color_layout = [
             self.RED, self.RED, self.RED, self.YELLOW, self.GREEN, self.BLUE, self.BLUE,
@@ -61,8 +65,8 @@ class Keyboard:
             [("Caps", 1.8), ("a", 1), ("s", 1), ("d", 1), ("f", 1), ("g", 1),
              ("h", 1), ("j", 1), ("k", 1), ("l", 1), (":", 1), ('"', 1), ("Enter", 2.35)],
 
-            [("Shift", 2.30), ("z", 1), ("x", 1), ("c", 1), ("v", 1), ("b", 1),
-             ("n", 1), ("m", 1), ("<", 1), (">", 1), ("?", 1), ("Shift", 3.0)],
+            [("L-Shift", 2.30), ("z", 1), ("x", 1), ("c", 1), ("v", 1), ("b", 1),
+             ("n", 1), ("m", 1), ("<", 1), (">", 1), ("?", 1), ("R-Shift", 3.0)],
 
             [("Ctrl", 1.25), ("Win", 1.25), ("Alt", 1.25), ("Space", 7.15),
              ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
@@ -78,8 +82,8 @@ class Keyboard:
             [("Caps", 1.8), ("a", 1), ("s", 1), ("d", 1), ("f", 1), ("g", 1),
              ("h", 1), ("j", 1), ("k", 1), ("l", 1), (";", 1), ("'", 1), ("Enter", 2.35)],
 
-            [("Shift", 2.30), ("z", 1), ("x", 1), ("c", 1), ("v", 1), ("b", 1),
-             ("n", 1), ("m", 1), (",", 1), (".", 1), ("/", 1), ("Shift", 3.0)],
+            [("L-Shift", 2.30), ("z", 1), ("x", 1), ("c", 1), ("v", 1), ("b", 1),
+             ("n", 1), ("m", 1), (",", 1), (".", 1), ("/", 1), ("R-Shift", 3.0)],
 
             [("Ctrl", 1.25), ("Win", 1.25), ("Alt", 1.25), ("Space", 7.15),
              ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
@@ -95,8 +99,8 @@ class Keyboard:
             [("Caps", 1.8), ("ф", 1), ("ы", 1), ("в", 1), ("а", 1), ("п", 1),
              ("р", 1), ("о", 1), ("л", 1), ("д", 1), ("ж", 1), ("э", 1), ("Enter", 2.35)],
 
-            [("Shift", 2.30), ("я", 1), ("ч", 1), ("с", 1), ("м", 1), ("и", 1),
-             ("т", 1), ("ь", 1), ("б", 1), ("ю", 1), (",", 1), ("Shift", 3.0)],
+            [("L-Shift", 2.30), ("я", 1), ("ч", 1), ("с", 1), ("м", 1), ("и", 1),
+             ("т", 1), ("ь", 1), ("б", 1), ("ю", 1), (",", 1), ("R-Shift", 3.0)],
 
             [("Ctrl", 1.25), ("Win", 1.25), ("Alt", 1.25), ("Space", 7.15),
              ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
@@ -112,8 +116,8 @@ class Keyboard:
             [("Caps", 1.8), ("ф", 1), ("ы", 1), ("в", 1), ("а", 1), ("п", 1),
              ("р", 1), ("о", 1), ("л", 1), ("д", 1), ("ж", 1), ("э", 1), ("Enter", 2.35)],
 
-            [("Shift", 2.30), ("я", 1), ("ч", 1), ("с", 1), ("м", 1), ("и", 1),
-             ("т", 1), ("ь", 1), ("б", 1), ("ю", 1), (".", 1), ("Shift", 3.0)],
+            [("L-Shift", 2.30), ("я", 1), ("ч", 1), ("с", 1), ("м", 1), ("и", 1),
+             ("т", 1), ("ь", 1), ("б", 1), ("ю", 1), (".", 1), ("R-Shift", 3.0)],
 
             [("Ctrl", 1.25), ("Win", 1.25), ("Alt", 1.25), ("Space", 7.15),
              ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
@@ -176,7 +180,7 @@ class Keyboard:
     def __set_scale(self, scale: float):
         self.__scale = scale
         self.__x = self.__screen_width / 2 - (Keyboard.LINE_KEYS_COUNT / 2.0 + 1) * Keyboard.KEY_SIZE * self.__scale
-        self.__y = self.__screen_height / 2.5 + Keyboard.KEY_SIZE * self.__scale
+        self.__y = self.__screen_height * self.__relative_y_pos + Keyboard.KEY_SIZE * self.__scale
         self.__key_size = Keyboard.KEY_SIZE * scale
         self.__spacing = Keyboard.KEY_SPACING * scale
         self.__font = pygame.font.Font(None, int(Keyboard.FONT_SIZE * scale))
@@ -200,6 +204,73 @@ class Keyboard:
         if key == " ":
             self.__highlighted_key = "Space"
 
+    def highlight_fingers_key(self, finger_enum: FingersEnum):
+        self.__highlighted_finger_keys = []
+        self.__start_button_keys = []
+
+        def filter_keys_by_color(target_color, finger_enum: FingersEnum):
+            finger_side = finger_enum.name.split('_')[0]  # "LEFT" или "RIGHT"
+            filtered_keys = []
+
+            keys_only = [k for k, _ in self.__keys]
+
+            row_lengths = [14, 14, 13, 12, 8]
+            start_index = 0
+
+            for row_len in row_lengths:
+                end_index = start_index + row_len
+
+                row_colors = self.__color_layout[start_index:end_index]
+                row_keys = keys_only[start_index:end_index]
+
+                middle = row_len // 2
+
+                if finger_side == "LEFT":
+                    zone_colors = row_colors[:middle]
+                    zone_keys = row_keys[:middle]
+                elif finger_side == "RIGHT":
+                    zone_colors = row_colors[-middle - 1:]
+                    zone_keys = row_keys[-middle - 1:]
+                else:
+                    zone_colors = row_colors
+                    zone_keys = row_keys
+
+                for key, color in zip(zone_keys, zone_colors):
+                    if color == target_color:
+                        filtered_keys.append(key)
+
+                start_index = end_index  # Переход к следующей строке
+
+            return filtered_keys
+
+        keys_only = [k for k, _ in self.__keys]
+
+        finger_color_map = {
+            FingersEnum.BOTH_THUMBS: self.PURPLE,
+            FingersEnum.LEFT_INDEX: self.BLUE,
+            FingersEnum.RIGHT_INDEX: self.PINK,
+            FingersEnum.LEFT_MIDDLE: self.GREEN,
+            FingersEnum.RIGHT_LITTLE: self.GREEN,
+            FingersEnum.LEFT_RING: self.YELLOW,
+            FingersEnum.RIGHT_RING: self.YELLOW,
+            FingersEnum.LEFT_LITTLE: self.RED,
+            FingersEnum.RIGHT_MIDDLE: self.RED
+        }
+
+        for enum, color in finger_color_map.items():
+            if finger_enum == enum:
+                self.__highlighted_finger_keys = filter_keys_by_color(color, finger_enum)
+                return
+
+        if finger_enum == FingersEnum.BOTH_INDEXES:
+            if self.__language == KeyboardLanguage.ENGLISH:
+                keys = [k for k in keys_only if k in ("f", "F", "j", "J")]
+            elif self.__language == KeyboardLanguage.RUSSIAN:
+                keys = [k for k in keys_only if k in ("а", "А", "о", "О")]
+
+            self.__highlighted_finger_keys = keys
+            self.__start_button_keys = keys
+
     def draw(self, screen: pygame.Surface):
         is_capslock = is_capslock_on()
         is_shift = is_shift_pressed()
@@ -207,7 +278,13 @@ class Keyboard:
         is_upper = is_capslock ^ is_shift
 
         for (key, rect), color in zip(self.__keys, self.__color_layout):
-            bg_color = self.REGULAR_BG_KEY_COLOR if key != self.__highlighted_key else self.change_color(color)
+            if key != self.__highlighted_key and key not in self.__highlighted_finger_keys:
+                bg_color = self.REGULAR_BG_KEY_COLOR
+            elif self.__start_button_keys:
+                bg_color = self.change_color((180, 70, 70))
+            else:
+                bg_color = self.change_color(color)
+
             pygame.draw.rect(screen, bg_color, rect, border_radius=5)
             pygame.draw.rect(screen, color, rect, int(1.5 * self.__scale))
 

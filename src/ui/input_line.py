@@ -127,7 +127,7 @@ class InputLine:
         cursor_rect = pygame.Rect(
             text_pos[0] + font_text_width,
             line_rect.y,
-            5,
+            self.__font.size('0')[1] / 16,
             line_rect.height
         )
 
