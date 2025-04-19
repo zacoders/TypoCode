@@ -24,8 +24,7 @@ class HandsAnimator:
             FingersEnum.LEFT_RING: self.__load_finger("left_ring_finger"),
             FingersEnum.LEFT_MIDDLE: self.__load_finger("left_middle_finger"),
             FingersEnum.LEFT_INDEX: self.__load_finger("left_index_finger"),
-            # FingersEnum.LEFT_THUMB: self.__load_finger("left_thumb"),
-            FingersEnum.BOTH_THUMBS: self.__load_finger("right_thumb"),
+            FingersEnum.BOTH_THUMBS: self.__load_finger("thumbs"),
             FingersEnum.RIGHT_INDEX: self.__load_finger("right_index_finger"),
             FingersEnum.RIGHT_MIDDLE: self.__load_finger("right_middle_finger"),
             FingersEnum.RIGHT_RING: self.__load_finger("right_ring_finger"),
@@ -92,6 +91,7 @@ class HandsAnimator:
 
         if self.__is_visible:
             finger: FingersEnum = self.__draw_sequence[self.__draw_finger]
+            self.__finger_enum = finger
             image = self.__fingers[finger]
             finger_image = pygame.transform.scale(
                 image,

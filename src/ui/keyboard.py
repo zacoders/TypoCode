@@ -227,6 +227,9 @@ class Keyboard:
                 elif finger_side == "RIGHT":
                     zone_colors = row_colors[-middle - 1:]
                     zone_keys = row_keys[-middle - 1:]
+                else:
+                    zone_colors = row_colors
+                    zone_keys = row_keys
 
                 for key, color in zip(zone_keys, zone_colors):
                     if color == target_color:
@@ -239,20 +242,23 @@ class Keyboard:
         keys_only = [k for k, _ in self.__keys]
 
         finger_color_map = {
-            (FingersEnum.LEFT_THUMB, FingersEnum.RIGHT_THUMB): self.PURPLE,
-            (FingersEnum.LEFT_INDEX,): self.BLUE,
-            (FingersEnum.RIGHT_INDEX,): self.PINK,
-            (FingersEnum.LEFT_MIDDLE, FingersEnum.RIGHT_LITTLE): self.GREEN,
-            (FingersEnum.LEFT_RING, FingersEnum.RIGHT_RING): self.YELLOW,
-            (FingersEnum.LEFT_LITTLE, FingersEnum.RIGHT_MIDDLE): self.RED
+            FingersEnum.BOTH_THUMBS: self.PURPLE,
+            FingersEnum.LEFT_INDEX: self.BLUE,
+            FingersEnum.RIGHT_INDEX: self.PINK,
+            FingersEnum.LEFT_MIDDLE: self.GREEN,
+            FingersEnum.RIGHT_LITTLE: self.GREEN,
+            FingersEnum.LEFT_RING: self.YELLOW,
+            FingersEnum.RIGHT_RING: self.YELLOW,
+            FingersEnum.LEFT_LITTLE: self.RED,
+            FingersEnum.RIGHT_MIDDLE: self.RED
         }
 
-        for fingers, color in finger_color_map.items():
-            if finger_enum in fingers:
+        for enum, color in finger_color_map.items():
+            if finger_enum == enum:
                 self.__highlighted_finger_keys = filter_keys_by_color(color, finger_enum)
                 return
 
-        if finger_enum == FingersEnum.START_BUTTONS:
+        if finger_enum == FingersEnum.BOTH_INDEXES:
             if self.__language == KeyboardLanguage.ENGLISH:
                 keys = [k for k in keys_only if k in ("f", "F", "j", "J")]
             elif self.__language == KeyboardLanguage.RUSSIAN:
@@ -273,7 +279,7 @@ class Keyboard:
             if key != self.__highlighted_key and key not in self.__highlighted_finger_keys:
                 bg_color = self.REGULAR_BG_KEY_COLOR
             elif self.__start_button_keys:
-                bg_color = self.change_color(self.RED)
+                bg_color = self.change_color((180, 70, 70))
             else:
                 bg_color = self.change_color(color)
 
