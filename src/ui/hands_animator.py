@@ -104,3 +104,6 @@ class HandsAnimator:
 
     def get_finger_enum(self):
         return self.__finger_enum
+    
+    def get_visible_stage(self):
+        return self.__is_visible

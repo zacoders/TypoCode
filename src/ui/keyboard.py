@@ -204,7 +204,7 @@ class Keyboard:
         if key == " ":
             self.__highlighted_key = "Space"
 
-    def highlight_fingers_key(self, finger_enum: FingersEnum):
+    def highlight_fingers_key(self, finger_enum: FingersEnum, is_visible: bool):
         self.__highlighted_finger_keys = []
         self.__start_button_keys = []
 
@@ -236,8 +236,9 @@ class Keyboard:
                     zone_keys = row_keys
 
                 for key, color in zip(zone_keys, zone_colors):
-                    if color == target_color:
-                        filtered_keys.append(key)
+                    if is_visible:
+                        if color == target_color:
+                            filtered_keys.append(key)
 
                 start_index = end_index  # Переход к следующей строке
 
@@ -268,8 +269,8 @@ class Keyboard:
             elif self.__language == KeyboardLanguage.RUSSIAN:
                 keys = [k for k in keys_only if k in ("а", "А", "о", "О")]
 
-            self.__highlighted_finger_keys = keys
-            self.__start_button_keys = keys
+            self.__highlighted_finger_keys = keys if is_visible else None
+            self.__start_button_keys = keys if is_visible else None
 
     def draw(self, screen: pygame.Surface):
         is_capslock = is_capslock_on()
@@ -278,12 +279,15 @@ class Keyboard:
         is_upper = is_capslock ^ is_shift
 
         for (key, rect), color in zip(self.__keys, self.__color_layout):
-            if key != self.__highlighted_key and key not in self.__highlighted_finger_keys:
+            if key != self.__highlighted_key:
                 bg_color = self.REGULAR_BG_KEY_COLOR
-            elif self.__start_button_keys:
-                bg_color = self.change_color((180, 70, 70))
+            if self.__highlighted_finger_keys is not None and key in self.__highlighted_finger_keys:
+                if self.__start_button_keys is not None and key in self.__start_button_keys:
+                    bg_color = self.change_color((180, 70, 70))
+                else:
+                    bg_color = self.change_color(color)
             else:
-                bg_color = self.change_color(color)
+                bg_color = self.REGULAR_BG_KEY_COLOR
 
             pygame.draw.rect(screen, bg_color, rect, border_radius=5)
             pygame.draw.rect(screen, color, rect, int(1.5 * self.__scale))
