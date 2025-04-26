@@ -40,6 +40,7 @@ class HandsAnimator:
         self.__is_visible = True
         self.__last_blink_time = pygame.time.get_ticks()
         self.__blink_delay = 500
+        self.__repeat = False
 
     def __load_finger(self, file_name: str) -> Surface:
         root = "src/_content/images/arms/"
@@ -66,6 +67,7 @@ class HandsAnimator:
                 self.__is_visible = True
 
             if self.__draw_finger > len(self.__draw_sequence) - 1:
+                self.__repeat = True
                 self.__draw_finger = 0
 
     def draw(self, screen: Surface):
@@ -107,3 +109,6 @@ class HandsAnimator:
     
     def get_visible_stage(self):
         return self.__is_visible
+    
+    def get_repeat_stage(self):
+        return self.__repeat

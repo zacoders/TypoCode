@@ -10,6 +10,7 @@ from typing_errors import TypingErrors
 from pygame.key import ScancodeWrapper
 from game_state import GameState
 from ui.font_calc import FontCalc
+from ui.help_window import HelpWindow
 from ui.input_line import InputLine
 from ui.keyboard import Keyboard
 from ui.random_line import RandomLine
@@ -88,6 +89,11 @@ class TypingWindow(WindowABC):
 
             if keys[pygame.K_ESCAPE]:
                 return
+
+            for event in events:
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
+                    help_window = HelpWindow()
+                    help_window.show(screen, clock, min_screen_size, max_screen_size)
 
             self.update(events, keys, screen.get_height(), screen.get_width())
             self.draw(screen)

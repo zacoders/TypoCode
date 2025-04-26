@@ -34,7 +34,6 @@ class InputLine:
 
         self.__text = ''
         self.__error_symbol = ''
-        self.__cursor_symbol = "_"
 
         self.__prev_font_size = 100
 

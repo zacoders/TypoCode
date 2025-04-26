@@ -11,6 +11,7 @@ from consts import BG_COLOR, FPS
 from game_state import GameState
 import generators
 from generators.generator_abc import GeneratorABC
+from ui.help_window import HelpWindow
 from ui.theme_config import get_theme_path
 from ui.window_abc import WindowABC
 from pygame.typing import Point
@@ -18,8 +19,10 @@ from pygame.typing import Point
 
 class StartWindow(WindowABC):
 
-    def __init__(self, game_state: GameState):
+    def __init__(self, game_state: GameState, is_help_show: bool):
         super().__init__()
+        
+        self.__is_help_show = is_help_show
 
         self.__game_state = game_state
 
@@ -88,6 +91,9 @@ class StartWindow(WindowABC):
 
             for event in events:
                 if event.type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
+                    if not self.__is_help_show:
+                        help_window = HelpWindow()
+                        help_window.show(screen, clock, min_screen_size, max_screen_size)
                     return
                 if event.type == pygame.KEYDOWN and keys[pygame.K_ESCAPE]:
                     pygame.quit()
