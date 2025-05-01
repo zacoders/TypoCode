@@ -41,6 +41,8 @@ class TypingWindow(WindowABC):
 
         self.__keyboard = Keyboard(language=text_generator.keyboard_lang, relative_y_pos=0.4)
 
+        self.__nothing_press_time = 0
+
         self.__random_line = RandomLine(
             text_len=self.__text_len,
             errors=typing_errors,
@@ -85,15 +87,24 @@ class TypingWindow(WindowABC):
             keys = pygame.key.get_pressed()
             events = pygame.event.get()
 
+            self.__nothing_press_time += 1
+
             self.update_events(events, screen, min_screen_size, max_screen_size)
 
             if keys[pygame.K_ESCAPE]:
                 return
 
             for event in events:
+                if event.type == pygame.KEYDOWN:
+                    self.__nothing_press_time = 0
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
                     help_window = HelpWindow()
                     help_window.show(screen, clock, min_screen_size, max_screen_size)
+
+            if self.__nothing_press_time >= 1500:
+                self.__nothing_press_time = 0
+                help_window = HelpWindow()
+                help_window.show(screen, clock, min_screen_size, max_screen_size)
 
             self.update(events, keys, screen.get_height(), screen.get_width())
             self.draw(screen)
