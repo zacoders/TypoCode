@@ -20,6 +20,7 @@ class HandsAnimator:
         self.__hands_image = self.__original_hands_image
 
         self.__fingers = {
+            FingersEnum.BOTH_INDEXES: self.__load_finger("start_buttons_fingers"),
             FingersEnum.LEFT_LITTLE: self.__load_finger("left_little_finger"),
             FingersEnum.LEFT_RING: self.__load_finger("left_ring_finger"),
             FingersEnum.LEFT_MIDDLE: self.__load_finger("left_middle_finger"),
@@ -28,13 +29,12 @@ class HandsAnimator:
             FingersEnum.RIGHT_INDEX: self.__load_finger("right_index_finger"),
             FingersEnum.RIGHT_MIDDLE: self.__load_finger("right_middle_finger"),
             FingersEnum.RIGHT_RING: self.__load_finger("right_ring_finger"),
-            FingersEnum.RIGHT_LITTLE: self.__load_finger("right_little_finger"),
-            FingersEnum.BOTH_INDEXES: self.__load_finger("start_buttons_fingers")
+            FingersEnum.RIGHT_LITTLE: self.__load_finger("right_little_finger")
         }
 
         self.__draw_sequence = list(self.__fingers.keys())
 
-        self.__finger_enum = FingersEnum.LEFT_LITTLE
+        self.__finger_enum = FingersEnum.BOTH_INDEXES
         self.__draw_finger = 0
         self.__blinks_num = 0
         self.__is_visible = True
@@ -87,7 +87,7 @@ class HandsAnimator:
         )
 
         hands_x = screen.get_width() // 2 - self.__hands_image.get_width() // 2
-        hands_y = screen.get_height() - self.__hands_image.get_height() + 75
+        hands_y = screen.get_height() - self.__hands_image.get_height() - 75
 
         screen.blit(self.__hands_image, (hands_x, hands_y))
 
@@ -106,9 +106,9 @@ class HandsAnimator:
 
     def get_finger_enum(self):
         return self.__finger_enum
-    
+
     def get_visible_stage(self):
         return self.__is_visible
-    
+
     def get_repeat_stage(self):
         return self.__repeat
