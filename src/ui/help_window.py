@@ -52,7 +52,9 @@ class HelpWindow(WindowABC):
             self.update_events(events, screen, min_screen_size, max_screen_size)
 
             for event in events:
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                if event.type == pygame.KEYDOWN and event.key:
+                    return
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button:
                     return
 
             self.update(screen.width)

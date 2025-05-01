@@ -91,12 +91,11 @@ class TypingWindow(WindowABC):
 
             self.update_events(events, screen, min_screen_size, max_screen_size)
 
-            if keys[pygame.K_ESCAPE]:
-                return
-
             for event in events:
                 if event.type == pygame.KEYDOWN:
                     self.__nothing_press_time = 0
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    return
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
                     help_window = HelpWindow()
                     help_window.show(screen, clock, min_screen_size, max_screen_size)
