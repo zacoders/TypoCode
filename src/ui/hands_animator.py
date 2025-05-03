@@ -13,7 +13,8 @@ class HandsAnimator:
     WIDTH_SCALE = 0.46
     HEIGHT_SCALE = 0.54
 
-    def __init__(self):
+    def __init__(self, relative_y_pos: float):
+        self.__relative_y_pos = relative_y_pos
         self.__original_hands_image = pygame.image.load(
             get_resource_path("src/_content/images/arms/arms.png")
         )
@@ -70,7 +71,7 @@ class HandsAnimator:
                 self.__repeat = True
                 self.__draw_finger = 0
 
-    def draw(self, screen: Surface, keyboard_bottom_y: int, y_distance: int):
+    def draw(self, screen: Surface):
         scale = self.__get_scale(
             self.__original_hands_image.get_size(),
             screen.get_size()
@@ -85,7 +86,7 @@ class HandsAnimator:
         )
 
         hands_x = screen.get_width() // 2 - self.__hands_image.get_width() // 2
-        hands_y = keyboard_bottom_y + y_distance
+        hands_y = screen.height * self.__relative_y_pos
 
         screen.blit(self.__hands_image, (hands_x, hands_y))
 
@@ -110,6 +111,3 @@ class HandsAnimator:
 
     def get_repeat_stage(self):
         return self.__repeat
-
-    def get_image_height(self):
-        return self.__hands_image.get_height()

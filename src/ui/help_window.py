@@ -1,5 +1,3 @@
-
-
 import pygame
 from pygame import Surface, Clock
 from pygame.key import ScancodeWrapper
@@ -16,42 +14,21 @@ class HelpWindow(WindowABC):
     def __init__(self):
         super().__init__()
 
-        self.__keyboard = Keyboard(KeyboardLanguage.ENGLISH)
-        self.__hands_animator = HandsAnimator()
+        self.__keyboard = Keyboard(KeyboardLanguage.ENGLISH, relative_y_pos=0.025)
+        self.__hands_animator = HandsAnimator(relative_y_pos=0.4)
 
-        self.__y_distance = 20
-
-    def update(self, screen_width: int, screen_height: int, keys: ScancodeWrapper):
-        
-        print(f'hands_animator_image_height = {self.__hands_animator.get_image_height()}, keyboard_height = {self.__keyboard.get_height()}')
-
-        total_height = self.__get_total_objs_height(
-            self.__y_distance,
-            self.__hands_animator.get_image_height(),
-            self.__keyboard.get_height()
-        )
-        
-        relative_y_pos = abs((screen_height - total_height) / 2 / screen_height)
+    def update(self, keys: ScancodeWrapper):
 
         self.__hands_animator.update()
-        self.__keyboard.update(screen_height, screen_width, keys, relative_y_pos)
+        self.__keyboard.update(keys)
 
         fingers_enum = self.__hands_animator.get_finger_enum()
         visible_stage = self.__hands_animator.get_visible_stage()
         self.__keyboard.highlight_fingers_key(fingers_enum, visible_stage)
 
     def draw(self, screen: Surface):
-        self.__hands_animator.draw(screen, self.__keyboard.get_bottom_y(), self.__y_distance)
+        self.__hands_animator.draw(screen)
         self.__keyboard.draw(screen)
-
-    def __get_total_objs_height(
-        self,
-        y_distance: int,
-        hands_height: int,
-        keyboard_height: int
-    ) -> int:
-
-        return hands_height + y_distance + keyboard_height
 
     def show(
         self,
@@ -77,7 +54,7 @@ class HelpWindow(WindowABC):
             if self.__hands_animator.get_repeat_stage():
                 return
 
-            self.update(screen.width, screen.height, keys)
+            self.update(keys)
             self.draw(screen)
 
             pygame.display.update()

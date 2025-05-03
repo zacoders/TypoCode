@@ -26,18 +26,17 @@ class Keyboard:
 
     REGULAR_BG_KEY_COLOR = (30, 30, 30)
 
-    def __init__(self, language: KeyboardLanguage):
-        self.__x = 0
-        self.__y = 0
-        self.__height = 0
+    def __init__(self, language: KeyboardLanguage, relative_y_pos: float):
+        self.__relative_y_pos = relative_y_pos
         self.__keys = []
         self.__highlighted_key = None
-        self.__screen_height = -1
-        self.__screen_width = -1
         self.__language = language
         self.__is_upper_case = False
         self.__highlighted_finger_keys = []
         self.__start_button_keys = []
+
+        self.__key_size = Keyboard.KEY_SIZE
+        self.__spacing = Keyboard.KEY_SPACING
 
         self.__color_layout = [
             self.RED, self.RED, self.RED, self.YELLOW, self.GREEN, self.BLUE, self.BLUE,
@@ -123,18 +122,15 @@ class Keyboard:
              ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
         ]
 
+        self.__create_keys()
+
     def __create_keys(self):
-
-        y_offset = self.__y
-
         if self.__language == KeyboardLanguage.ENGLISH:
             self.__create_keys_from_layout(
-                y_offset,
                 self.__eng_layout_uppercase if self.__is_upper_case else self.__eng_layout_lowercase
             )
         elif self.__language == KeyboardLanguage.RUSSIAN:
             self.__create_keys_from_layout(
-                y_offset,
                 self.__rus_layout_uppercase if self.__is_upper_case else self.__rus_layout_lowercase
             )
 
@@ -153,44 +149,20 @@ class Keyboard:
             self.__create_keys()  # Recreate keys with lowercase layout
             print('lower')
 
-    def __create_keys_from_layout(self, y_offset, layout):
+    def __create_keys_from_layout(self, layout):
         print('call __create_keys_from_layout')
         self.__keys = []
+        y_offset = 0
         for row in layout:
-            x_offset = self.__x
+            x_offset = 0
             for key, width in row:
                 rect = pygame.Rect(x_offset, y_offset, self.__key_size * width, self.__key_size)
                 self.__keys.append((key, rect))
                 x_offset += self.__key_size * width + self.__spacing
             y_offset += self.__key_size + self.__spacing
 
-    def update(self, screen_height: int, screen_width: int, keys: ScancodeWrapper, relative_y_pos: float = 0):
-        if self.__screen_height != screen_height or self.__screen_width != screen_width:
-            self.__screen_height = screen_height
-            self.__screen_width = screen_width
-            scale_w = (screen_width * Keyboard.WIDTH_SCALE / Keyboard.LINE_KEYS_COUNT) / \
-                (Keyboard.KEY_SIZE + Keyboard.KEY_SPACING)
-            scale_h = (screen_height * Keyboard.HEIGHT_SCALE / Keyboard.LINES_COUNT) / \
-                (Keyboard.KEY_SIZE + Keyboard.KEY_SPACING)
-            scale = min(scale_w, scale_h)
-
-            print(f'{scale=}, {relative_y_pos=}, {self.__screen_height=}, key_size={Keyboard.KEY_SIZE * scale}')
-
-            print(f'old_y={self.__y}')
-            self.__set_scale(scale, relative_y_pos)
-            print(f'new_y={self.__y}')
-
+    def update(self, keys: ScancodeWrapper):
         self._switch_layout(keys)
-
-    def __set_scale(self, scale: float, relative_y_pos: float):
-        self.__scale = scale
-        self.__key_size = Keyboard.KEY_SIZE * scale
-        self.__spacing = Keyboard.KEY_SPACING * scale
-        self.__x = self.__screen_width / 2 - (Keyboard.LINE_KEYS_COUNT / 2.0 + 1) * self.__key_size
-        self.__y = self.__screen_height * relative_y_pos + self.__key_size
-        self.__height = int(self.__key_size * 5 + self.__spacing * 4)
-        self.__font = pygame.font.Font(None, int(Keyboard.FONT_SIZE * scale))
-        self.__create_keys()
 
     def change_color(self, color, factor=0.5):
         r, g, b = color
@@ -279,12 +251,33 @@ class Keyboard:
             self.__start_button_keys = keys if is_visible else []
 
     def draw(self, screen: pygame.Surface):
+
+        scale_w = (screen.width * Keyboard.WIDTH_SCALE / Keyboard.LINE_KEYS_COUNT) / \
+            (Keyboard.KEY_SIZE + Keyboard.KEY_SPACING)
+        scale_h = (screen.height * Keyboard.HEIGHT_SCALE / Keyboard.LINES_COUNT) / \
+            (Keyboard.KEY_SIZE + Keyboard.KEY_SPACING)
+        scale = min(scale_w, scale_h)
+
+        y = screen.height * self.__relative_y_pos + self.__key_size
+        x = screen.width / 2 - (Keyboard.LINE_KEYS_COUNT / 2.0 + 1) * self.__key_size * scale
+
+        self.__font = pygame.font.Font(None, int(Keyboard.FONT_SIZE * scale))
+
+        print(f"{x=}, {y=}")
+
         is_capslock = is_capslock_on()
         is_shift = is_shift_pressed()
 
         is_upper = is_capslock ^ is_shift
 
-        for (key, rect), color in zip(self.__keys, self.__color_layout):
+        for (key, raw_rect), color in zip(self.__keys, self.__color_layout):
+            rect = pygame.rect.Rect(
+                raw_rect.x * scale + x,
+                raw_rect.y * scale + y,
+                raw_rect.width * scale,
+                raw_rect.height * scale
+            )
+            print(rect)
             if key not in self.__highlighted_finger_keys:
                 bg_color = self.REGULAR_BG_KEY_COLOR if key != self.__highlighted_key else self.change_color(color)
             else:
@@ -294,7 +287,7 @@ class Keyboard:
                     bg_color = self.change_color(color)
 
             pygame.draw.rect(screen, bg_color, rect, border_radius=5)
-            pygame.draw.rect(screen, color, rect, int(1.5 * self.__scale))
+            pygame.draw.rect(screen, color, rect, int(1.5 * scale))
 
             if is_upper and len(key) == 1 and key.isalpha():
                 key_str = key.upper()
@@ -304,9 +297,3 @@ class Keyboard:
             text = self.__font.render(key_str, True, (200, 200, 200))
             text_rect = text.get_rect(center=rect.center)
             screen.blit(text, text_rect)
-
-    def get_bottom_y(self) -> int:
-        return int(self.__y + self.__height)
-
-    def get_height(self):
-        return self.__height
