@@ -1,6 +1,6 @@
 
 
-from typing import Dict, Tuple
+from typing import Tuple
 import pygame
 from pygame import Surface
 
@@ -14,10 +14,11 @@ class HandsAnimator:
     WIDTH_SCALE = 0.46
     HEIGHT_SCALE = 0.54
 
-    def __init__(self, relative_y_pos: float):
+    def __init__(self, relative_y_pos: float, images_loader: ImagesLoader):
+
         self.__relative_y_pos = relative_y_pos
 
-        self.__images_loader = ImagesLoader()
+        self.__images_loader = images_loader
 
         self.__original_hands_image = self.__images_loader.get_image("src/_content/images/arms/arms.png")
         self.__hands_image = self.__original_hands_image

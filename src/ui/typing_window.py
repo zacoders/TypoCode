@@ -11,6 +11,7 @@ from pygame.key import ScancodeWrapper
 from game_state import GameState
 from ui.font_calc import FontCalc
 from ui.help_window import HelpWindow
+from ui.images_loader import ImagesLoader
 from ui.input_line import InputLine
 from ui.keyboard import Keyboard
 from ui.random_line import RandomLine
@@ -21,8 +22,10 @@ from pygame import Surface
 
 class TypingWindow(WindowABC):
 
-    def __init__(self, game_state: GameState):
+    def __init__(self, game_state: GameState, images_loader: ImagesLoader):
         super().__init__()
+        
+        self.__images_loader = images_loader
 
         self.__game_state = game_state
 
@@ -97,12 +100,12 @@ class TypingWindow(WindowABC):
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     return
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
-                    help_window = HelpWindow()
+                    help_window = HelpWindow(self.__images_loader)
                     help_window.show(screen, clock, min_screen_size, max_screen_size)
 
             if self.__nothing_press_time >= 1500:
                 self.__nothing_press_time = 0
-                help_window = HelpWindow()
+                help_window = HelpWindow(self.__images_loader)
                 help_window.show(screen, clock, min_screen_size, max_screen_size)
 
             self.update(events, keys, screen.get_height(), screen.get_width())

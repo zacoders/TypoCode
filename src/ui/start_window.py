@@ -12,6 +12,7 @@ from game_state import GameState
 import generators
 from generators.generator_abc import GeneratorABC
 from ui.help_window import HelpWindow
+from ui.images_loader import ImagesLoader
 from ui.theme_config import get_theme_path
 from ui.window_abc import WindowABC
 from pygame.typing import Point
@@ -19,8 +20,10 @@ from pygame.typing import Point
 
 class StartWindow(WindowABC):
 
-    def __init__(self, game_state: GameState, is_help_show: bool):
+    def __init__(self, game_state: GameState, is_help_show: bool, images_loader: ImagesLoader):
         super().__init__()
+        
+        self.__images_loader = images_loader
         
         self.__is_help_show = is_help_show
 
@@ -92,7 +95,7 @@ class StartWindow(WindowABC):
             for event in events:
                 if event.type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
                     if not self.__is_help_show:
-                        help_window = HelpWindow()
+                        help_window = HelpWindow(self.__images_loader)
                         help_window.show(screen, clock, min_screen_size, max_screen_size)
                     return
                 if event.type == pygame.KEYDOWN and keys[pygame.K_ESCAPE]:

@@ -3,7 +3,7 @@ import sys
 import pygame
 from common.common import get_resource_path, is_linux, is_windows
 from game_state import GameState
-from ui.help_window import HelpWindow
+from ui.images_loader import ImagesLoader
 from ui.theme_config import save_theme
 from ui.typing_window import TypingWindow
 from ui.start_window import StartWindow
@@ -43,13 +43,15 @@ game_state = GameState()
 
 clock = pygame.time.Clock()
 
+images_loader = ImagesLoader()
+
 is_help_show = False
 
 while True:
-    start_window = StartWindow(game_state, is_help_show)
+    start_window = StartWindow(game_state, is_help_show, images_loader)
     start_window.show(screen, start_screen_size, clock, min_screen_size, max_screen_size)
     
     is_help_show = True
 
-    typing_window = TypingWindow(game_state)
+    typing_window = TypingWindow(game_state, images_loader)
     typing_window.show(screen, clock, min_screen_size, max_screen_size)

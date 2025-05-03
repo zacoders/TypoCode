@@ -4,6 +4,7 @@ from pygame.key import ScancodeWrapper
 from consts import BG_COLOR, FPS
 from generators.keyboard_lang import KeyboardLanguage
 from ui.hands_animator import HandsAnimator
+from ui.images_loader import ImagesLoader
 from ui.keyboard import Keyboard
 from ui.window_abc import WindowABC
 from pygame.typing import Point
@@ -11,11 +12,11 @@ from pygame.typing import Point
 
 class HelpWindow(WindowABC):
 
-    def __init__(self):
+    def __init__(self, images_loader: ImagesLoader):
         super().__init__()
 
         self.__keyboard = Keyboard(KeyboardLanguage.ENGLISH, relative_y_pos=0.025)
-        self.__hands_animator = HandsAnimator(relative_y_pos=0.4)
+        self.__hands_animator = HandsAnimator(relative_y_pos=0.4, images_loader=images_loader)
 
     def update(self, keys: ScancodeWrapper):
 
