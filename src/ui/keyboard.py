@@ -26,10 +26,10 @@ class Keyboard:
 
     REGULAR_BG_KEY_COLOR = (30, 30, 30)
 
-    def __init__(self, language: KeyboardLanguage, relative_y_pos: float = 0):
-        self.__relative_y_pos = relative_y_pos
+    def __init__(self, language: KeyboardLanguage):
         self.__x = 0
         self.__y = 0
+        self.__height = 0
         self.__keys = []
         self.__highlighted_key = None
         self.__screen_height = -1
@@ -123,8 +123,6 @@ class Keyboard:
              ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
         ]
 
-        # self.__set_scale(1.0)
-
     def __create_keys(self):
 
         y_offset = self.__y
@@ -166,7 +164,7 @@ class Keyboard:
                 x_offset += self.__key_size * width + self.__spacing
             y_offset += self.__key_size + self.__spacing
 
-    def update(self, screen_height: int, screen_width: int, keys: ScancodeWrapper):
+    def update(self, screen_height: int, screen_width: int, keys: ScancodeWrapper, relative_y_pos: float = 0):
         if self.__screen_height != screen_height or self.__screen_width != screen_width:
             self.__screen_height = screen_height
             self.__screen_width = screen_width
@@ -174,15 +172,23 @@ class Keyboard:
                 (Keyboard.KEY_SIZE + Keyboard.KEY_SPACING)
             scale_h = (screen_height * Keyboard.HEIGHT_SCALE / Keyboard.LINES_COUNT) / \
                 (Keyboard.KEY_SIZE + Keyboard.KEY_SPACING)
-            self.__set_scale(min(scale_w, scale_h))
+            scale = min(scale_w, scale_h)
+
+            print(f'{scale=}, {relative_y_pos=}, {self.__screen_height=}, key_size={Keyboard.KEY_SIZE * scale}')
+
+            print(f'old_y={self.__y}')
+            self.__set_scale(scale, relative_y_pos)
+            print(f'new_y={self.__y}')
+
         self._switch_layout(keys)
 
-    def __set_scale(self, scale: float):
+    def __set_scale(self, scale: float, relative_y_pos: float):
         self.__scale = scale
-        self.__x = self.__screen_width / 2 - (Keyboard.LINE_KEYS_COUNT / 2.0 + 1) * Keyboard.KEY_SIZE * self.__scale
-        self.__y = self.__screen_height * self.__relative_y_pos + Keyboard.KEY_SIZE * self.__scale
         self.__key_size = Keyboard.KEY_SIZE * scale
         self.__spacing = Keyboard.KEY_SPACING * scale
+        self.__x = self.__screen_width / 2 - (Keyboard.LINE_KEYS_COUNT / 2.0 + 1) * self.__key_size
+        self.__y = self.__screen_height * relative_y_pos + self.__key_size
+        self.__height = int(self.__key_size * 5 + self.__spacing * 4)
         self.__font = pygame.font.Font(None, int(Keyboard.FONT_SIZE * scale))
         self.__create_keys()
 
@@ -298,3 +304,9 @@ class Keyboard:
             text = self.__font.render(key_str, True, (200, 200, 200))
             text_rect = text.get_rect(center=rect.center)
             screen.blit(text, text_rect)
+
+    def get_bottom_y(self) -> int:
+        return int(self.__y + self.__height)
+
+    def get_height(self):
+        return self.__height

@@ -49,7 +49,7 @@ class HandsAnimator:
     def __get_scale(self, image_size: Tuple[int, int], screen_size: Tuple[int, int]):
         scale_w = image_size[0] / screen_size[0] / self.WIDTH_SCALE
         scale_h = image_size[1] / screen_size[1] / self.HEIGHT_SCALE
-        return scale_w, scale_h
+        return max(scale_w, scale_h)
 
     def update(self):
 
@@ -70,13 +70,11 @@ class HandsAnimator:
                 self.__repeat = True
                 self.__draw_finger = 0
 
-    def draw(self, screen: Surface):
-        scale_w, scale_h = self.__get_scale(
-            (self.__original_hands_image.get_size()),
-            (screen.get_size())
+    def draw(self, screen: Surface, keyboard_bottom_y: int, y_distance: int):
+        scale = self.__get_scale(
+            self.__original_hands_image.get_size(),
+            screen.get_size()
         )
-
-        scale = max(scale_w, scale_h)
 
         self.__hands_image = pygame.transform.scale(
             self.__original_hands_image,
@@ -87,7 +85,7 @@ class HandsAnimator:
         )
 
         hands_x = screen.get_width() // 2 - self.__hands_image.get_width() // 2
-        hands_y = screen.get_height() - self.__hands_image.get_height() - 75
+        hands_y = keyboard_bottom_y + y_distance
 
         screen.blit(self.__hands_image, (hands_x, hands_y))
 
@@ -112,3 +110,6 @@ class HandsAnimator:
 
     def get_repeat_stage(self):
         return self.__repeat
+
+    def get_image_height(self):
+        return self.__hands_image.get_height()

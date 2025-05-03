@@ -1,11 +1,10 @@
 
 
 import pygame
-from pygame import Font, Surface, Clock
-from common.common import get_resource_path
+from pygame import Surface, Clock
+from pygame.key import ScancodeWrapper
 from consts import BG_COLOR, FPS
 from generators.keyboard_lang import KeyboardLanguage
-from ui.font_calc import FontCalc
 from ui.hands_animator import HandsAnimator
 from ui.keyboard import Keyboard
 from ui.window_abc import WindowABC
@@ -17,24 +16,42 @@ class HelpWindow(WindowABC):
     def __init__(self):
         super().__init__()
 
-        self.__keyboard = Keyboard(KeyboardLanguage.ENGLISH, relative_y_pos=0.01)
+        self.__keyboard = Keyboard(KeyboardLanguage.ENGLISH)
         self.__hands_animator = HandsAnimator()
 
-        self.__font_file_path = get_resource_path("src/_content/fonts/UbuntuMono-Regular.ttf")
+        self.__y_distance = 20
 
-        self.__font_calc = FontCalc(self.__font_file_path)
+    def update(self, screen_width: int, screen_height: int, keys: ScancodeWrapper):
+        
+        print(f'hands_animator_image_height = {self.__hands_animator.get_image_height()}, keyboard_height = {self.__keyboard.get_height()}')
 
-        self.__str_text = "press ENTER to skip"
-        self.__reload_text()
-        self.__text_len = len(self.__str_text)
+        total_height = self.__get_total_objs_height(
+            self.__y_distance,
+            self.__hands_animator.get_image_height(),
+            self.__keyboard.get_height()
+        )
+        
+        relative_y_pos = abs((screen_height - total_height) / 2 / screen_height)
 
-    def __reload_text(self):
-        self.__font = Font(self.__font_file_path, self.__font_calc.current_font_size())
-        self.__text = self.__font.render(self.__str_text, True, (255, 255, 255))
+        self.__hands_animator.update()
+        self.__keyboard.update(screen_height, screen_width, keys, relative_y_pos)
 
-    def update(self, screen_width: int):
-        self.__font_calc.update(self.__text_len, screen_width // 5)
-        self.__reload_text()
+        fingers_enum = self.__hands_animator.get_finger_enum()
+        visible_stage = self.__hands_animator.get_visible_stage()
+        self.__keyboard.highlight_fingers_key(fingers_enum, visible_stage)
+
+    def draw(self, screen: Surface):
+        self.__hands_animator.draw(screen, self.__keyboard.get_bottom_y(), self.__y_distance)
+        self.__keyboard.draw(screen)
+
+    def __get_total_objs_height(
+        self,
+        y_distance: int,
+        hands_height: int,
+        keyboard_height: int
+    ) -> int:
+
+        return hands_height + y_distance + keyboard_height
 
     def show(
         self,
@@ -52,32 +69,16 @@ class HelpWindow(WindowABC):
             self.update_events(events, screen, min_screen_size, max_screen_size)
 
             for event in events:
-                if event.type == pygame.KEYDOWN and event.key:
+                if event.type == pygame.KEYDOWN and event.key != pygame.K_F11:
                     return
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button:
                     return
 
-            self.update(screen.width)
-
-            self.__hands_animator.update()
-            self.__keyboard.update(screen.height, screen.width, keys)
-
-            fingers_enum = self.__hands_animator.get_finger_enum()
-            self.__keyboard.highlight_fingers_key(fingers_enum, self.__hands_animator.get_visible_stage())
-
-            self.__hands_animator.draw(screen)
-            self.__keyboard.draw(screen)
-
-            screen.blit(
-                self.__text,
-                (
-                    screen.width - self.__text.width - 5,
-                    screen.height - self.__text.height - 5
-                )
-            )
-
             if self.__hands_animator.get_repeat_stage():
                 return
+
+            self.update(screen.width, screen.height, keys)
+            self.draw(screen)
 
             pygame.display.update()
             pygame.display.flip()

@@ -39,7 +39,7 @@ class TypingWindow(WindowABC):
 
         mentor = Mentor()
 
-        self.__keyboard = Keyboard(language=text_generator.keyboard_lang, relative_y_pos=0.4)
+        self.__keyboard = Keyboard(language=text_generator.keyboard_lang)
 
         self.__nothing_press_time = 0
 
@@ -63,7 +63,7 @@ class TypingWindow(WindowABC):
 
     def update(self, events: list[Event], keys: ScancodeWrapper, screen_height: int, screen_width: int):
         self.__font_calc.update(self.__text_len, screen_width)
-        self.__keyboard.update(screen_height, screen_width, keys)
+        self.__keyboard.update(screen_height, screen_width, keys, relative_y_pos=0.4)
         self.__input_line.update(events)
         self.__line_stats_calc.update(screen_height, screen_width)
 
