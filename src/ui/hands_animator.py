@@ -1,11 +1,12 @@
 
 
-from typing import Tuple
+from typing import Dict, Tuple
 import pygame
 from pygame import Surface
 
 from common.common import get_resource_path
 from ui.fingers_enum import FingersEnum
+from ui.images_loader import ImagesLoader
 
 
 class HandsAnimator:
@@ -15,9 +16,10 @@ class HandsAnimator:
 
     def __init__(self, relative_y_pos: float):
         self.__relative_y_pos = relative_y_pos
-        self.__original_hands_image = pygame.image.load(
-            get_resource_path("src/_content/images/arms/arms.png")
-        )
+
+        self.__images_loader = ImagesLoader()
+
+        self.__original_hands_image = self.__images_loader.get_image("src/_content/images/arms/arms.png")
         self.__hands_image = self.__original_hands_image
 
         self.__fingers = {
@@ -45,7 +47,7 @@ class HandsAnimator:
 
     def __load_finger(self, file_name: str) -> Surface:
         root = "src/_content/images/arms/"
-        return pygame.image.load(get_resource_path(root + file_name + '.png'))
+        return self.__images_loader.get_image(root + file_name + '.png')
 
     def __get_scale(self, image_size: Tuple[int, int], screen_size: Tuple[int, int]):
         scale_w = image_size[0] / screen_size[0] / self.WIDTH_SCALE

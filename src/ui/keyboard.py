@@ -263,8 +263,6 @@ class Keyboard:
 
         self.__font = pygame.font.Font(None, int(Keyboard.FONT_SIZE * scale))
 
-        print(f"{x=}, {y=}")
-
         is_capslock = is_capslock_on()
         is_shift = is_shift_pressed()
 
@@ -277,7 +275,7 @@ class Keyboard:
                 raw_rect.width * scale,
                 raw_rect.height * scale
             )
-            print(rect)
+
             if key not in self.__highlighted_finger_keys:
                 bg_color = self.REGULAR_BG_KEY_COLOR if key != self.__highlighted_key else self.change_color(color)
             else:
