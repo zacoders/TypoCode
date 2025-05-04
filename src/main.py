@@ -46,7 +46,7 @@ clock = pygame.time.Clock()
 
 game_state = GameState()
 help_window = HelpWindow(images_loader)
-start_window = StartWindow(game_state, help_window)
+start_window = StartWindow(game_state)
 
 while True:
     start_window.show(screen, start_screen_size, clock, min_screen_size, max_screen_size)

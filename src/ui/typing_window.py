@@ -83,6 +83,9 @@ class TypingWindow(WindowABC):
         min_screen_size: Point,
         max_screen_size: Point
     ):
+        if not self.__game_state.is_help_showed:
+            self.__help_window.show(screen, clock, min_screen_size, max_screen_size)
+            self.__game_state.is_help_showed = True
 
         while True:
             screen.fill(BG_COLOR)

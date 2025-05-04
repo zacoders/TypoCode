@@ -295,3 +295,7 @@ class Keyboard:
             text = self.__font.render(key_str, True, (200, 200, 200))
             text_rect = text.get_rect(center=rect.center)
             screen.blit(text, text_rect)
+
+    def set_language(self, language: KeyboardLanguage):
+        self.__language = language
+        self.__create_keys()
