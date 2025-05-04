@@ -15,6 +15,7 @@ class Keyboard:
     WIDTH_SCALE = 0.7  # 70% of the screen
     HEIGHT_SCALE = 0.45  # 45% of the screen
 
+    POINTER_RED = (230, 10, 10)
     RED = (180, 100, 102)
     YELLOW = (190, 190, 100)
     GREEN = (100, 180, 105)
@@ -68,6 +69,22 @@ class Keyboard:
             FingersEnum.RIGHT_INDEX, FingersEnum.RIGHT_INDEX, FingersEnum.RIGHT_MIDDLE, FingersEnum.RIGHT_RING, FingersEnum.RIGHT_LITTLE, FingersEnum.RIGHT_LITTLE,  # Fourth row
 
             FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.BOTH_THUMBS, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE  # Space bar row
+        ]
+
+        self.__pointer_fingers_layout = [
+            FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE,
+            FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE,  # First row
+
+            FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE,
+            FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE,  # Second row
+
+            FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.BOTH_INDEXES, FingersEnum.NONE, FingersEnum.NONE,
+            FingersEnum.BOTH_INDEXES, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE,  # Third row
+
+            FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE,
+            FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE,  # Fourth row
+
+            FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE  # Space bar row
         ]
 
         self.__eng_layout_uppercase = [
@@ -220,7 +237,8 @@ class Keyboard:
 
         is_upper = is_capslock ^ is_shift
 
-        for (key, raw_rect), color, finger in zip(self.__keys, self.__color_layout, self.__fingers_layout):
+        layout_zip = zip(self.__keys, self.__color_layout, self.__fingers_layout, self.__pointer_fingers_layout)
+        for (key, raw_rect), color, finger, pointer_finger in layout_zip:
             rect = pygame.rect.Rect(
                 raw_rect.x * scale + x,
                 raw_rect.y * scale + y,
@@ -228,10 +246,12 @@ class Keyboard:
                 raw_rect.height * scale
             )
 
+            bg_color = self.REGULAR_BG_KEY_COLOR
+
             if key == self.__highlighted_key or (self.__finger == finger and self.__finger_is_visible):
                 bg_color = self.change_color(color)
-            else:
-                bg_color = self.REGULAR_BG_KEY_COLOR
+            elif self.__finger == pointer_finger and self.__finger_is_visible:
+                bg_color = self.change_color(self.POINTER_RED)
 
             pygame.draw.rect(screen, bg_color, rect, border_radius=5)
             pygame.draw.rect(screen, color, rect, int(1.5 * scale))
