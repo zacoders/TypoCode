@@ -4,7 +4,6 @@ from typing import Tuple
 import pygame
 from pygame import Surface
 
-from common.common import get_resource_path
 from ui.fingers_enum import FingersEnum
 from ui.images_loader import ImagesLoader
 
@@ -41,8 +40,8 @@ class HandsAnimator:
         self.__finger_enum = FingersEnum.BOTH_INDEXES
         self.__draw_finger = 0
         self.__blinks_num = 0
-        self.__is_visible = True
-        self.__last_blink_time = pygame.time.get_ticks()
+        self.__is_visible = False
+        self.__next_blink_time = pygame.time.get_ticks()
         self.__blink_delay = 500
         self.__repeat = False
 
@@ -58,21 +57,24 @@ class HandsAnimator:
     def update(self):
 
         now = pygame.time.get_ticks()
-        if now - self.__last_blink_time >= self.__blink_delay:
-            self.__last_blink_time = now
-            self.__is_visible = not self.__is_visible  # мигаем
 
-            if not self.__is_visible:
-                self.__blinks_num += 1
+        if now < self.__next_blink_time:
+            return
 
-            if self.__blinks_num >= 3:
-                self.__blinks_num = 0
-                self.__draw_finger += 1
-                self.__is_visible = True
+        self.__next_blink_time = now + self.__blink_delay
+        self.__is_visible = not self.__is_visible  # мигаем
 
-            if self.__draw_finger > len(self.__draw_sequence) - 1:
-                self.__repeat = True
-                self.__draw_finger = 0
+        if not self.__is_visible:
+            self.__blinks_num += 1
+
+        if self.__blinks_num >= 3:
+            self.__blinks_num = 0
+            self.__draw_finger += 1
+            self.__is_visible = True
+
+        if self.__draw_finger > len(self.__draw_sequence) - 1:
+            self.__repeat = True
+            self.__draw_finger = 0
 
     def draw(self, screen: Surface):
         scale = self.__get_scale(
