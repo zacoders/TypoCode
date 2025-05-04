@@ -16,7 +16,7 @@ class HelpWindow(WindowABC):
         super().__init__()
 
         self.__keyboard = Keyboard(KeyboardLanguage.ENGLISH, relative_y_pos=0.025)
-        self.__hands_animator = HandsAnimator(relative_y_pos=0.4, images_loader=images_loader)
+        self.__hands_animator = HandsAnimator(relative_y_pos=0.5, images_loader=images_loader)
 
     def update(self, keys: ScancodeWrapper):
 
