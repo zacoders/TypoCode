@@ -19,7 +19,7 @@ class HandsAnimator:
 
         self.__images_loader = images_loader
 
-        self.__original_hands_image = self.__images_loader.get_image("src/_content/images/arms/arms.png")
+        self.__original_hands_image = self.__images_loader.get_image("src/_content/images/hands/hands.png")
         self.__hands_image = self.__original_hands_image
 
         self.__fingers = {
@@ -46,7 +46,7 @@ class HandsAnimator:
         self.__repeat = False
 
     def __load_finger(self, file_name: str) -> Surface:
-        root = "src/_content/images/arms/"
+        root = "src/_content/images/hands/"
         return self.__images_loader.get_image(root + file_name + '.png')
 
     def __get_scale(self, image_size: Tuple[int, int], screen_size: Tuple[int, int]):
