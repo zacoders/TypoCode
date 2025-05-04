@@ -3,7 +3,7 @@ from pygame.time import Clock
 from pygame.event import Event
 from common.common import get_resource_path
 from common.time_provider import TimeProvider
-from consts import BG_COLOR, FPS
+from consts import BG_COLOR, FPS, HELP_SHOW_TIME_MS
 from services.line_stats_calc import LineStatsCalc
 from services.mentor import Mentor
 from typing_errors import TypingErrors
@@ -43,7 +43,8 @@ class TypingWindow(WindowABC):
 
         self.__keyboard = Keyboard(language=text_generator.keyboard_lang, relative_y_pos=0.45)
 
-        self.__nothing_press_time = 0
+        self.__help_show_time = 0
+        self.__update_help_show_time()
 
         self.__random_line = RandomLine(
             text_len=self.__text_len,
@@ -75,6 +76,9 @@ class TypingWindow(WindowABC):
         self.__keyboard.draw(screen)
         self.__line_stats_calc.draw(screen)
 
+    def __update_help_show_time(self):
+        self.__help_show_time = pygame.time.get_ticks() + HELP_SHOW_TIME_MS
+
     def show(
         self,
         screen: Surface,
@@ -88,6 +92,7 @@ class TypingWindow(WindowABC):
                 self.__game_state.generator.keyboard_lang
             )
             self.__game_state.is_help_showed = True
+            self.__update_help_show_time()
 
         while True:
             screen.fill(BG_COLOR)
@@ -95,27 +100,30 @@ class TypingWindow(WindowABC):
             keys = pygame.key.get_pressed()
             events = pygame.event.get()
 
-            self.__nothing_press_time += 1
-
             self.update_events(events, screen, min_screen_size, max_screen_size)
 
             for event in events:
-                if event.type == pygame.KEYDOWN:
-                    self.__nothing_press_time = 0
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+
+                if event.type != pygame.KEYDOWN:
+                    break
+
+                if event.key == pygame.K_ESCAPE:
                     return
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
+
+                self.__update_help_show_time()
+
+                if event.key == pygame.K_F1:
                     self.__help_window.show(
                         screen, clock, min_screen_size, max_screen_size,
                         self.__game_state.generator.keyboard_lang
                     )
 
-            if self.__nothing_press_time >= 1500:
-                self.__nothing_press_time = 0
+            if pygame.time.get_ticks() > self.__help_show_time:
                 self.__help_window.show(
                     screen, clock, min_screen_size, max_screen_size,
                     self.__game_state.generator.keyboard_lang
                 )
+                self.__update_help_show_time()
 
             self.update(events, keys, screen.get_height(), screen.get_width())
             self.draw(screen)

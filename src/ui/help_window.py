@@ -40,6 +40,7 @@ class HelpWindow(WindowABC):
         keyboard_lang: KeyboardLanguage
     ):
         self.__keyboard.set_language(keyboard_lang)
+        self.__hands_animator.restart()
         while True:
             screen.fill(BG_COLOR)
 

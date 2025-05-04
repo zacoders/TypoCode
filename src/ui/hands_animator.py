@@ -4,6 +4,7 @@ from typing import Tuple
 import pygame
 from pygame import Surface
 
+from consts import FINGER_BLINK_TIME_MS
 from ui.fingers_enum import FingersEnum
 from ui.images_loader import ImagesLoader
 
@@ -42,7 +43,7 @@ class HandsAnimator:
         self.__blinks_num = 0
         self.__is_visible = False
         self.__next_blink_time = pygame.time.get_ticks()
-        self.__blink_delay = 500
+        self.__blink_delay = FINGER_BLINK_TIME_MS
         self.__repeat = False
 
     def __load_finger(self, file_name: str) -> Surface:
@@ -116,3 +117,10 @@ class HandsAnimator:
 
     def is_repeat(self):
         return self.__repeat
+
+    def restart(self):
+        self.__repeat = False
+        self.__blinks_num = 0
+        self.__draw_finger = 0
+        self.__is_visible = False
+        self.__next_blink_time = pygame.time.get_ticks() + self.__blink_delay
