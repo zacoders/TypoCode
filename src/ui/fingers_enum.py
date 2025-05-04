@@ -15,3 +15,4 @@ class FingersEnum(Enum):
     RIGHT_LITTLE = auto()
     BOTH_THUMBS = auto()
     BOTH_INDEXES = auto()
+    NONE = auto()

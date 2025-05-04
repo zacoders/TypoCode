@@ -1,4 +1,3 @@
-
 import pygame
 from pygame.key import ScancodeWrapper
 from common.common import is_capslock_on, is_shift_pressed
@@ -32,8 +31,9 @@ class Keyboard:
         self.__highlighted_key = None
         self.__language = language
         self.__is_upper_case = False
-        self.__highlighted_finger_keys = []
-        self.__start_button_keys = []
+
+        self.__finger: FingersEnum | None = None
+        self.__finger_is_visible = False
 
         self.__key_size = Keyboard.KEY_SIZE
         self.__spacing = Keyboard.KEY_SPACING
@@ -52,6 +52,22 @@ class Keyboard:
             self.PINK, self.PINK, self.RED, self.YELLOW, self.GREEN, self.GREEN,  # Fourth row
 
             self.GREY, self.GREY, self.GREY, self.PURPLE, self.GREY, self.GREY, self.GREY, self.GREY  # Space bar row
+        ]
+
+        self.__fingers_layout = [
+            FingersEnum.LEFT_LITTLE, FingersEnum.LEFT_LITTLE, FingersEnum.LEFT_LITTLE, FingersEnum.LEFT_RING, FingersEnum.LEFT_MIDDLE, FingersEnum.LEFT_INDEX, FingersEnum.LEFT_INDEX,
+            FingersEnum.RIGHT_INDEX, FingersEnum.RIGHT_INDEX, FingersEnum.RIGHT_MIDDLE, FingersEnum.RIGHT_RING, FingersEnum.RIGHT_LITTLE, FingersEnum.RIGHT_LITTLE, FingersEnum.RIGHT_LITTLE,  # First row
+
+            FingersEnum.LEFT_LITTLE, FingersEnum.LEFT_LITTLE, FingersEnum.LEFT_RING, FingersEnum.LEFT_MIDDLE, FingersEnum.LEFT_INDEX, FingersEnum.LEFT_INDEX, FingersEnum.RIGHT_INDEX,
+            FingersEnum.RIGHT_INDEX, FingersEnum.RIGHT_MIDDLE, FingersEnum.RIGHT_RING, FingersEnum.RIGHT_LITTLE, FingersEnum.RIGHT_LITTLE, FingersEnum.RIGHT_LITTLE, FingersEnum.RIGHT_LITTLE,  # Second row
+
+            FingersEnum.LEFT_LITTLE, FingersEnum.LEFT_LITTLE, FingersEnum.LEFT_RING, FingersEnum.LEFT_MIDDLE, FingersEnum.LEFT_INDEX, FingersEnum.LEFT_INDEX, FingersEnum.RIGHT_INDEX,
+            FingersEnum.RIGHT_INDEX, FingersEnum.RIGHT_MIDDLE, FingersEnum.RIGHT_RING, FingersEnum.RIGHT_LITTLE, FingersEnum.RIGHT_LITTLE, FingersEnum.RIGHT_LITTLE,  # Third row
+
+            FingersEnum.LEFT_LITTLE, FingersEnum.LEFT_LITTLE, FingersEnum.LEFT_RING, FingersEnum.LEFT_MIDDLE, FingersEnum.LEFT_INDEX, FingersEnum.LEFT_INDEX,
+            FingersEnum.RIGHT_INDEX, FingersEnum.RIGHT_INDEX, FingersEnum.RIGHT_MIDDLE, FingersEnum.RIGHT_RING, FingersEnum.RIGHT_LITTLE, FingersEnum.RIGHT_LITTLE,  # Fourth row
+
+            FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.BOTH_THUMBS, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE  # Space bar row
         ]
 
         self.__eng_layout_uppercase = [
@@ -182,73 +198,9 @@ class Keyboard:
         if key == " ":
             self.__highlighted_key = "Space"
 
-    def __filter_keys_by_color(self, target_color, finger: FingersEnum, is_visible: bool):
-        finger_side = finger.name.split('_')[0]  # "LEFT" или "RIGHT"
-        filtered_keys = []
-
-        keys_only = [k for k, _ in self.__keys]
-
-        row_lengths = [14, 14, 13, 12, 8]
-        start_index = 0
-
-        for row_len in row_lengths:
-            end_index = start_index + row_len
-
-            row_colors = self.__color_layout[start_index:end_index]
-            row_keys = keys_only[start_index:end_index]
-
-            middle = row_len // 2
-
-            if finger_side == "LEFT":
-                zone_colors = row_colors[:middle]
-                zone_keys = row_keys[:middle]
-            elif finger_side == "RIGHT":
-                zone_colors = row_colors[-middle - 1:]
-                zone_keys = row_keys[-middle - 1:]
-            else:
-                zone_colors = row_colors
-                zone_keys = row_keys
-
-            for key, color in zip(zone_keys, zone_colors):
-                if is_visible:
-                    if color == target_color:
-                        filtered_keys.append(key)
-
-            start_index = end_index  # Переход к следующей строке
-
-        return filtered_keys
-
     def highlight_fingers_key(self, finger: FingersEnum, is_visible: bool):
-        self.__highlighted_finger_keys = []
-        self.__start_button_keys = []
-
-        keys_only = [k for k, _ in self.__keys]
-
-        finger_color_map = {
-            FingersEnum.BOTH_THUMBS: self.PURPLE,
-            FingersEnum.LEFT_INDEX: self.BLUE,
-            FingersEnum.RIGHT_INDEX: self.PINK,
-            FingersEnum.LEFT_MIDDLE: self.GREEN,
-            FingersEnum.RIGHT_LITTLE: self.GREEN,
-            FingersEnum.LEFT_RING: self.YELLOW,
-            FingersEnum.RIGHT_RING: self.YELLOW,
-            FingersEnum.LEFT_LITTLE: self.RED,
-            FingersEnum.RIGHT_MIDDLE: self.RED
-        }
-
-        for enum, color in finger_color_map.items():
-            if finger == enum:
-                self.__highlighted_finger_keys = self.__filter_keys_by_color(color, finger, is_visible)
-                return
-
-        if finger == FingersEnum.BOTH_INDEXES:
-            if self.__language == KeyboardLanguage.ENGLISH:
-                keys = [k for k in keys_only if k in ("f", "F", "j", "J")]
-            elif self.__language == KeyboardLanguage.RUSSIAN:
-                keys = [k for k in keys_only if k in ("а", "А", "о", "О")]
-
-            self.__highlighted_finger_keys = keys if is_visible else []
-            self.__start_button_keys = keys if is_visible else []
+        self.__finger = finger
+        self.__finger_is_visible = is_visible
 
     def draw(self, screen: pygame.Surface):
 
@@ -268,7 +220,7 @@ class Keyboard:
 
         is_upper = is_capslock ^ is_shift
 
-        for (key, raw_rect), color in zip(self.__keys, self.__color_layout):
+        for (key, raw_rect), color, finger in zip(self.__keys, self.__color_layout, self.__fingers_layout):
             rect = pygame.rect.Rect(
                 raw_rect.x * scale + x,
                 raw_rect.y * scale + y,
@@ -276,13 +228,10 @@ class Keyboard:
                 raw_rect.height * scale
             )
 
-            if key not in self.__highlighted_finger_keys:
-                bg_color = self.REGULAR_BG_KEY_COLOR if key != self.__highlighted_key else self.change_color(color)
+            if key == self.__highlighted_key or (self.__finger == finger and self.__finger_is_visible):
+                bg_color = self.change_color(color)
             else:
-                if key in self.__start_button_keys:
-                    bg_color = self.change_color((180, 70, 70))
-                else:
-                    bg_color = self.change_color(color)
+                bg_color = self.REGULAR_BG_KEY_COLOR
 
             pygame.draw.rect(screen, bg_color, rect, border_radius=5)
             pygame.draw.rect(screen, color, rect, int(1.5 * scale))
