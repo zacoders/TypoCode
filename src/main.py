@@ -32,7 +32,7 @@ screen_size = info.current_w * 0.7, info.current_h * 0.7
 screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
 pygame.display.set_caption("TypoCode")
 
-icon = pygame.image.load(get_resource_path("./src/keyboard_32x32.png"))
+icon = pygame.image.load(get_resource_path("./src/_content/images/keyboard_32x32.png"))
 pygame.display.set_icon(icon)
 
 start_screen_size = screen.size
@@ -50,7 +50,7 @@ is_help_show = False
 while True:
     start_window = StartWindow(game_state, is_help_show, images_loader)
     start_window.show(screen, start_screen_size, clock, min_screen_size, max_screen_size)
-    
+
     is_help_show = True
 
     typing_window = TypingWindow(game_state, images_loader)
