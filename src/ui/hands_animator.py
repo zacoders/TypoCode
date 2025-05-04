@@ -108,11 +108,11 @@ class HandsAnimator:
             )
             screen.blit(finger_image, (hands_x, hands_y))
 
-    def get_finger_enum(self):
+    def get_finger(self):
         return self.__finger_enum
 
-    def get_visible_stage(self):
+    def is_visible(self):
         return self.__is_visible
 
-    def get_repeat_stage(self):
+    def is_repeat(self):
         return self.__repeat

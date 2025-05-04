@@ -182,45 +182,45 @@ class Keyboard:
         if key == " ":
             self.__highlighted_key = "Space"
 
-    def highlight_fingers_key(self, finger_enum: FingersEnum, is_visible: bool):
+    def __filter_keys_by_color(self, target_color, finger: FingersEnum, is_visible: bool):
+        finger_side = finger.name.split('_')[0]  # "LEFT" или "RIGHT"
+        filtered_keys = []
+
+        keys_only = [k for k, _ in self.__keys]
+
+        row_lengths = [14, 14, 13, 12, 8]
+        start_index = 0
+
+        for row_len in row_lengths:
+            end_index = start_index + row_len
+
+            row_colors = self.__color_layout[start_index:end_index]
+            row_keys = keys_only[start_index:end_index]
+
+            middle = row_len // 2
+
+            if finger_side == "LEFT":
+                zone_colors = row_colors[:middle]
+                zone_keys = row_keys[:middle]
+            elif finger_side == "RIGHT":
+                zone_colors = row_colors[-middle - 1:]
+                zone_keys = row_keys[-middle - 1:]
+            else:
+                zone_colors = row_colors
+                zone_keys = row_keys
+
+            for key, color in zip(zone_keys, zone_colors):
+                if is_visible:
+                    if color == target_color:
+                        filtered_keys.append(key)
+
+            start_index = end_index  # Переход к следующей строке
+
+        return filtered_keys
+
+    def highlight_fingers_key(self, finger: FingersEnum, is_visible: bool):
         self.__highlighted_finger_keys = []
         self.__start_button_keys = []
-
-        def filter_keys_by_color(target_color, finger_enum: FingersEnum):
-            finger_side = finger_enum.name.split('_')[0]  # "LEFT" или "RIGHT"
-            filtered_keys = []
-
-            keys_only = [k for k, _ in self.__keys]
-
-            row_lengths = [14, 14, 13, 12, 8]
-            start_index = 0
-
-            for row_len in row_lengths:
-                end_index = start_index + row_len
-
-                row_colors = self.__color_layout[start_index:end_index]
-                row_keys = keys_only[start_index:end_index]
-
-                middle = row_len // 2
-
-                if finger_side == "LEFT":
-                    zone_colors = row_colors[:middle]
-                    zone_keys = row_keys[:middle]
-                elif finger_side == "RIGHT":
-                    zone_colors = row_colors[-middle - 1:]
-                    zone_keys = row_keys[-middle - 1:]
-                else:
-                    zone_colors = row_colors
-                    zone_keys = row_keys
-
-                for key, color in zip(zone_keys, zone_colors):
-                    if is_visible:
-                        if color == target_color:
-                            filtered_keys.append(key)
-
-                start_index = end_index  # Переход к следующей строке
-
-            return filtered_keys
 
         keys_only = [k for k, _ in self.__keys]
 
@@ -237,11 +237,11 @@ class Keyboard:
         }
 
         for enum, color in finger_color_map.items():
-            if finger_enum == enum:
-                self.__highlighted_finger_keys = filter_keys_by_color(color, finger_enum)
+            if finger == enum:
+                self.__highlighted_finger_keys = self.__filter_keys_by_color(color, finger, is_visible)
                 return
 
-        if finger_enum == FingersEnum.BOTH_INDEXES:
+        if finger == FingersEnum.BOTH_INDEXES:
             if self.__language == KeyboardLanguage.ENGLISH:
                 keys = [k for k in keys_only if k in ("f", "F", "j", "J")]
             elif self.__language == KeyboardLanguage.RUSSIAN:

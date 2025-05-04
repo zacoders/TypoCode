@@ -23,9 +23,9 @@ class HelpWindow(WindowABC):
         self.__hands_animator.update()
         self.__keyboard.update(keys)
 
-        fingers_enum = self.__hands_animator.get_finger_enum()
-        visible_stage = self.__hands_animator.get_visible_stage()
-        self.__keyboard.highlight_fingers_key(fingers_enum, visible_stage)
+        fingers_enum = self.__hands_animator.get_finger()
+        is_visible = self.__hands_animator.is_visible()
+        self.__keyboard.highlight_fingers_key(fingers_enum, is_visible)
 
     def draw(self, screen: Surface):
         self.__hands_animator.draw(screen)
@@ -52,7 +52,7 @@ class HelpWindow(WindowABC):
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button:
                     return
 
-            if self.__hands_animator.get_repeat_stage():
+            if self.__hands_animator.is_repeat():
                 return
 
             self.update(keys)
