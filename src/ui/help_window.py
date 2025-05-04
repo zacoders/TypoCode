@@ -36,8 +36,10 @@ class HelpWindow(WindowABC):
         screen: Surface,
         clock: Clock,
         min_screen_size: Point,
-        max_screen_size: Point
+        max_screen_size: Point,
+        keyboard_lang: KeyboardLanguage
     ):
+        self.__keyboard.set_language(keyboard_lang)
         while True:
             screen.fill(BG_COLOR)
 
