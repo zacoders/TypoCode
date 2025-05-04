@@ -20,12 +20,12 @@ from pygame.typing import Point
 
 class StartWindow(WindowABC):
 
-    def __init__(self, game_state: GameState, is_help_show: bool, images_loader: ImagesLoader):
+    def __init__(self, game_state: GameState, help_window: HelpWindow):
         super().__init__()
-        
-        self.__images_loader = images_loader
-        
-        self.__is_help_show = is_help_show
+
+        self.__help_window = help_window
+
+        self.__is_help_show = False
 
         self.__game_state = game_state
 
@@ -95,8 +95,7 @@ class StartWindow(WindowABC):
             for event in events:
                 if event.type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
                     if not self.__is_help_show:
-                        help_window = HelpWindow(self.__images_loader)
-                        help_window.show(screen, clock, min_screen_size, max_screen_size)
+                        self.__help_window.show(screen, clock, min_screen_size, max_screen_size)
                     return
                 if event.type == pygame.KEYDOWN and keys[pygame.K_ESCAPE]:
                     pygame.quit()

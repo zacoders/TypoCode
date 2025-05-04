@@ -22,10 +22,10 @@ from pygame import Surface
 
 class TypingWindow(WindowABC):
 
-    def __init__(self, game_state: GameState, images_loader: ImagesLoader):
+    def __init__(self, game_state: GameState, help_window: HelpWindow):
         super().__init__()
-        
-        self.__images_loader = images_loader
+
+        self.__help_window = help_window
 
         self.__game_state = game_state
 
@@ -100,13 +100,11 @@ class TypingWindow(WindowABC):
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     return
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
-                    help_window = HelpWindow(self.__images_loader)
-                    help_window.show(screen, clock, min_screen_size, max_screen_size)
+                    self.__help_window.show(screen, clock, min_screen_size, max_screen_size)
 
             if self.__nothing_press_time >= 1500:
                 self.__nothing_press_time = 0
-                help_window = HelpWindow(self.__images_loader)
-                help_window.show(screen, clock, min_screen_size, max_screen_size)
+                self.__help_window.show(screen, clock, min_screen_size, max_screen_size)
 
             self.update(events, keys, screen.get_height(), screen.get_width())
             self.draw(screen)
