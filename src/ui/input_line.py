@@ -124,10 +124,10 @@ class InputLine:
         font_text_width, _ = self.__font.size(self.__text)
 
         cursor_rect = pygame.Rect(
-            text_pos[0] + font_text_width,
-            line_rect.y,
-            self.__font.size('0')[1] / 16,
-            line_rect.height
+            left=text_pos[0] + font_text_width,
+            top=line_rect.y,
+            width=self.__font.size('0')[1] / 16,
+            height=line_rect.height
         )
 
         if self.__error_symbol and self.__error_symbol != ' ':
