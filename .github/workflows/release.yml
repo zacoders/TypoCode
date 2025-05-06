@@ -51,7 +51,7 @@ jobs:
     
         # Zip exe and hash file with version in filename
         $zipName = "typocode-windows-$tag.zip"
-        Compress-Archive -Path $exe, "$exe.sha256.txt" -DestinationPath "artifacts/$zipName
+        Compress-Archive -Path $exe, "$exe.sha256.txt" -DestinationPath "artifacts/$zipName"
 
     # - name: Upload Windows artifact
     #   if: runner.os == 'Windows'
