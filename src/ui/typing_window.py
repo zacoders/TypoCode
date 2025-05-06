@@ -3,13 +3,14 @@ from pygame.time import Clock
 from pygame.event import Event
 from common.common import get_resource_path
 from common.time_provider import TimeProvider
-from consts import BG_COLOR, FPS
+from consts import BG_COLOR, FPS, HELP_SHOW_TIME_MS
 from services.line_stats_calc import LineStatsCalc
 from services.mentor import Mentor
 from typing_errors import TypingErrors
 from pygame.key import ScancodeWrapper
 from game_state import GameState
 from ui.font_calc import FontCalc
+from ui.help_window import HelpWindow
 from ui.input_line import InputLine
 from ui.keyboard import Keyboard
 from ui.random_line import RandomLine
@@ -20,8 +21,10 @@ from pygame import Surface
 
 class TypingWindow(WindowABC):
 
-    def __init__(self, game_state: GameState):
+    def __init__(self, game_state: GameState, help_window: HelpWindow):
         super().__init__()
+
+        self.__help_window = help_window
 
         self.__game_state = game_state
 
@@ -38,7 +41,10 @@ class TypingWindow(WindowABC):
 
         mentor = Mentor()
 
-        self.__keyboard = Keyboard(language=text_generator.keyboard_lang)
+        self.__keyboard = Keyboard(language=text_generator.keyboard_lang, relative_y_pos=0.45)
+
+        self.__help_show_time = 0
+        self.__update_help_show_time()
 
         self.__random_line = RandomLine(
             text_len=self.__text_len,
@@ -60,7 +66,7 @@ class TypingWindow(WindowABC):
 
     def update(self, events: list[Event], keys: ScancodeWrapper, screen_height: int, screen_width: int):
         self.__font_calc.update(self.__text_len, screen_width)
-        self.__keyboard.update(screen_height, screen_width, keys)
+        self.__keyboard.update(keys)
         self.__input_line.update(events)
         self.__line_stats_calc.update(screen_height, screen_width)
 
@@ -70,6 +76,9 @@ class TypingWindow(WindowABC):
         self.__keyboard.draw(screen)
         self.__line_stats_calc.draw(screen)
 
+    def __update_help_show_time(self):
+        self.__help_show_time = pygame.time.get_ticks() + HELP_SHOW_TIME_MS
+
     def show(
         self,
         screen: Surface,
@@ -77,6 +86,13 @@ class TypingWindow(WindowABC):
         min_screen_size: Point,
         max_screen_size: Point
     ):
+        if not self.__game_state.is_help_showed:
+            self.__help_window.show(
+                screen, clock, min_screen_size, max_screen_size,
+                self.__game_state.generator.keyboard_lang
+            )
+            self.__game_state.is_help_showed = True
+            self.__update_help_show_time()
 
         while True:
             screen.fill(BG_COLOR)
@@ -84,10 +100,30 @@ class TypingWindow(WindowABC):
             keys = pygame.key.get_pressed()
             events = pygame.event.get()
 
-            self.update_events(keys, events, screen, min_screen_size, max_screen_size)
+            self.update_events(events, screen, min_screen_size, max_screen_size)
 
-            if keys[pygame.K_ESCAPE]:
-                return
+            for event in events:
+
+                if event.type != pygame.KEYDOWN:
+                    break
+
+                if event.key == pygame.K_ESCAPE:
+                    return
+
+                self.__update_help_show_time()
+
+                if event.key == pygame.K_F1:
+                    self.__help_window.show(
+                        screen, clock, min_screen_size, max_screen_size,
+                        self.__game_state.generator.keyboard_lang
+                    )
+
+            if pygame.time.get_ticks() > self.__help_show_time:
+                self.__help_window.show(
+                    screen, clock, min_screen_size, max_screen_size,
+                    self.__game_state.generator.keyboard_lang
+                )
+                self.__update_help_show_time()
 
             self.update(events, keys, screen.get_height(), screen.get_width())
             self.draw(screen)

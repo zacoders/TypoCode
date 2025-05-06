@@ -34,7 +34,6 @@ class InputLine:
 
         self.__text = ''
         self.__error_symbol = ''
-        self.__cursor_symbol = "_"
 
         self.__prev_font_size = 100
 
@@ -127,7 +126,7 @@ class InputLine:
         cursor_rect = pygame.Rect(
             text_pos[0] + font_text_width,
             line_rect.y,
-            5,
+            self.__font.size('0')[1] / 16,  # 1/16 of font size
             line_rect.height
         )
 

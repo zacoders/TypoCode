@@ -1,8 +1,10 @@
 import os
 import sys
 import pygame
-from common.common import get_resource_path, is_linux, is_windows
+from common.common import is_linux, is_windows
 from game_state import GameState
+from ui.help_window import HelpWindow
+from ui.images_loader import ImagesLoader
 from ui.theme_config import save_theme
 from ui.typing_window import TypingWindow
 from ui.start_window import StartWindow
@@ -31,20 +33,23 @@ screen_size = info.current_w * 0.7, info.current_h * 0.7
 screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
 pygame.display.set_caption("TypoCode")
 
-icon = pygame.image.load(get_resource_path("./src/_content/icons/keyboard_32x32.png"))
+images_loader = ImagesLoader()
+
+icon = images_loader.get_image("src/_content/images/keyboard_32x32.png")
 pygame.display.set_icon(icon)
 
 start_screen_size = screen.size
 
 save_theme()
 
-game_state = GameState()
-
 clock = pygame.time.Clock()
 
+game_state = GameState()
+help_window = HelpWindow(images_loader)
+start_window = StartWindow(game_state)
+
 while True:
-    start_window = StartWindow(game_state)
     start_window.show(screen, start_screen_size, clock, min_screen_size, max_screen_size)
 
-    typing_window = TypingWindow(game_state)
+    typing_window = TypingWindow(game_state, help_window)
     typing_window.show(screen, clock, min_screen_size, max_screen_size)
