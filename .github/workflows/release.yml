@@ -33,13 +33,32 @@ jobs:
         cd src
         pyinstaller --onefile --noconsole --add-data "_content;src/_content" --icon=main.ico --name TypoCode main.py
       shell: cmd
-
-    - name: Upload Windows artifact
+      
+    - name: Zip Windows executable with hash
       if: runner.os == 'Windows'
-      uses: actions/upload-artifact@v4
-      with:
-        name: my-app-${{ runner.os }}
-        path: src/dist/*
+      run: |
+        cd src/dist
+        mkdir artifacts
+    
+        # Get the tag name like v0.5.5
+        $tag = "${{ github.ref_name }}"
+        $exe = "TypoCode.exe"
+    
+        # Generate SHA256 hash
+        Get-FileHash $exe -Algorithm SHA256 | ForEach-Object {
+          "$($_.Hash) *$exe" | Out-File -Encoding ASCII "$exe.sha256.txt"
+        }
+    
+        # Zip exe and hash file with version in filename
+        $zipName = "typocode-windows-$tag.zip"
+        Compress-Archive -Path $exe, "$exe.sha256.txt" -DestinationPath "artifacts/$zipName
+
+    # - name: Upload Windows artifact
+    #   if: runner.os == 'Windows'
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: my-app-${{ runner.os }}
+    #     path: src/dist/*
 
     - name: Build Linux executable
       if: runner.os == 'Linux'
