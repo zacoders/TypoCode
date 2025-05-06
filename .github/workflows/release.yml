@@ -61,7 +61,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y python3-pip
-        pip install appimage-builder
+        pip install appimage-builder==1.1.0
 
     - name: Create Linux AppImage
       if: runner.os == 'Linux'
