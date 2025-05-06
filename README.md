@@ -1,4 +1,5 @@
 # TypoCode - Adaptive Typing Trainer
+![APP Image](appimage.png "APP Image")
 
 ## Description
 TypoCode is adaptive typing trainer is a program designed to improve typing skills. It automatically adjusts to the user's level and modifies exercises based on mistakes. Select programming language dictionary to improve development typing skills.
@@ -15,3 +16,4 @@ TypoCode is adaptive typing trainer is a program designed to improve typing skil
 ## License & Attribution
 This program is created by Zatuliveter`s and is **free for personal use**. Commercial use is **prohibited**.
 License: Attribution-NonCommercial-ShareAlike 4.0 International
+
