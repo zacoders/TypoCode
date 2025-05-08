@@ -31,13 +31,13 @@ jobs:
     - name: Prepare version file
       if: runner.os == 'Windows'
       run: |
-        $version = "${{ github.ref_name }}".TrimStart("v")
-        $verTuple = ($version -split '\.') -join ',' + ',0'
+          $version = "${{ github.ref_name }}".TrimStart("v")
+          $verTuple = ($version -split '\.') + '0' -join ','
 
-        $content = Get-Content src\version.template.txt -Raw
-        $content = $content -replace "0,0,0,0", $verTuple
-        $content = $content -replace "0\.0\.0", $version
-        Set-Content src\version.txt $content
+          $content = Get-Content src\version.template.txt -Raw
+          $content = $content -replace "0,0,0,0", $verTuple
+          $content = $content -replace "0\.0\.0", $version
+          Set-Content src\version.txt $content
       shell: pwsh
       
     - name: Build Windows executable
