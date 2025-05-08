@@ -27,11 +27,24 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt
 
+      
+    - name: Prepare version file
+      if: runner.os == 'Windows'
+      run: |
+        $version = "${{ github.ref_name }}".TrimStart("v")
+        $verTuple = ($version -split '\.') -join ',' + ',0'
+
+        $content = Get-Content src\version.template.txt -Raw
+        $content = $content -replace "0,0,0,0", $verTuple
+        $content = $content -replace "0\.0\.0", $version
+        Set-Content src\version.txt $content
+      shell: pwsh
+      
     - name: Build Windows executable
       if: runner.os == 'Windows'
       run: |
         cd src
-        pyinstaller --onefile --noconsole --add-data "_content;src/_content" --icon=main.ico --name TypoCode main.py
+        pyinstaller --onefile --noconsole --add-data "_content;src/_content" --icon=main.ico --version-file version.txt --name TypoCode main.py
       shell: cmd
       
     - name: Zip Windows executable with hash
@@ -52,13 +65,6 @@ jobs:
         # Zip exe and hash file with version in filename
         $zipName = "typocode-windows-$tag.zip"
         Compress-Archive -Path $exe, "$exe.sha256.txt" -DestinationPath "artifacts/$zipName"
-
-    # - name: Upload Windows artifact
-    #   if: runner.os == 'Windows'
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: my-app-${{ runner.os }}
-    #     path: src/dist/*
 
     - name: Build Linux executable
       if: runner.os == 'Linux'
