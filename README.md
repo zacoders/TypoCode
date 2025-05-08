@@ -14,6 +14,12 @@ TypoCode is adaptive typing trainer is a program designed to improve typing skil
 2. Run the program.
 
 ## License & Attribution
-This program is created by Zatuliveter`s and is **free for personal use**. Commercial use is **prohibited**.
+This program is created by [zacoders](https://github.com/zacoders) and is **free for personal use**. Commercial use is **prohibited**.
 License: Attribution-NonCommercial-ShareAlike 4.0 International
 
+## Privacy policy
+This program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it.
+
+## Members
+- [Members team](https://github.com/orgs/zacoders/teams/committers-and-reviewers)
+- [Owners](https://github.com/orgs/zacoders/people?query=role%3Aowner)
