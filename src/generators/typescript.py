@@ -2,10 +2,10 @@ from generators.generator_abc import GeneratorABC
 from generators.keyboard_lang import KeyboardLanguage
 
 
-class CSharpGenerator(GeneratorABC):
+class TypeScriptGenerator(GeneratorABC):
 
     @property
-    def display_name(self): return "C#"
+    def display_name(self): return "TypeScript"
 
     keyboard_lang = KeyboardLanguage.ENGLISH
 
@@ -13,81 +13,66 @@ class CSharpGenerator(GeneratorABC):
         set('asdfghjkl '),  # level 0
         set('asdfghjkl qwertyuiop'),  # level 1
         set('asdfghjkl qwertyuiop zxcvbnm'),  # level 2
-        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM .,;_'),  # level 3
-        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM 1234567890 .,;_{}[]()'),  # level 4
-        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM 1234567890 .,;_`~!@#$%^&*()-=+[]{}\\|:"<>/?' + "'")  # level 5
+        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM .,_;:'),  # level 3
+        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM 1234567890 .,_:{}[]()$|'),  # level 4
+        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM 1234567890 `~!@#$%^&*()-=+[]{}\\|;:",<.>/?_' + "'")  # level 5
     ]
 
     _words = [
-        # Keywords
-        "abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked",
-        "class", "const", "continue", "decimal", "default", "delegate", "do", "double", "else", "enum",
-        "event", "explicit", "extern", "false", "finally", "fixed", "float", "for", "foreach", "goto",
-        "if", "implicit", "in", "int", "interface", "internal", "is", "lock", "long", "namespace",
-        "new", "null", "object", "operator", "out", "override", "params", "private", "protected", "public",
-        "readonly", "ref", "return", "sbyte", "sealed", "short", "sizeof", "stackalloc", "static", "string",
-        "struct", "switch", "this", "throw", "true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe",
-        "ushort", "using", "virtual", "void", "volatile", "while", "async", "await", "record", "init",
+        # TypeScript Keywords
+        'abstract', 'any', 'as', 'asserts', 'async', 'await', 'bigint', 'boolean', 'break',
+        'case', 'catch', 'class', 'const', 'constructor', 'continue', 'debugger', 'declare',
+        'default', 'delete', 'do', 'else', 'enum', 'export', 'extends', 'false', 'finally',
+        'for', 'from', 'function', 'get', 'if', 'implements', 'import', 'in', 'infer',
+        'instanceof', 'interface', 'is', 'keyof', 'let', 'module', 'namespace', 'never', 'new',
+        'null', 'number', 'object', 'package', 'private', 'protected', 'public', 'readonly',
+        'require', 'return', 'set', 'static', 'string', 'super', 'switch', 'symbol', 'this',
+        'throw', 'true', 'try', 'type', 'typeof', 'undefined', 'unique', 'unknown', 'var',
+        'void', 'while', 'with', 'yield',
 
-        # Special Identifiers
-        "this", "base", "nameof", "typeof", "default", "var", "dynamic", "async", "await",
+        # Common decorators
+        '@Injectable', '@Component', '@Input', '@Output', '@NgModule', '@HostListener', '@Directive',
 
-        # Common Built-in Methods
-        "Console.WriteLine", "Console.ReadLine", "Console.Write", "Math.Abs", "Math.Max", "Math.Min", "Math.Pow", "Math.Sqrt",
-        "string.Concat", "string.Join", "string.Format", "string.Split", "string.Replace", "string.ToUpper", "string.ToLower",
-        "int.Parse", "double.Parse", "float.Parse", "bool.Parse", "DateTime.Now", "DateTime.Today", "DateTime.UtcNow",
-        "List<T>", "Dictionary<T, T>", "HashSet<T>", "Queue<T>", "Stack<T>", "Enumerable.Range", "Enumerable.ToList",
+        # Built-in/Global objects
+        'Array', 'Boolean', 'console', 'Date', 'Error', 'Function', 'JSON', 'Map', 'Math', 'Number',
+        'Object', 'Promise', 'RegExp', 'Set', 'String', 'Symbol', 'WeakMap', 'WeakSet', 'window', 'document',
 
-        # Common Dunder (Magic) Methods
-        "public override string ToString()", "public override bool Equals(object obj)", "public override int GetHashCode()",
-        "public static bool operator ==", "public static bool operator !=", "public static implicit operator",
-        "public static explicit operator",
+        # Common methods
+        'push', 'pop', 'shift', 'unshift', 'map', 'filter', 'reduce', 'forEach', 'slice', 'splice',
+        'includes', 'indexOf', 'find', 'findIndex', 'join', 'split', 'trim', 'toUpperCase', 'toLowerCase',
+        'parseInt', 'parseFloat', 'toString', 'charAt', 'charCodeAt',
 
-        # Common Standard Library Modules
-        "System", "System.IO", "System.Text", "System.Collections.Generic", "System.Linq", "System.Threading", "System.Threading.Tasks",
-        "System.Diagnostics", "System.Reflection", "System.Globalization", "System.Net", "System.Net.Http", "System.Xml", "System.Xml.Linq",
-        "System.Data", "System.Security.Cryptography", "System.Text.RegularExpressions",
+        # Common operators
+        '=', '==', '===', '!=', '!==', '<', '<=', '>', '>=', '+', '-', '*', '/', '%',
+        '&&', '||', '!', '??', '?.', '=>', '...', 'as', 'is', 'instanceof', 'typeof', 'in',
 
-        # Symbols and Operators
-        "+", "-", "*", "/", "%", "++", "--", "==", "!=", "<", ">", "<=", ">=",
-        "=", "+=", "-=", "*=", "/=", "%=", "&&", "||", "!", "^", "~", "<<", ">>",
-        "=>", "??", "??=", "?.", "?.[]", "_",
-
-        # Delimiters
-        "(", ")", "[]", "{}", ":", ";", ",", ".", "@", "\"", "'", "$\"...\"",
-
-        # Other
-        "while (true)", "int number", "string text", "using System", "namespace Example", "class Program", "static void Main()",
+        # Brackets and punctuation
+        '(', ')', '[', ']', '{', '}', ';', ':', ',', '.', '`', "'", '"',
 
         # Common variable names
-        "i", "j", "k", "x", "y", "z", "name", "age", "count", "result", "data", "item", "value", "index",
-        "temp", "exception", "ex", "args", "input", "output", "filename", "path", "url", "response", "status",
-        "message", "error", "config", "settings", "file", "records", "timestamp", "startTime", "endTime", "isValid",
-        "buffer", "size", "key", "obj", "model", "query", "connection", "log", "environment", "local", "localhost",
+        'i', 'j', 'k', 'x', 'y', 'z', 'key', 'value', 'item', 'data', 'result', 'error',
+        'user', 'input', 'output', 'name', 'type', 'id', 'count', 'flag', 'status', 'index',
+        'config', 'settings', 'props', 'state', 'message', 'response', 'request', 'url', 'event',
 
         # Common class names
-        "App", "Base", "Config", "Controller", "Database", "Data", "Entity", "Error", "Exception", "Factory",
-        "Handler", "Helper", "Job", "Logger", "Manager", "Mapper", "Model", "Node", "Parser", "Processor",
-        "Queue", "Reader", "Registry", "Request", "Response", "Router", "Scheduler", "Serializer", "Service",
-        "Session", "Settings", "Singleton", "State", "Strategy", "Task", "Thread", "Tracker", "Transformer",
-        "Unit", "User", "Validator", "View", "Worker", "Writer", "Adapter", "Builder", "Command", "Component",
-        "Observer",
+        'App', 'Service', 'Component', 'Controller', 'Model', 'View', 'Router', 'Handler',
+        'Client', 'Server', 'Logger', 'Database', 'Api', 'Manager', 'Config', 'Session',
 
         # Common constant names
-        "PI", "E", "MAX_INT", "MIN_INT", "NULL", "TRUE", "FALSE", "DEFAULT", "SUCCESS", "FAILURE", "ERROR", "TIMEOUT",
-        "CACHE_TIMEOUT", "BUFFER_SIZE", "MAX_LENGTH", "MIN_LENGTH", "MAX_SIZE", "MIN_SIZE", "API_KEY", "AUTH_TOKEN",
-        "DB_HOST", "DB_PORT", "DB_NAME", "DB_USER", "DB_PASSWORD", "LOG_LEVEL", "LOG_FILE", "CACHE_LIMIT",
-        "SESSION_TIMEOUT", "MAX_CONNECTIONS", "RETRY_INTERVAL", "PAGE_SIZE", "TIME_FORMAT", "DATE_FORMAT",
+        'DEFAULT_TIMEOUT', 'MAX_RETRIES', 'API_URL', 'STATUS_OK', 'STATUS_ERROR',
+        'AUTH_TOKEN', 'USER_ROLE', 'APP_VERSION', 'ENVIRONMENT', 'HTTP_PORT',
 
-        # Command line
-        "dotnet", "dotnet build", "dotnet run", "dotnet publish", "dotnet restore", "dotnet new", "dotnet test",
-        "csc", "msbuild", "nuget", "dotnet pack", "dotnet add package", "dotnet remove package", "dotnet list package",
+        # camelCase method/var names
+        'getData', 'setData', 'loadData', 'fetchData', 'handleError', 'onInit',
+        'ngOnInit', 'renderView', 'updateState', 'sendRequest', 'parseJson', 'toJson',
+        'saveChanges', 'clearCache', 'addItem', 'removeItem', 'getUserInput',
+        'resetForm', 'validateForm', 'createUser', 'deleteUser', 'toggleFlag',
 
-        # A few words for the first typing level.
-        "dsl", "ask", "gl", "ddl", "gh", "sdk", "lag", "asg", "dfg", "hjd", "ksl", "glk",
-        'add', 'flag', 'glass', 'dash', 'fall', 'lad', 'slag',
-        'flash', 'flask', 'half', 'gag', 'hall', 'jag',
-        'gall', 'has', 'gala', 'afk', 'shad', 'gas',
+        # CLI commands
+        'tsc', 'ts-node', 'npm install', 'npm run', 'npm test', 'npx', 'node', 'tslint', 'eslint', 'prettier',
+
+        # A few easy level 0/1 typing words
+        'ask', 'lag', 'flag', 'task', 'desk', 'gas', 'sad', 'fast', 'glass', 'data',
 
         # Common words
         "Add", "AddRange", "Aggregate", "All", "Any", "Append", "AsEnumerable", "AsParallel", "AsQueryable", "Average",
