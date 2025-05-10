@@ -15,8 +15,8 @@ class PythonGenerator(GeneratorABC):
         set('asdfghjkl qwertyuiop'),  # level 1
         set('asdfghjkl qwertyuiop zxcvbnm'),  # level 2
         set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM .,_'),  # level 3
-        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM 1234567890 .,'),  # level 4
-        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM 1234567890 `~!@#$%^&*()-=+[]{}\\|;:",<.>/?' + "'")  # level 5
+        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM 1234567890 .,_'),  # level 4
+        set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM 1234567890 `~!@#$%^&*()-=+[]{}\\|;:",<.>/?_' + "'")  # level 5
     ]
 
     _words = [
@@ -92,9 +92,10 @@ class PythonGenerator(GeneratorABC):
         'python', '--version', '--help', 'venv', 'source bin/activate', 'Scripts\\activate', 'pip install', 'pip install --upgrade', 'pip uninstall', 'pip freeze', 'pip list', 'pip show', 'pip install', 'pip list', 'pip freeze', '-c', 'unittest', 'pydoc', '-i', 'timeit', 'http.server', 'cProfile', 'pdb', 'deactivate', 'pip install --user', 'pip uninstall --yes', 'setup.py install', 'setup.py bdist_wheel', 'ensurepip --upgrade', 'venv --clear', 'pip search', 'tarfile', 'socket', 'smtpd -n -c DebuggingServer', '-m',
 
         # A few words for the first typing level.
-        'ask', 'add', 'flag', 'glass', 'dash', 'fall', 'lad', 'slag',
+        "dsl", "ask", "gl", "ddl", "gh", "sdk", "lag", "asg", "dfg", "hjd", "ksl", "glk",
+        'add', 'flag', 'glass', 'dash', 'fall', 'lad', 'slag',
         'flash', 'flask', 'half', 'gag', 'hall', 'jag',
-        'lag', 'gall', 'has', 'gala', 'afk', 'shad', 'gas',
+        'gall', 'has', 'gala', 'afk', 'shad', 'gas',
 
         # Snake case words
         "add_connection", "add_data", "add_hash", "add_init", "add_item", "add_key", "add_loop", "add_path", "add_safe",
