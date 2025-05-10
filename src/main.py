@@ -26,7 +26,7 @@ pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=100)
 info = pygame.display.Info()
 
 max_screen_size = (info.current_w, info.current_h)
-min_screen_size = (1280, 800)
+min_screen_size = (800, 600)
 
 screen_size = info.current_w * 0.7, info.current_h * 0.7
 

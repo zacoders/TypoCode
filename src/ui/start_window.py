@@ -38,11 +38,14 @@ class StartWindow(WindowABC):
             theme_path=get_theme_path()
         )
 
-        pos_x = screen_size[0] // 2 - 600  # selection_list_width // 2
-        pos_y = screen_size[1] // 2 - 360  # selection_list_height // 2
+        self.__list_width = int(screen_size[0] * 0.7)
+        self.__list_height = int(screen_size[1] * 0.7)
+
+        pos_x = screen_size[0] // 2 - self.__list_width // 2
+        pos_y = screen_size[1] // 2 - self.__list_height // 2
 
         self.__selection_list = UISelectionList(
-            relative_rect=Rect(pos_x, pos_y, 1200, 720),
+            relative_rect=Rect(pos_x, pos_y, self.__list_width, self.__list_height),
             item_list=self.__generator_names,
             manager=self.__manager
         )
