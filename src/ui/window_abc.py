@@ -1,4 +1,3 @@
-
 from abc import ABC
 import sys
 from typing import List
@@ -34,15 +33,18 @@ class WindowABC(ABC):
                 screen = pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_F11:
-                if screen.get_size() != max_screen_size:
-                    self.__prev_screen_size = screen.get_size()
-                    new_screen_size = max_screen_size
-                    self.__is_fullscreen = True
-                else:
-                    new_screen_size = self.__prev_screen_size
-                    self.__is_fullscreen = False
+                # Check if any other keys are pressed
+                keys = pygame.key.get_pressed()
+                if not any(keys[i] for i in range(len(keys)) if i != pygame.K_F11):
+                    if screen.get_size() != max_screen_size:
+                        self.__prev_screen_size = screen.get_size()
+                        new_screen_size = max_screen_size
+                        self.__is_fullscreen = True
+                    else:
+                        new_screen_size = self.__prev_screen_size
+                        self.__is_fullscreen = False
 
-                screen = pygame.display.set_mode(
-                    new_screen_size,
-                    pygame.FULLSCREEN if self.__is_fullscreen else pygame.RESIZABLE
-                )
+                    screen = pygame.display.set_mode(
+                        new_screen_size,
+                        pygame.FULLSCREEN if self.__is_fullscreen else pygame.RESIZABLE
+                    )
