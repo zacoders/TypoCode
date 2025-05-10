@@ -23,15 +23,10 @@ class WindowABC(ABC):
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_F11:
                 if WindowABC.__is_fullscreen:
-                    # When exiting fullscreen, use the previous size but ensure it's within bounds
-                    new_width = min(max(WindowABC.__prev_screen_size[0], min_width), max_screen_size[0])
-                    new_height = min(max(WindowABC.__prev_screen_size[1], min_height), max_screen_size[1])
-                    screen = pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
+                    screen = pygame.display.set_mode(self.__prev_screen_size, pygame.RESIZABLE)
                     WindowABC.__is_fullscreen = False
                 else:
-                    # Store current size before going fullscreen
                     WindowABC.__prev_screen_size = screen.get_size()
-                    # Use the actual screen size for fullscreen
                     screen = pygame.display.set_mode(max_screen_size, pygame.FULLSCREEN)
                     WindowABC.__is_fullscreen = True
 
