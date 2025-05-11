@@ -5,7 +5,7 @@ from generators.keyboard_lang import KeyboardLanguage
 class TransactSqlGenerator(GeneratorABC):
 
     @property
-    def display_name(self): return "Transact SQL"
+    def display_name(self): return "Transact-SQL"
 
     keyboard_lang = KeyboardLanguage.ENGLISH
 
