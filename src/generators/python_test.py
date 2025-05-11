@@ -1,5 +1,5 @@
 from unittest.mock import MagicMock
-from typing_errors import TypingErrors
+from common.typing_errors import TypingErrors
 from generators.python import PythonGenerator
 from common.time_provider import TimeProvider
 

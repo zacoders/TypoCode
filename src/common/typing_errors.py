@@ -18,6 +18,7 @@ class TypingErrors:
 
         print(f'{self.__error_letters=}')
         print(f'{self.__error_words=}')
+        
 
     def del_word(self, word: str):
         if word:

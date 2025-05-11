@@ -1,7 +1,7 @@
 
 from abc import ABC, abstractmethod
 from generators.typing_level import TypingLevel
-from typing_errors import TypingErrors
+from common.typing_errors import TypingErrors
 import random
 
 from generators.keyboard_lang import KeyboardLanguage

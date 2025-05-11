@@ -1,12 +1,13 @@
 import pygame
 from pygame.time import Clock
 from pygame.event import Event
+from common.char_stats import CharStats
 from common.common import get_resource_path
 from common.time_provider import TimeProvider
 from consts import BG_COLOR, FPS, HELP_SHOW_TIME_MS
 from services.line_stats_calc import LineStatsCalc
 from services.mentor import Mentor
-from typing_errors import TypingErrors
+from common.typing_errors import TypingErrors
 from pygame.key import ScancodeWrapper
 from game_state import GameState
 from ui.font_calc import FontCalc
@@ -35,7 +36,8 @@ class TypingWindow(WindowABC):
         text_generator = self.__game_state.generator
 
         time_provider = TimeProvider()
-        self.__line_stats_calc = LineStatsCalc(time_provider)
+        char_stats = CharStats()
+        self.__line_stats_calc = LineStatsCalc(time_provider, char_stats)
 
         typing_errors = TypingErrors()
 

@@ -7,7 +7,7 @@ from game_state import GameState
 from services.keyboard_service import KeyboardService
 from services.line_stats_calc import LineStatsCalc
 from services.mentor import Mentor
-from typing_errors import TypingErrors
+from common.typing_errors import TypingErrors
 from ui.keyboard import Keyboard
 from ui.random_line import RandomLine
 

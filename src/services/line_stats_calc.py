@@ -1,15 +1,14 @@
-from datetime import timedelta
 import pygame
+from common.char_stats import CharStats
 from common.time_provider import TimeProvider
 from services.line_stats import LineStats
 from pygame.typing import RectLike
-from collections import defaultdict
 
 
 class LineStatsCalc:
     FONT_SIZE = 50
 
-    def __init__(self, time_provider: TimeProvider):
+    def __init__(self, time_provider: TimeProvider, char_stats: CharStats):
         self.__success_count = 0
         self.__error_count = 0
         self.__time_provider = time_provider
@@ -18,7 +17,7 @@ class LineStatsCalc:
         self.__scale = 1.0
         self.__screen_height = 0
         self.__screen_width = 0
-        self.__stats = defaultdict(lambda: {'total_time': 0.0, 'count': 0})
+        self.__char_stats = char_stats
 
     def is_stopped(self):
         return self.__end_time_utc
@@ -34,10 +33,6 @@ class LineStatsCalc:
     def stop(self):
         self.__end_time_utc = self.__time_provider.get_utc_time()
 
-    def __update_symbol_stats(self, char: str, time_taken: float):
-        self.__stats[char]['total_time'] += time_taken
-        self.__stats[char]['count'] += 1
-
     def symbol_typed(self, is_error: bool, char: str):
 
         if not self.__start_time_utc:
@@ -51,7 +46,7 @@ class LineStatsCalc:
             interval: float = (key_press_time - self.__pref_key_press_time).total_seconds()
             self.__intervals.append(interval)
             self.__pref_key_press_time = key_press_time
-            self.__update_symbol_stats(char, interval)
+            self.__char_stats.update_stats(char, interval)
 
     def get_rhythm(self, intervals: list[float]) -> float:
         if len(intervals) < 2:
