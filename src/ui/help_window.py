@@ -1,4 +1,5 @@
 import pygame
+from pygame.font import Font
 from pygame import Surface, Clock
 from pygame.key import ScancodeWrapper
 from consts import BG_COLOR, FPS
@@ -8,6 +9,8 @@ from ui.images_loader import ImagesLoader
 from ui.keyboard import Keyboard
 from ui.window_abc import WindowABC
 from pygame.typing import Point
+from ui.font_calc import FontCalc
+from common.common import get_resource_path
 
 
 class HelpWindow(WindowABC):
@@ -16,20 +19,43 @@ class HelpWindow(WindowABC):
         super().__init__()
 
         self.__keyboard = Keyboard(KeyboardLanguage.ENGLISH, relative_y_pos=0.025)
-        self.__hands_animator = HandsAnimator(relative_y_pos=0.5, images_loader=images_loader)
+        self.__hands_animator = HandsAnimator(relative_y_pos=0.48, images_loader=images_loader)
 
-    def update(self, keys: ScancodeWrapper):
+        self.__font_file_path = get_resource_path("src/_content/fonts/UbuntuMono-Regular.ttf")
+        self.__font_calc = FontCalc(self.__font_file_path)
+        self.__font = Font(self.__font_file_path, 100)
 
+        self.__text = 'F11 - fullscreen; F3 - zen mode; F1 - help; ESC - exit from window.'
+        self.__text_color = (255, 255, 255)
+        self.__text_line_color = (60, 60, 60)
+
+    def update(self, keys: ScancodeWrapper, screen_width: int):
+        self.__font_calc.update(len(self.__text), screen_width // 2)
         self.__hands_animator.update()
         self.__keyboard.update(keys)
-
         fingers_enum = self.__hands_animator.get_finger()
         is_visible = self.__hands_animator.is_visible()
         self.__keyboard.highlight_fingers_key(fingers_enum, is_visible)
 
-    def draw(self, screen: Surface):
+    def draw(self, screen: Surface, font_size: int):
         self.__hands_animator.draw(screen)
         self.__keyboard.draw(screen)
+
+        self.__font = Font(self.__font_file_path, font_size)
+
+        line_rect = pygame.Rect(
+            0,
+            screen.get_height() - font_size,
+            screen.get_width(),
+            font_size
+        )
+
+        pygame.draw.rect(screen, self.__text_line_color, line_rect)
+
+        text = self.__font.render(self.__text, True, self.__text_color)
+        x, y = (screen.get_width() - text.get_width()) // 2, line_rect.y
+        text_pos = (x, y)
+        screen.blit(text, text_pos)
 
     def show(
         self,
@@ -58,8 +84,8 @@ class HelpWindow(WindowABC):
             if self.__hands_animator.is_repeat():
                 return
 
-            self.update(keys)
-            self.draw(screen)
+            self.update(keys, screen.get_width())
+            self.draw(screen, self.__font_calc.current_font_size())
 
             pygame.display.update()
             pygame.display.flip()
