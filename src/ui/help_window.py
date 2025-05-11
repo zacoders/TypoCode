@@ -23,14 +23,14 @@ class HelpWindow(WindowABC):
 
         self.__font_file_path = get_resource_path("src/_content/fonts/UbuntuMono-Regular.ttf")
         self.__font_calc = FontCalc(self.__font_file_path)
-        self.__font = Font(self.__font_file_path, 100)
+        self.__font = Font(self.__font_file_path, 150)
 
-        self.__text = 'F11 - fullscreen; F3 - zen mode; F1 - help; ESC - exit from window.'
+        self.__text = 'F1 - Help;    F3 - Zen Mode;    F11 - Fulls Screen;    ESC - Exit'
         self.__text_color = (255, 255, 255)
         self.__text_line_color = (60, 60, 60)
 
     def update(self, keys: ScancodeWrapper, screen_width: int):
-        self.__font_calc.update(len(self.__text), screen_width // 2)
+        self.__font_calc.update(len(self.__text), int(screen_width * 0.6))
         self.__hands_animator.update()
         self.__keyboard.update(keys)
         fingers_enum = self.__hands_animator.get_finger()
