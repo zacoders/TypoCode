@@ -51,6 +51,7 @@ class TypingWindow(WindowABC):
         self.__random_line = RandomLine(
             text_len=self.__text_len,
             errors=typing_errors,
+            char_stats=char_stats,
             text_generator=text_generator,
             font_file_path=font_file_path,
             mentor=mentor
