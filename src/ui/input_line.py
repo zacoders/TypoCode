@@ -90,14 +90,14 @@ class InputLine:
 
             if unicode_char == current_char:
                 self.__type_sound.play()
-                self.__line_stats_calc.symbol_typed(is_error=False)
+                self.__line_stats_calc.symbol_typed(is_error=False, char=unicode_char)
                 self.__text += unicode_char
                 self.__error_symbol = ''
             else:
                 if unicode_char:
                     word = self.__get_word(current_char_pos)
                     self.__typing_errors.add_errors(current_char, word)
-                self.__line_stats_calc.symbol_typed(is_error=True)
+                self.__line_stats_calc.symbol_typed(is_error=True, char=unicode_char)
                 self.__error_sound.play()
                 self.__error_symbol = unicode_char
 
