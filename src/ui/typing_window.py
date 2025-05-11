@@ -64,6 +64,8 @@ class TypingWindow(WindowABC):
             game_state=self.__game_state
         )
 
+        self.__zen_mode = False
+
     def update(self, events: list[Event], keys: ScancodeWrapper, screen_height: int, screen_width: int):
         self.__font_calc.update(self.__text_len, screen_width)
         self.__keyboard.update(keys)
@@ -73,7 +75,8 @@ class TypingWindow(WindowABC):
     def draw(self, screen: Surface):
         self.__input_line.draw(screen, self.__font_calc.current_font_size(), self.__font_calc.current_text_width())
         self.__random_line.draw(screen, self.__font_calc.current_font_size(), self.__font_calc.current_text_width())
-        self.__keyboard.draw(screen)
+        if not self.__zen_mode:
+            self.__keyboard.draw(screen)
         self.__line_stats_calc.draw(screen)
 
     def __update_help_show_time(self):
@@ -117,6 +120,9 @@ class TypingWindow(WindowABC):
                         screen, clock, min_screen_size, max_screen_size,
                         self.__game_state.generator.keyboard_lang
                     )
+
+                if event.key == pygame.K_F3:
+                    self.__zen_mode = not self.__zen_mode
 
             if pygame.time.get_ticks() > self.__help_show_time:
                 self.__help_window.show(
