@@ -7,7 +7,7 @@ from game_state import GameState
 from services.keyboard_service import KeyboardService
 from services.line_stats_calc import LineStatsCalc
 from services.mentor import Mentor
-from typing_errors import TypingErrors
+from common.typing_errors import TypingErrors
 from ui.keyboard import Keyboard
 from ui.random_line import RandomLine
 
@@ -90,14 +90,14 @@ class InputLine:
 
             if unicode_char == current_char:
                 self.__type_sound.play()
-                self.__line_stats_calc.symbol_typed(is_error=False)
+                self.__line_stats_calc.symbol_typed(is_error=False, char=unicode_char)
                 self.__text += unicode_char
                 self.__error_symbol = ''
             else:
                 if unicode_char:
                     word = self.__get_word(current_char_pos)
                     self.__typing_errors.add_errors(current_char, word)
-                self.__line_stats_calc.symbol_typed(is_error=True)
+                self.__line_stats_calc.symbol_typed(is_error=True, char=unicode_char)
                 self.__error_sound.play()
                 self.__error_symbol = unicode_char
 

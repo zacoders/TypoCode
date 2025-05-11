@@ -1,7 +1,8 @@
 
 from abc import ABC, abstractmethod
+from common.char_stats import CharStats
 from generators.typing_level import TypingLevel
-from typing_errors import TypingErrors
+from common.typing_errors import TypingErrors
 import random
 
 from generators.keyboard_lang import KeyboardLanguage
@@ -27,8 +28,16 @@ class GeneratorABC(ABC):
         set('asdfghjkl qwertyuiop zxcvbnm ASDFGHJKL QWERTYUIOP ZXCVBNM 1234567890 `~!@#$%^&*()-_=+[]{}\\|;:",<.>/?' + "'")  # level 5
     ]
 
-    def get_text(self, length: int, errors: TypingErrors, typing_level: int) -> str:
+    def get_text(
+        self,
+        length: int,
+        errors: TypingErrors,
+        char_stats: CharStats,
+        typing_level: int
+    ) -> str:
         text = ''
+        slow_symbols = char_stats.get_top_n_chars_by_avg_time(3)
+
         while True:
             total_len = len(text)
             if total_len >= length:
@@ -46,12 +55,19 @@ class GeneratorABC(ABC):
                 continue
             elif word_type < 0.1 and typing_level >= TypingLevel.NUMBERS_4.value:
                 word = self._get_random_number(max_word_len)
-            elif word_type < 0.5 and len(error_words) > 0:
+            elif word_type < 0.4 and len(error_words) > 0:
                 word = self._get_random_word(words=error_words, max_length=max_word_len, typing_level=typing_level)
                 if not word:
                     continue
                 errors.del_word(word)
-            elif word_type < 0.75 and len(error_letters) > 0:
+            elif word_type < 0.6 and len(error_letters) > 0:
+                rand_letter = random.choice(slow_symbols)
+                word = self._get_random_word_with_letter(
+                    words=self._words, max_length=max_word_len, letter=rand_letter, typing_level=typing_level
+                )
+                if not word:
+                    continue
+            elif word_type < 0.8 and len(error_letters) > 0:
                 rand_letter = random.choice(error_letters)
                 word = self._get_random_word_with_letter(
                     words=self._words, max_length=max_word_len, letter=rand_letter, typing_level=typing_level

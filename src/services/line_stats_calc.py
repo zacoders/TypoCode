@@ -1,14 +1,14 @@
 import pygame
+from common.char_stats import CharStats
 from common.time_provider import TimeProvider
 from services.line_stats import LineStats
 from pygame.typing import RectLike
-import statistics
 
 
 class LineStatsCalc:
     FONT_SIZE = 50
 
-    def __init__(self, time_provider: TimeProvider):
+    def __init__(self, time_provider: TimeProvider, char_stats: CharStats):
         self.__success_count = 0
         self.__error_count = 0
         self.__time_provider = time_provider
@@ -17,6 +17,7 @@ class LineStatsCalc:
         self.__scale = 1.0
         self.__screen_height = 0
         self.__screen_width = 0
+        self.__char_stats = char_stats
 
     def is_stopped(self):
         return self.__end_time_utc
@@ -32,7 +33,7 @@ class LineStatsCalc:
     def stop(self):
         self.__end_time_utc = self.__time_provider.get_utc_time()
 
-    def symbol_typed(self, is_error: bool):
+    def symbol_typed(self, is_error: bool, char: str):
 
         if not self.__start_time_utc:
             raise Exception(f"Please call {LineStatsCalc.__name__}.{LineStatsCalc.start.__name__}() first.")
@@ -42,9 +43,10 @@ class LineStatsCalc:
         else:
             self.__success_count += 1
             key_press_time = self.__time_provider.get_utc_time()
-            self.__intervals.append((key_press_time - self.__pref_key_press_time).total_seconds())
-            print(key_press_time - self.__pref_key_press_time)
+            interval: float = (key_press_time - self.__pref_key_press_time).total_seconds()
+            self.__intervals.append(interval)
             self.__pref_key_press_time = key_press_time
+            self.__char_stats.update_stats(char, interval)
 
     def get_rhythm(self, intervals: list[float]) -> float:
         if len(intervals) < 2:
