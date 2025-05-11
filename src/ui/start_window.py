@@ -41,7 +41,7 @@ class StartWindow(WindowABC):
         list_width = int(screen_size[0] * 0.7)
         list_height = int(screen_size[1] * 0.7)
         list_width = min(list_width, 1200)
-        list_height = min(list_height, 720)
+        list_height = min(list_height, 940)
 
         pos_x = screen_size[0] // 2 - list_width // 2
         pos_y = screen_size[1] // 2 - list_height // 2

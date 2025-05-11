@@ -7,7 +7,7 @@ theme_config = {
     "button": {
         "font": {
             "name": "UbuntuMono-Regular",
-            "size": 66,
+            "size": 55,
             "regular_path": get_resource_path("src/_content/fonts/UbuntuMono-Regular.ttf")
         },
         "colours": {
