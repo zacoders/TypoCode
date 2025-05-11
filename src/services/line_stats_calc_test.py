@@ -1,10 +1,12 @@
+from common.char_stats import CharStats
 from common.time_provider import TimeProvider
 from services.line_stats_calc import LineStatsCalc
 
 
 def test_rhythm_100_percent():
     time_provider = TimeProvider()
-    calc = LineStatsCalc(time_provider)
+    char_stats = CharStats()
+    calc = LineStatsCalc(time_provider, char_stats)
     intervals = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
     rhythm_percentage = calc.get_rhythm(intervals)
     assert rhythm_percentage == 100
@@ -12,7 +14,8 @@ def test_rhythm_100_percent():
 
 def test_rhythm_50_percent():
     time_provider = TimeProvider()
-    calc = LineStatsCalc(time_provider)
+    char_stats = CharStats()
+    calc = LineStatsCalc(time_provider, char_stats)
     intervals = [1.0, 3, 1, 3, 1, 3, 1, 3, 1, 3]
     rhythm_percentage = calc.get_rhythm(intervals)
     assert rhythm_percentage == 50
@@ -20,7 +23,8 @@ def test_rhythm_50_percent():
 
 def test_rhythm_with_long_delay():
     time_provider = TimeProvider()
-    calc = LineStatsCalc(time_provider)
+    char_stats = CharStats()
+    calc = LineStatsCalc(time_provider, char_stats)
     intervals = [1.0, 1.0, 1.0, 30.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
     rhythm_percentage = calc.get_rhythm(intervals)
     print(f'{rhythm_percentage=}')
@@ -29,7 +33,8 @@ def test_rhythm_with_long_delay():
 
 def test_rhythm_real_life():
     time_provider = TimeProvider()
-    calc = LineStatsCalc(time_provider)
+    char_stats = CharStats()
+    calc = LineStatsCalc(time_provider, char_stats)
     intervals = [
         0.444680, 0.409908, 0.477721, 0.448560, 0.426258, 0.446133, 0.431645, 0.432888,
         0.409544, 0.457144, 0.397899, 0.511224, 0.411902, 0.439939, 0.411013, 0.380297,
