@@ -60,7 +60,7 @@ class GeneratorABC(ABC):
                 if not word:
                     continue
                 errors.del_word(word)
-            elif word_type < 0.6 and len(error_letters) > 0:
+            elif word_type < 0.6 and len(slow_symbols) > 0:
                 rand_letter = random.choice(slow_symbols)
                 word = self._get_random_word_with_letter(
                     words=self._words, max_length=max_word_len, letter=rand_letter, typing_level=typing_level
