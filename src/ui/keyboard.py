@@ -251,6 +251,9 @@ class Keyboard:
             self.__shift_test(key)
             return
 
+        punctuation_test = [char in string.punctuation for char in next_word_slice]
+        number_test = [char.isdigit() for char in next_word_slice]
+
         if is_shift or is_caps:
             for row in self.__negative_layout:
                 for (neg_key, _) in row:
@@ -258,12 +261,24 @@ class Keyboard:
                         self.__highlighted_key = neg_key
                         return
 
+            if (all(punctuation_test) or all(number_test)) and is_caps:
+                self.__highlighted_key = "Caps"
+                return
+
             if key in keys_only:
                 self.__highlighted_key = key
                 return
 
+        if " " not in next_word_slice:
+            caps_test = [
+                letter.isupper() or letter in string.punctuation
+                for letter in next_word_slice
+            ]
+        else:
+            caps_test = [False]
+
         if not is_shift and not is_caps:
-            if all(letter.isupper() or letter in string.punctuation for letter in next_word_slice) \
+            if all(caps_test) and not all(punctuation_test) \
                     and key not in string.punctuation:
                 self.__highlighted_key = "Caps"
                 return
