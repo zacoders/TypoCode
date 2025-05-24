@@ -1,3 +1,4 @@
+from typing import List
 import pygame
 from pygame.key import ScancodeWrapper
 from common.common import is_capslock_on, is_shift_pressed
@@ -40,7 +41,8 @@ class Keyboard:
         self.__key_size = Keyboard.KEY_SIZE
         self.__spacing = Keyboard.KEY_SPACING
 
-        self.__negative_layout = []
+        self.__highlight_left_shift = False
+        self.__highlight_right_shift = False
 
         self.__color_layout = [
             self.RED, self.RED, self.RED, self.YELLOW, self.GREEN, self.BLUE, self.BLUE,
@@ -90,72 +92,44 @@ class Keyboard:
             FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE  # Space bar row
         ]
 
+        self.__key_lengths = [
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+            [1.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5],
+            [1.8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2.35],
+            [2.30, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3.0],
+            [1.25, 1.25, 1.25, 7.15, 1.25, 1.25, 1.25, 1.25]
+        ]
+
         self.__eng_layout_uppercase = [
-            [("~", 1), ("!", 1), ("@", 1), ("#", 1), ("$", 1), ("%", 1), ("^", 1),
-             ("&", 1), ("*", 1), ("(", 1), (")", 1), ("_", 1), ("+", 1), ("<--", 2)],
-
-            [("Tab", 1.5), ("q", 1), ("w", 1), ("e", 1), ("r", 1), ("t", 1), ("y", 1),
-             ("u", 1), ("i", 1), ("o", 1), ("p", 1), ("{", 1), ("}", 1), ("|", 1.5)],
-
-            [("Caps", 1.8), ("a", 1), ("s", 1), ("d", 1), ("f", 1), ("g", 1),
-             ("h", 1), ("j", 1), ("k", 1), ("l", 1), (":", 1), ('"', 1), ("Enter", 2.35)],
-
-            [("L-Shift", 2.30), ("z", 1), ("x", 1), ("c", 1), ("v", 1), ("b", 1),
-             ("n", 1), ("m", 1), ("<", 1), (">", 1), ("?", 1), ("R-Shift", 3.0)],
-
-            [("Ctrl", 1.25), ("Win", 1.25), ("Alt", 1.25), ("Space", 7.15),
-             ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
+            ["~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "<--"],
+            ["Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}", "|"],
+            ["Caps", "A", "S", "D", "F", "G", "H", "J", "K", "L", ":", '"', "Enter"],
+            ["L-Shift", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?", "R-Shift"],
+            ["Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"]
         ]
 
         self.__eng_layout_lowercase = [
-            [("`", 1), ("1", 1), ("2", 1), ("3", 1), ("4", 1), ("5", 1), ("6", 1),
-             ("7", 1), ("8", 1), ("9", 1), ("0", 1), ("-", 1), ("=", 1), ("<--", 2)],
-
-            [("Tab", 1.5), ("q", 1), ("w", 1), ("e", 1), ("r", 1), ("t", 1), ("y", 1),
-             ("u", 1), ("i", 1), ("o", 1), ("p", 1), ("[", 1), ("]", 1), ("\\", 1.5)],
-
-            [("Caps", 1.8), ("a", 1), ("s", 1), ("d", 1), ("f", 1), ("g", 1),
-             ("h", 1), ("j", 1), ("k", 1), ("l", 1), (";", 1), ("'", 1), ("Enter", 2.35)],
-
-            [("L-Shift", 2.30), ("z", 1), ("x", 1), ("c", 1), ("v", 1), ("b", 1),
-             ("n", 1), ("m", 1), (",", 1), (".", 1), ("/", 1), ("R-Shift", 3.0)],
-
-            [("Ctrl", 1.25), ("Win", 1.25), ("Alt", 1.25), ("Space", 7.15),
-             ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
+            ["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "<--"],
+            ["Tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\"],
+            ["Caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "Enter"],
+            ["L-Shift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "R-Shift"],
+            ["Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"]
         ]
 
         self.__rus_layout_uppercase = [
-            [("ё", 1), ("!", 1), ('"', 1), ("Nº", 1), (";", 1), ("%", 1), (":", 1),
-             ("?", 1), ("*", 1), ("(", 1), (")", 1), ("_", 1), ("+", 1), ("<--", 2)],
-
-            [("Tab", 1.5), ("й", 1), ("ц", 1), ("у", 1), ("к", 1), ("е", 1), ("н", 1),
-             ("г", 1), ("ш", 1), ("щ", 1), ("з", 1), ("х", 1), ("ъ", 1), ("/", 1.5)],
-
-            [("Caps", 1.8), ("ф", 1), ("ы", 1), ("в", 1), ("а", 1), ("п", 1),
-             ("р", 1), ("о", 1), ("л", 1), ("д", 1), ("ж", 1), ("э", 1), ("Enter", 2.35)],
-
-            [("L-Shift", 2.30), ("я", 1), ("ч", 1), ("с", 1), ("м", 1), ("и", 1),
-             ("т", 1), ("ь", 1), ("б", 1), ("ю", 1), (",", 1), ("R-Shift", 3.0)],
-
-            [("Ctrl", 1.25), ("Win", 1.25), ("Alt", 1.25), ("Space", 7.15),
-             ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
+            ["Ё", "!", '"', "Nº", ";", "%", ":", "?", "*", "(", ")", "_", "+", "<--"],
+            ["Tab", "Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З", "Х", "Ъ", "/"],
+            ["Caps", "Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э", "Enter"],
+            ["L-Shift", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", ",", "R-Shift"],
+            ["Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"]
         ]
 
         self.__rus_layout_lowercase = [
-            [("ё", 1), ("1", 1), ("2", 1), ("3", 1), ("4", 1), ("5", 1), ("6", 1),
-             ("7", 1), ("8", 1), ("9", 1), ("0", 1), ("-", 1), ("=", 1), ("<--", 2)],
-
-            [("Tab", 1.5), ("й", 1), ("ц", 1), ("у", 1), ("к", 1), ("е", 1), ("н", 1),
-             ("г", 1), ("ш", 1), ("щ", 1), ("з", 1), ("х", 1), ("ъ", 1), ("\\", 1.5)],
-
-            [("Caps", 1.8), ("ф", 1), ("ы", 1), ("в", 1), ("а", 1), ("п", 1),
-             ("р", 1), ("о", 1), ("л", 1), ("д", 1), ("ж", 1), ("э", 1), ("Enter", 2.35)],
-
-            [("L-Shift", 2.30), ("я", 1), ("ч", 1), ("с", 1), ("м", 1), ("и", 1),
-             ("т", 1), ("ь", 1), ("б", 1), ("ю", 1), (".", 1), ("R-Shift", 3.0)],
-
-            [("Ctrl", 1.25), ("Win", 1.25), ("Alt", 1.25), ("Space", 7.15),
-             ("Alt", 1.25), ("Fn", 1.25), ("Menu", 1.25), ("Ctrl", 1.25)]
+            ["ё", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "<--"],
+            ["Tab", "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "\\"],
+            ["Caps", "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", "Enter"],
+            ["L-Shift", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "R-Shift"],
+            ["Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"]
         ]
 
         self.__create_keys()
@@ -163,10 +137,8 @@ class Keyboard:
     def __create_keys(self):
         if self.__language == KeyboardLanguage.ENGLISH:
             layout = self.__eng_layout_uppercase if self.__is_upper_case else self.__eng_layout_lowercase
-            self.__negative_layout = self.__eng_layout_lowercase if self.__is_upper_case else self.__eng_layout_uppercase
         elif self.__language == KeyboardLanguage.RUSSIAN:
             layout = self.__rus_layout_uppercase if self.__is_upper_case else self.__rus_layout_lowercase
-            self.__negative_layout = self.__rus_layout_lowercase if self.__is_upper_case else self.__rus_layout_uppercase
         self.__create_keys_from_layout(layout)
 
     def _switch_layout(self, keys: ScancodeWrapper):
@@ -184,13 +156,13 @@ class Keyboard:
             self.__create_keys()  # Recreate keys with lowercase layout
             print('lower')
 
-    def __create_keys_from_layout(self, layout):
+    def __create_keys_from_layout(self, layout: List[List[str]]):
         print('call __create_keys_from_layout')
         self.__keys = []
         y_offset = 0
-        for row in layout:
+        for keys_row, width_row in zip(layout, self.__key_lengths):
             x_offset = 0
-            for key, width in row:
+            for key, width in zip(keys_row, width_row):
                 rect = pygame.Rect(x_offset, y_offset, self.__key_size * width, self.__key_size)
                 self.__keys.append((key, rect))
                 x_offset += self.__key_size * width + self.__spacing
@@ -206,107 +178,44 @@ class Keyboard:
         b = min(int(b * factor), 255)
         return (r, g, b)
 
-    def __shift_test(self, key: str):
-        for row in self.__negative_layout:
-            for (neg_key, rect) in row:
-                if self.__negative_layout.index(row) == 0 or 2 <= self.__negative_layout.index(row) <= 3:
-                    cut_end = len(row) // 2 - 1
-                elif self.__negative_layout.index(row) == 1:
-                    cut_end = len(row) // 2 - 2
+    def __is_left_finger(self, finger: FingersEnum) -> bool:
+        return finger in {
+            FingersEnum.LEFT_THUMB,
+            FingersEnum.LEFT_INDEX,
+            FingersEnum.LEFT_MIDDLE,
+            FingersEnum.LEFT_RING,
+            FingersEnum.LEFT_LITTLE,
+        }
 
-                if row.index((neg_key, rect)) <= cut_end:
-                    if neg_key.lower() == key.lower():
-                        self.__highlighted_key = "R-Shift"
-                        return
-                else:
-                    if neg_key.lower() == key.lower():
-                        self.__highlighted_key = "L-Shift"
-                        return
-
-    def highlight_key(self, key: str, next_word_slice: str) -> None:
+    def highlight_key(self, key: str):
         keys_only = [k for k, _ in self.__keys]
-
+        if key in keys_only:
+            self.__highlighted_key = key
+            return
         if key == " ":
             self.__highlighted_key = "Space"
             return
-
-        is_shift = is_shift_pressed()
-        is_caps = is_capslock_on()
-
-        if key in keys_only:
-            for row in self.__negative_layout:
-                for (neg_key, _) in row:
-                    if neg_key == key:
-                        if is_caps:
-                            self.__highlighted_key = "Caps"
-                            return
-                        elif is_shift:
-                            self.__highlighted_key = None
-                            return
-
-            self.__highlighted_key = key
+        if key.isupper():
+            self.__highlighted_key = "R-Shift"
+            # self.__highlighted_key = "L-Shift"
             return
 
-        if key in string.punctuation:
-            self.__shift_test(key)
-            return
-
-        punctuation_test = [char in string.punctuation for char in next_word_slice]
-        number_test = [char.isdigit() for char in next_word_slice]
-
-        if is_shift or is_caps:
-            for row in self.__negative_layout:
-                for (neg_key, _) in row:
-                    if neg_key.lower() == key.lower():
-                        self.__highlighted_key = neg_key
-                        return
-
-            if (all(punctuation_test) or all(number_test)) and is_caps:
-                self.__highlighted_key = "Caps"
-                return
-
-            if key in keys_only:
-                self.__highlighted_key = key
-                return
-
-        if " " not in next_word_slice:
-            caps_test = [
-                letter.isupper() or letter in string.punctuation
-                for letter in next_word_slice
-            ]
-        else:
-            caps_test = [False]
-
-        if not is_shift and not is_caps:
-            if all(caps_test) and not all(punctuation_test) \
-                    and key not in string.punctuation:
-                self.__highlighted_key = "Caps"
-                return
-
-            self.__shift_test(key)
-
-    def highlight_finger_key(self, finger: FingersEnum, is_visible: bool):
+    def highlight_fingers_key(self, finger: FingersEnum, is_visible: bool):
         self.__finger = finger
         self.__finger_is_visible = is_visible
 
     def draw(self, screen: pygame.Surface):
-
         scale_w = (screen.width * Keyboard.WIDTH_SCALE / Keyboard.LINE_KEYS_COUNT) / \
             (Keyboard.KEY_SIZE + Keyboard.KEY_SPACING)
         scale_h = (screen.height * Keyboard.HEIGHT_SCALE / Keyboard.LINES_COUNT) / \
             (Keyboard.KEY_SIZE + Keyboard.KEY_SPACING)
         scale = min(scale_w, scale_h)
-
         y = screen.height * self.__relative_y_pos + self.__key_size
         x = screen.width / 2 - (Keyboard.LINE_KEYS_COUNT / 2.0 + 1) * self.__key_size * scale
-
         self.__font = pygame.font.Font(None, int(Keyboard.FONT_SIZE * scale))
-
         is_capslock = is_capslock_on()
         is_shift = is_shift_pressed()
-
         is_upper = is_capslock ^ is_shift
-
         layout_zip = zip(self.__keys, self.__color_layout, self.__fingers_layout, self.__pointer_fingers_layout)
         for (key, raw_rect), color, finger, pointer_finger in layout_zip:
             rect = pygame.rect.Rect(
@@ -315,22 +224,17 @@ class Keyboard:
                 raw_rect.width * scale,
                 raw_rect.height * scale
             )
-
             bg_color = self.REGULAR_BG_KEY_COLOR
-
             if key == self.__highlighted_key or (self.__finger == finger and self.__finger_is_visible):
                 bg_color = self.change_color(color)
             elif self.__finger == pointer_finger and self.__finger_is_visible:
                 bg_color = self.change_color(self.POINTER_RED)
-
             pygame.draw.rect(screen, bg_color, rect, border_radius=5)
             pygame.draw.rect(screen, color, rect, int(1.5 * scale))
-
             if is_upper and len(key) == 1 and key.isalpha():
                 key_str = key.upper()
             else:
                 key_str = key
-
             text = self.__font.render(key_str, True, (200, 200, 200))
             text_rect = text.get_rect(center=rect.center)
             screen.blit(text, text_rect)
