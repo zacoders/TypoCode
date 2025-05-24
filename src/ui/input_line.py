@@ -50,14 +50,14 @@ class InputLine:
 
         self.__keyboard_service = KeyboardService()
 
-    def __get_word(self, pos: int) -> str:
+    def __get_word(self, pos: int) -> tuple[str, int]:
         words = self.__random_line.get_text().split()
         count = 0
         for word in words:
             if count <= pos < count + len(word):
-                return word
+                return word, count
             count += len(word) + 1  # +1 for space
-        return ""
+        return "", 0
 
     def update(self, events: list[Event]):
         rand_text = self.__random_line.get_text()
@@ -70,7 +70,11 @@ class InputLine:
         current_char_pos = len(self.__text)
         current_char = rand_text[current_char_pos]
 
-        self.__keyboard.highlight_key(current_char)
+        word, word_start = self.__get_word(current_char_pos)
+        word_pos = current_char_pos - word_start
+        word_slice = word[word_pos:word_pos + 3]
+
+        self.__keyboard.highlight_key(current_char, word_slice)
 
         for event in events:
             if event.type != pygame.KEYDOWN:
@@ -95,7 +99,7 @@ class InputLine:
                 self.__error_symbol = ''
             else:
                 if unicode_char:
-                    word = self.__get_word(current_char_pos)
+                    word = self.__get_word(current_char_pos)[0]
                     self.__typing_errors.add_errors(current_char, word)
                 self.__line_stats_calc.symbol_typed(is_error=True, char=unicode_char)
                 self.__error_sound.play()

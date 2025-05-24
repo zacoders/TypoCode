@@ -35,7 +35,7 @@ class HelpWindow(WindowABC):
         self.__keyboard.update(keys)
         fingers_enum = self.__hands_animator.get_finger()
         is_visible = self.__hands_animator.is_visible()
-        self.__keyboard.highlight_fingers_key(fingers_enum, is_visible)
+        self.__keyboard.highlight_finger_key(fingers_enum, is_visible)
 
     def draw(self, screen: Surface, font_size: int):
         self.__hands_animator.draw(screen)

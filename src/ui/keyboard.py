@@ -3,6 +3,7 @@ from pygame.key import ScancodeWrapper
 from common.common import is_capslock_on, is_shift_pressed
 from generators.keyboard_lang import KeyboardLanguage
 from ui.fingers_enum import FingersEnum
+import string
 
 
 class Keyboard:
@@ -38,6 +39,8 @@ class Keyboard:
 
         self.__key_size = Keyboard.KEY_SIZE
         self.__spacing = Keyboard.KEY_SPACING
+
+        self.__negative_layout = []
 
         self.__color_layout = [
             self.RED, self.RED, self.RED, self.YELLOW, self.GREEN, self.BLUE, self.BLUE,
@@ -159,13 +162,12 @@ class Keyboard:
 
     def __create_keys(self):
         if self.__language == KeyboardLanguage.ENGLISH:
-            self.__create_keys_from_layout(
-                self.__eng_layout_uppercase if self.__is_upper_case else self.__eng_layout_lowercase
-            )
+            layout = self.__eng_layout_uppercase if self.__is_upper_case else self.__eng_layout_lowercase
+            self.__negative_layout = self.__eng_layout_lowercase if self.__is_upper_case else self.__eng_layout_uppercase
         elif self.__language == KeyboardLanguage.RUSSIAN:
-            self.__create_keys_from_layout(
-                self.__rus_layout_uppercase if self.__is_upper_case else self.__rus_layout_lowercase
-            )
+            layout = self.__rus_layout_uppercase if self.__is_upper_case else self.__rus_layout_lowercase
+            self.__negative_layout = self.__rus_layout_lowercase if self.__is_upper_case else self.__rus_layout_uppercase
+        self.__create_keys_from_layout(layout)
 
     def _switch_layout(self, keys: ScancodeWrapper):
         # Detect if shift has been pressed or released
@@ -204,18 +206,71 @@ class Keyboard:
         b = min(int(b * factor), 255)
         return (r, g, b)
 
-    def highlight_key(self, key: str):
+    def __shift_test(self, key: str):
+        for row in self.__negative_layout:
+            for (neg_key, rect) in row:
+                if self.__negative_layout.index(row) == 0 or 2 <= self.__negative_layout.index(row) <= 3:
+                    cut_end = len(row) // 2 - 1
+                elif self.__negative_layout.index(row) == 1:
+                    cut_end = len(row) // 2 - 2
+
+                if row.index((neg_key, rect)) <= cut_end:
+                    if neg_key.lower() == key.lower():
+                        self.__highlighted_key = "R-Shift"
+                        return
+                else:
+                    if neg_key.lower() == key.lower():
+                        self.__highlighted_key = "L-Shift"
+                        return
+
+    def highlight_key(self, key: str, next_word_slice: str) -> None:
         keys_only = [k for k, _ in self.__keys]
-        if key in keys_only:
-            self.__highlighted_key = key
-        elif key.upper() in keys_only:
-            self.__highlighted_key = key.upper()
-        elif key.lower() in keys_only:
-            self.__highlighted_key = key.lower()
+
         if key == " ":
             self.__highlighted_key = "Space"
+            return
 
-    def highlight_fingers_key(self, finger: FingersEnum, is_visible: bool):
+        is_shift = is_shift_pressed()
+        is_caps = is_capslock_on()
+
+        if key in keys_only:
+            for row in self.__negative_layout:
+                for (neg_key, _) in row:
+                    if neg_key == key:
+                        if is_caps:
+                            self.__highlighted_key = "Caps"
+                            return
+                        elif is_shift:
+                            self.__highlighted_key = None
+                            return
+
+            self.__highlighted_key = key
+            return
+
+        if key in string.punctuation:
+            self.__shift_test(key)
+            return
+
+        if is_shift or is_caps:
+            for row in self.__negative_layout:
+                for (neg_key, _) in row:
+                    if neg_key.lower() == key.lower():
+                        self.__highlighted_key = neg_key
+                        return
+
+            if key in keys_only:
+                self.__highlighted_key = key
+                return
+
+        if not is_shift and not is_caps:
+            if all(letter.isupper() or letter in string.punctuation for letter in next_word_slice) \
+                    and key not in string.punctuation:
+                self.__highlighted_key = "Caps"
+                return
+
+            self.__shift_test(key)
+
+    def highlight_finger_key(self, finger: FingersEnum, is_visible: bool):
         self.__finger = finger
         self.__finger_is_visible = is_visible
 
