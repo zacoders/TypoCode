@@ -1,6 +1,5 @@
 import pygame
-from pygame.key import ScancodeWrapper
-from common.common import is_capslock_on, is_shift_pressed
+from common.common import is_capslock_on, is_shift_pressed, uppercase_percentage
 from generators.keyboard_lang import KeyboardLanguage
 from ui.fingers_enum import FingersEnum
 from ui.keyboard_layouts import KeyboardLayouts
@@ -126,16 +125,25 @@ class Keyboard:
             FingersEnum.LEFT_LITTLE,
         }
 
-    def highlight_key(self, key: str):
+    def highlight_key(self, key: str, word: str):
 
         is_capslock = is_capslock_on()
         is_shift = is_shift_pressed()
         is_upper = is_capslock ^ is_shift
 
+        if len(word) > 3:
+            if uppercase_percentage(word) > 0.5 and not is_capslock:
+                self.__highlighted_key = "Caps"
+                return
+            if uppercase_percentage(word) < 0.5 and is_capslock:
+                self.__highlighted_key = "Caps"
+                return
+
         layout = self.__upper_layout if is_upper else self.__lower_layout
         if key in layout:
             self.__highlighted_key = key
             return
+
         if key == " ":
             self.__highlighted_key = "Space"
             return
