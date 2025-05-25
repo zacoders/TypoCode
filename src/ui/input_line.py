@@ -50,14 +50,14 @@ class InputLine:
 
         self.__keyboard_service = KeyboardService()
 
-    def __get_word(self, pos: int) -> tuple[str, int]:
+    def __get_word(self, pos: int) -> str:
         words = self.__random_line.get_text().split()
         count = 0
         for word in words:
             if count <= pos < count + len(word):
-                return word, count
+                return word
             count += len(word) + 1  # +1 for space
-        return "", 0
+        return ""
 
     def update(self, events: list[Event]):
         rand_text = self.__random_line.get_text()
@@ -70,9 +70,7 @@ class InputLine:
         current_char_pos = len(self.__text)
         current_char = rand_text[current_char_pos]
 
-        word, word_start = self.__get_word(current_char_pos)
-        # word_pos = current_char_pos - word_start
-        # word_slice = word[word_pos:word_pos + 3]
+        word = self.__get_word(current_char_pos)
 
         self.__keyboard.highlight_key(current_char, word)
 
@@ -99,7 +97,7 @@ class InputLine:
                 self.__error_symbol = ''
             else:
                 if unicode_char:
-                    word = self.__get_word(current_char_pos)[0]
+                    word = self.__get_word(current_char_pos)
                     self.__typing_errors.add_errors(current_char, word)
                 self.__line_stats_calc.symbol_typed(is_error=True, char=unicode_char)
                 self.__error_sound.play()
