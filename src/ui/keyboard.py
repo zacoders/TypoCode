@@ -30,19 +30,12 @@ class Keyboard:
 
     def __init__(self, language: KeyboardLanguage, relative_y_pos: float):
         self.__relative_y_pos = relative_y_pos
-        self.__keys = []
         self.__highlighted_key = None
         self.__language = language
         self.__is_upper_case = False
 
         self.__finger: FingersEnum | None = None
         self.__finger_is_visible = False
-
-        self.__key_size = Keyboard.KEY_SIZE
-        self.__spacing = Keyboard.KEY_SPACING
-
-        self.__highlight_left_shift = False
-        self.__highlight_right_shift = False
 
         self.__color_layout = [
             self.RED, self.RED, self.RED, self.YELLOW, self.GREEN, self.BLUE, self.BLUE,
@@ -92,54 +85,54 @@ class Keyboard:
             FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE  # Space bar row
         ]
 
-        self.__key_lengths = [
+        key_lengths = [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
             [1.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5],
             [1.8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2.35],
             [2.30, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3.0],
             [1.25, 1.25, 1.25, 7.15, 1.25, 1.25, 1.25, 1.25]
         ]
+        self.__key_sizes = self.__create_key_sizes(key_lengths)
 
         self.__eng_layout_uppercase = [
-            ["~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "<--"],
-            ["Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}", "|"],
-            ["Caps", "A", "S", "D", "F", "G", "H", "J", "K", "L", ":", '"', "Enter"],
-            ["L-Shift", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?", "R-Shift"],
-            ["Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"]
+            "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "<--",
+            "Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}", "|",
+            "Caps", "A", "S", "D", "F", "G", "H", "J", "K", "L", ":", '"', "Enter",
+            "L-Shift", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?", "R-Shift",
+            "Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"
         ]
 
         self.__eng_layout_lowercase = [
-            ["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "<--"],
-            ["Tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\"],
-            ["Caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "Enter"],
-            ["L-Shift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "R-Shift"],
-            ["Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"]
+            "`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "<--",
+            "Tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\",
+            "Caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "Enter",
+            "L-Shift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "R-Shift",
+            "Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"
         ]
 
         self.__rus_layout_uppercase = [
-            ["Ё", "!", '"', "Nº", ";", "%", ":", "?", "*", "(", ")", "_", "+", "<--"],
-            ["Tab", "Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З", "Х", "Ъ", "/"],
-            ["Caps", "Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э", "Enter"],
-            ["L-Shift", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", ",", "R-Shift"],
-            ["Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"]
+            "Ё", "!", '"', "Nº", ";", "%", ":", "?", "*", "(", ")", "_", "+", "<--",
+            "Tab", "Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З", "Х", "Ъ", "/",
+            "Caps", "Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э", "Enter",
+            "L-Shift", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", ",", "R-Shift",
+            "Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"
         ]
 
         self.__rus_layout_lowercase = [
-            ["ё", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "<--"],
-            ["Tab", "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "\\"],
-            ["Caps", "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", "Enter"],
-            ["L-Shift", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "R-Shift"],
-            ["Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"]
+            "ё", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "<--",
+            "Tab", "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "\\",
+            "Caps", "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", "Enter",
+            "L-Shift", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "R-Shift",
+            "Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"
         ]
 
         self.__create_keys()
 
     def __create_keys(self):
         if self.__language == KeyboardLanguage.ENGLISH:
-            layout = self.__eng_layout_uppercase if self.__is_upper_case else self.__eng_layout_lowercase
+            self.__current_layout = self.__eng_layout_uppercase if self.__is_upper_case else self.__eng_layout_lowercase
         elif self.__language == KeyboardLanguage.RUSSIAN:
-            layout = self.__rus_layout_uppercase if self.__is_upper_case else self.__rus_layout_lowercase
-        self.__create_keys_from_layout(layout)
+            self.__current_layout = self.__rus_layout_uppercase if self.__is_upper_case else self.__rus_layout_lowercase
 
     def _switch_layout(self, keys: ScancodeWrapper):
         # Detect if shift has been pressed or released
@@ -156,17 +149,18 @@ class Keyboard:
             self.__create_keys()  # Recreate keys with lowercase layout
             print('lower')
 
-    def __create_keys_from_layout(self, layout: List[List[str]]):
-        print('call __create_keys_from_layout')
-        self.__keys = []
+    @classmethod
+    def __create_key_sizes(cls, key_lengths):
+        key_sizes = []
         y_offset = 0
-        for keys_row, width_row in zip(layout, self.__key_lengths):
+        for width_row in key_lengths:
             x_offset = 0
-            for key, width in zip(keys_row, width_row):
-                rect = pygame.Rect(x_offset, y_offset, self.__key_size * width, self.__key_size)
-                self.__keys.append((key, rect))
-                x_offset += self.__key_size * width + self.__spacing
-            y_offset += self.__key_size + self.__spacing
+            for width in width_row:
+                rect = pygame.Rect(x_offset, y_offset, cls.KEY_SIZE * width, cls.KEY_SIZE)
+                key_sizes.append(rect)
+                x_offset += cls.KEY_SIZE * width + cls.KEY_SPACING
+            y_offset += cls.KEY_SIZE + cls.KEY_SPACING
+        return key_sizes
 
     def update(self, keys: ScancodeWrapper):
         self._switch_layout(keys)
@@ -188,8 +182,7 @@ class Keyboard:
         }
 
     def highlight_key(self, key: str):
-        keys_only = [k for k, _ in self.__keys]
-        if key in keys_only:
+        if key in self.__current_layout:
             self.__highlighted_key = key
             return
         if key == " ":
@@ -210,14 +203,20 @@ class Keyboard:
         scale_h = (screen.height * Keyboard.HEIGHT_SCALE / Keyboard.LINES_COUNT) / \
             (Keyboard.KEY_SIZE + Keyboard.KEY_SPACING)
         scale = min(scale_w, scale_h)
-        y = screen.height * self.__relative_y_pos + self.__key_size
-        x = screen.width / 2 - (Keyboard.LINE_KEYS_COUNT / 2.0 + 1) * self.__key_size * scale
+        y = screen.height * self.__relative_y_pos + self.KEY_SIZE
+        x = screen.width / 2 - (Keyboard.LINE_KEYS_COUNT / 2.0 + 1) * self.KEY_SIZE * scale
         self.__font = pygame.font.Font(None, int(Keyboard.FONT_SIZE * scale))
         is_capslock = is_capslock_on()
         is_shift = is_shift_pressed()
         is_upper = is_capslock ^ is_shift
-        layout_zip = zip(self.__keys, self.__color_layout, self.__fingers_layout, self.__pointer_fingers_layout)
-        for (key, raw_rect), color, finger, pointer_finger in layout_zip:
+        layout_zip = zip(
+            self.__current_layout,
+            self.__key_sizes,
+            self.__color_layout,
+            self.__fingers_layout,
+            self.__pointer_fingers_layout
+        )
+        for key, raw_rect, color, finger, pointer_finger in layout_zip:
             rect = pygame.rect.Rect(
                 raw_rect.x * scale + x,
                 raw_rect.y * scale + y,
