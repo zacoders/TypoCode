@@ -1,10 +1,9 @@
-from typing import List
 import pygame
 from pygame.key import ScancodeWrapper
 from common.common import is_capslock_on, is_shift_pressed
 from generators.keyboard_lang import KeyboardLanguage
 from ui.fingers_enum import FingersEnum
-import string
+from ui.keyboard_layouts import KeyboardLayouts
 
 
 class Keyboard:
@@ -31,7 +30,6 @@ class Keyboard:
     def __init__(self, language: KeyboardLanguage, relative_y_pos: float):
         self.__relative_y_pos = relative_y_pos
         self.__highlighted_key = None
-        self.__language = language
         self.__is_upper_case = False
 
         self.__finger: FingersEnum | None = None
@@ -94,45 +92,7 @@ class Keyboard:
         ]
         self.__key_sizes = self.__create_key_sizes(key_lengths)
 
-        self.__eng_layout_uppercase = [
-            "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "<--",
-            "Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}", "|",
-            "Caps", "A", "S", "D", "F", "G", "H", "J", "K", "L", ":", '"', "Enter",
-            "L-Shift", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?", "R-Shift",
-            "Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"
-        ]
-
-        self.__eng_layout_lowercase = [
-            "`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "<--",
-            "Tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\",
-            "Caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "Enter",
-            "L-Shift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "R-Shift",
-            "Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"
-        ]
-
-        self.__rus_layout_uppercase = [
-            "Ё", "!", '"', "Nº", ";", "%", ":", "?", "*", "(", ")", "_", "+", "<--",
-            "Tab", "Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З", "Х", "Ъ", "/",
-            "Caps", "Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э", "Enter",
-            "L-Shift", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", ",", "R-Shift",
-            "Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"
-        ]
-
-        self.__rus_layout_lowercase = [
-            "ё", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "<--",
-            "Tab", "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "\\",
-            "Caps", "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", "Enter",
-            "L-Shift", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "R-Shift",
-            "Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Menu", "Ctrl"
-        ]
-
-        self.__create_keys()
-
-    def __create_keys(self):
-        if self.__language == KeyboardLanguage.ENGLISH:
-            self.__current_layout = self.__eng_layout_uppercase if self.__is_upper_case else self.__eng_layout_lowercase
-        elif self.__language == KeyboardLanguage.RUSSIAN:
-            self.__current_layout = self.__rus_layout_uppercase if self.__is_upper_case else self.__rus_layout_lowercase
+        self.__lower_layout, self.__upper_layout = KeyboardLayouts.get_layout(language)
 
     def _switch_layout(self, keys: ScancodeWrapper):
         # Detect if shift has been pressed or released
@@ -141,13 +101,9 @@ class Keyboard:
         # Only change case if the state is different
         if shift_pressed and not self.__is_upper_case:
             self.__is_upper_case = True
-            self.__create_keys()  # Recreate keys with uppercase layout
-            print('upper')
 
         elif not shift_pressed and self.__is_upper_case:
             self.__is_upper_case = False
-            self.__create_keys()  # Recreate keys with lowercase layout
-            print('lower')
 
     @classmethod
     def __create_key_sizes(cls, key_lengths):
@@ -182,15 +138,20 @@ class Keyboard:
         }
 
     def highlight_key(self, key: str):
-        if key in self.__current_layout:
+        layout = self.__upper_layout if self.__is_upper_case else self.__lower_layout
+        if key in layout:
             self.__highlighted_key = key
             return
         if key == " ":
             self.__highlighted_key = "Space"
             return
         if key.isupper():
-            self.__highlighted_key = "R-Shift"
-            # self.__highlighted_key = "L-Shift"
+            reverse_layout = self.__upper_layout if not self.__is_upper_case else self.__lower_layout
+            finger = self.__fingers_layout[reverse_layout.index(key)]
+            if self.__is_left_finger(finger):
+                self.__highlighted_key = "R-Shift"
+            else:
+                self.__highlighted_key = "L-Shift"
             return
 
     def highlight_fingers_key(self, finger: FingersEnum, is_visible: bool):
@@ -210,7 +171,7 @@ class Keyboard:
         is_shift = is_shift_pressed()
         is_upper = is_capslock ^ is_shift
         layout_zip = zip(
-            self.__current_layout,
+            self.__upper_layout if self.__is_upper_case else self.__lower_layout,
             self.__key_sizes,
             self.__color_layout,
             self.__fingers_layout,
@@ -239,5 +200,4 @@ class Keyboard:
             screen.blit(text, text_rect)
 
     def set_language(self, language: KeyboardLanguage):
-        self.__language = language
-        self.__create_keys()
+        self.__lower_layout, self.__upper_layout = KeyboardLayouts.get_layout(language)
