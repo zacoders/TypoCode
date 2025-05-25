@@ -69,9 +69,9 @@ class TypingWindow(WindowABC):
 
         self.__zen_mode = False
 
-    def update(self, events: list[Event], keys: ScancodeWrapper, screen_height: int, screen_width: int):
+    def update(self, events: list[Event], screen_height: int, screen_width: int):
         self.__font_calc.update(self.__text_len, screen_width)
-        self.__keyboard.update(keys)
+        self.__keyboard.update()
         self.__input_line.update(events)
         self.__line_stats_calc.update(screen_height, screen_width)
 
@@ -134,7 +134,7 @@ class TypingWindow(WindowABC):
                 )
                 self.__update_help_show_time()
 
-            self.update(events, keys, screen.get_height(), screen.get_width())
+            self.update(events, screen.get_height(), screen.get_width())
             self.draw(screen)
 
             pygame.display.update()

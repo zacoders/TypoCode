@@ -30,7 +30,6 @@ class Keyboard:
     def __init__(self, language: KeyboardLanguage, relative_y_pos: float):
         self.__relative_y_pos = relative_y_pos
         self.__highlighted_key = None
-        self.__is_upper_case = False
 
         self.__finger: FingersEnum | None = None
         self.__finger_is_visible = False
@@ -94,17 +93,6 @@ class Keyboard:
 
         self.__lower_layout, self.__upper_layout = KeyboardLayouts.get_layout(language)
 
-    def _switch_layout(self, keys: ScancodeWrapper):
-        # Detect if shift has been pressed or released
-        shift_pressed = keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]
-
-        # Only change case if the state is different
-        if shift_pressed and not self.__is_upper_case:
-            self.__is_upper_case = True
-
-        elif not shift_pressed and self.__is_upper_case:
-            self.__is_upper_case = False
-
     @classmethod
     def __create_key_sizes(cls, key_lengths):
         key_sizes = []
@@ -118,8 +106,9 @@ class Keyboard:
             y_offset += cls.KEY_SIZE + cls.KEY_SPACING
         return key_sizes
 
-    def update(self, keys: ScancodeWrapper):
-        self._switch_layout(keys)
+    def update(self):
+        # self._switch_layout(keys)
+        ...
 
     def change_color(self, color, factor=0.5):
         r, g, b = color
@@ -138,15 +127,27 @@ class Keyboard:
         }
 
     def highlight_key(self, key: str):
-        layout = self.__upper_layout if self.__is_upper_case else self.__lower_layout
+
+        is_capslock = is_capslock_on()
+        is_shift = is_shift_pressed()
+        is_upper = is_capslock ^ is_shift
+
+        layout = self.__upper_layout if is_upper else self.__lower_layout
         if key in layout:
             self.__highlighted_key = key
             return
         if key == " ":
             self.__highlighted_key = "Space"
             return
+
+        reverse_layout = []
         if key.isupper():
-            reverse_layout = self.__upper_layout if not self.__is_upper_case else self.__lower_layout
+            reverse_layout = self.__upper_layout
+
+        if key.islower():
+            reverse_layout = self.__lower_layout
+
+        if reverse_layout and not is_shift:
             finger = self.__fingers_layout[reverse_layout.index(key)]
             if self.__is_left_finger(finger):
                 self.__highlighted_key = "R-Shift"
@@ -171,7 +172,7 @@ class Keyboard:
         is_shift = is_shift_pressed()
         is_upper = is_capslock ^ is_shift
         layout_zip = zip(
-            self.__upper_layout if self.__is_upper_case else self.__lower_layout,
+            self.__upper_layout if is_upper else self.__lower_layout,
             self.__key_sizes,
             self.__color_layout,
             self.__fingers_layout,

@@ -29,10 +29,10 @@ class HelpWindow(WindowABC):
         self.__text_color = (255, 255, 255)
         self.__text_line_color = (60, 60, 60)
 
-    def update(self, keys: ScancodeWrapper, screen_width: int):
+    def update(self, screen_width: int):
         self.__font_calc.update(len(self.__text), int(screen_width * 0.6))
         self.__hands_animator.update()
-        self.__keyboard.update(keys)
+        self.__keyboard.update()
         fingers_enum = self.__hands_animator.get_finger()
         is_visible = self.__hands_animator.is_visible()
         self.__keyboard.highlight_fingers_key(fingers_enum, is_visible)
@@ -70,7 +70,6 @@ class HelpWindow(WindowABC):
         while True:
             screen.fill(BG_COLOR)
 
-            keys = pygame.key.get_pressed()
             events = pygame.event.get()
 
             self.update_events(events, screen, min_screen_size, max_screen_size)
@@ -84,7 +83,7 @@ class HelpWindow(WindowABC):
             if self.__hands_animator.is_repeat():
                 return
 
-            self.update(keys, screen.get_width())
+            self.update(screen.get_width())
             self.draw(screen, self.__font_calc.current_font_size())
 
             pygame.display.update()
