@@ -148,8 +148,8 @@ class Keyboard:
             self.__highlighted_key = "Space"
             return
 
-        if (key.isalpha()) and not is_shift:
-            layout = self.__lower_layout if key.islower() else self.__upper_layout
+        if not is_shift:
+            layout = self.__lower_layout if key in self.__lower_layout else self.__upper_layout
             finger = self.__fingers_layout[layout.index(key)]
             if self.__is_left_finger(finger):
                 self.__highlighted_key = "R-Shift"
