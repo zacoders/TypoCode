@@ -29,7 +29,7 @@ class Keyboard:
     def __init__(self, language: KeyboardLanguage, relative_y_pos: float):
         self.__relative_y_pos = relative_y_pos
         self.__highlighted_key = None
-
+        self.__language = language
         self.__finger: FingersEnum | None = None
         self.__finger_is_visible = False
 
@@ -90,8 +90,6 @@ class Keyboard:
         ]
         self.__key_sizes = self.__create_key_sizes(key_lengths)
 
-        self.__lower_layout, self.__upper_layout = KeyboardLayouts.get_layout(language)
-
     @classmethod
     def __create_key_sizes(cls, key_lengths):
         key_sizes = []
@@ -129,17 +127,17 @@ class Keyboard:
 
         is_capslock = is_capslock_on()
         is_shift = is_shift_pressed()
-        is_upper = is_capslock ^ is_shift
 
-        if len(word) > 3:
-            if uppercase_percentage(word) > 0.5 and not is_capslock:
+        if len(word) > 2:
+            if uppercase_percentage(word) >= 0.5 and not is_capslock:
                 self.__highlighted_key = "Caps"
                 return
-            if uppercase_percentage(word) < 0.5 and is_capslock:
+            if uppercase_percentage(word) <= 0.5 and is_capslock:
                 self.__highlighted_key = "Caps"
                 return
 
-        layout = self.__upper_layout if is_upper else self.__lower_layout
+        layout = KeyboardLayouts.get_layout(self.__language, is_shift, is_capslock)
+
         if key in layout:
             self.__highlighted_key = key
             return
@@ -149,7 +147,15 @@ class Keyboard:
             return
 
         if not is_shift:
-            layout = self.__lower_layout if key in self.__lower_layout else self.__upper_layout
+
+            caps_invert_layout = KeyboardLayouts.get_layout(self.__language, is_shift, not is_capslock)
+            if key in caps_invert_layout:
+                layout = caps_invert_layout
+
+            shift_invert_layout = KeyboardLayouts.get_layout(self.__language, not is_shift, is_capslock)
+            if key in shift_invert_layout:
+                layout = shift_invert_layout
+
             finger = self.__fingers_layout[layout.index(key)]
             if self.__is_left_finger(finger):
                 self.__highlighted_key = "R-Shift"
@@ -174,7 +180,7 @@ class Keyboard:
         is_shift = is_shift_pressed()
         is_upper = is_capslock ^ is_shift
         layout_zip = zip(
-            self.__upper_layout if is_upper else self.__lower_layout,
+            KeyboardLayouts.get_layout(self.__language, is_shift, is_capslock),
             self.__key_sizes,
             self.__color_layout,
             self.__fingers_layout,
@@ -203,4 +209,4 @@ class Keyboard:
             screen.blit(text, text_rect)
 
     def set_language(self, language: KeyboardLanguage):
-        self.__lower_layout, self.__upper_layout = KeyboardLayouts.get_layout(language)
+        self.__language = language
