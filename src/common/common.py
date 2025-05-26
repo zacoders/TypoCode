@@ -60,3 +60,11 @@ def get_resource_path(relative_path):
         # Running in a normal Python environment
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
+
+
+def uppercase_percentage(word) -> float:
+    letters = [char for char in word if char.isalpha()]
+    if not letters:
+        return 0.0
+    upper_count = sum(1 for char in letters if char.isupper())
+    return (upper_count / len(letters))
