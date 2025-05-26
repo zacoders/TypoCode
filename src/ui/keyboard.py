@@ -141,10 +141,11 @@ class Keyboard:
         if key in layout:
             self.__highlighted_key = key
             return
-
-        if key == " ":
+        elif key == " ":
             self.__highlighted_key = "Space"
             return
+        else:
+            self.__highlighted_key = key
 
         if not is_shift:
 
