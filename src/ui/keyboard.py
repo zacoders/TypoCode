@@ -33,7 +33,6 @@ class Keyboard:
         self.__language = language
         self.__highlighted_finger: FingersEnum | None = None
         self.__highlight_finger_is_visible = False
-        self.__past_finger = FingersEnum.NONE
 
         self.__color_layout = [
             self.RED, self.RED, self.RED, self.YELLOW, self.GREEN, self.BLUE, self.BLUE,
@@ -125,7 +124,25 @@ class Keyboard:
             FingersEnum.LEFT_LITTLE,
         }
 
-    def highlight_key(self, key: str, word: str):
+    def __get_finger_by_key(self, key: str):
+        layout = KeyboardLayouts.get_layout(self.__language, False, False)
+
+        if key in layout:
+            return layout.index(key)
+
+        caps_layout = KeyboardLayouts.get_layout(self.__language, False, True)
+
+        if key in caps_layout:
+            return caps_layout.index(key)
+
+        shift_layout = KeyboardLayouts.get_layout(self.__language, True, False)
+
+        if key in shift_layout:
+            return shift_layout.index(key)
+
+        raise Exception(f"Key '{key}' not found in any layout.")
+
+    def highlight_key(self, key_to_press: str, prev_key: str, word: str):
         is_capslock = is_capslock_on()
         is_shift = is_shift_pressed()
 
@@ -137,34 +154,25 @@ class Keyboard:
                 self.__highlighted_key = "Caps"
                 return
 
+        self.__highlighted_key = key_to_press
+
         layout = KeyboardLayouts.get_layout(self.__language, is_shift, is_capslock)
 
-        if key in layout:
-            self.__past_finger = self.__fingers_layout[layout.index(key)]
-
-        if key in layout:
-            self.__highlighted_key = key
+        if key_to_press in layout:
             return
-        elif key == " ":
-            if self.__is_left_finger(self.__past_finger):
+
+        if key_to_press == " ":
+            finger_index = self.__get_finger_by_key(prev_key)
+            finger = self.__fingers_layout[finger_index]
+            if self.__is_left_finger(finger):
                 self.__highlighted_key = "R-Space"
             else:
                 self.__highlighted_key = "L-Space"
             return
-        else:
-            self.__highlighted_key = key
 
         if not is_shift:
-            caps_invert_layout = KeyboardLayouts.get_layout(self.__language, is_shift, not is_capslock)
-            if key in caps_invert_layout:
-                layout = caps_invert_layout
-
-            shift_invert_layout = KeyboardLayouts.get_layout(self.__language, not is_shift, is_capslock)
-            if key in shift_invert_layout:
-                layout = shift_invert_layout
-
-            # if key in layout:
-            finger = self.__fingers_layout[layout.index(key)]
+            finger_index = self.__get_finger_by_key(key_to_press)
+            finger = self.__fingers_layout[finger_index]
             if self.__is_left_finger(finger):
                 self.__highlighted_key = "R-Shift"
             else:
