@@ -31,8 +31,8 @@ class Keyboard:
         self.__relative_y_pos = relative_y_pos
         self.__highlighted_key = None
         self.__language = language
-        self.__finger: FingersEnum | None = None
-        self.__finger_is_visible = False
+        self.__highlighted_finger: FingersEnum | None = None
+        self.__highlight_finger_is_visible = False
         self.__past_finger = FingersEnum.NONE
 
         self.__color_layout = [
@@ -64,7 +64,7 @@ class Keyboard:
             FingersEnum.LEFT_LITTLE, FingersEnum.LEFT_LITTLE, FingersEnum.LEFT_RING, FingersEnum.LEFT_MIDDLE, FingersEnum.LEFT_INDEX, FingersEnum.LEFT_INDEX,
             FingersEnum.RIGHT_INDEX, FingersEnum.RIGHT_INDEX, FingersEnum.RIGHT_MIDDLE, FingersEnum.RIGHT_RING, FingersEnum.RIGHT_LITTLE, FingersEnum.RIGHT_LITTLE,  # Fourth row
 
-            FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.LEFT_THUMB, FingersEnum.RIGHT_THUMB, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE  # Space bar row
+            FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.BOTH_THUMBS, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE  # Space bar row
         ]
 
         self.__pointer_fingers_layout = [
@@ -172,8 +172,8 @@ class Keyboard:
             return
 
     def highlight_fingers_key(self, finger: FingersEnum, is_visible: bool):
-        self.__finger = finger
-        self.__finger_is_visible = is_visible
+        self.__highlighted_finger = finger
+        self.__highlight_finger_is_visible = is_visible
 
     def __draw_highlighted_space(
         self,
@@ -217,21 +217,26 @@ class Keyboard:
                 raw_rect.height * scale
             )
             bg_color = self.REGULAR_BG_KEY_COLOR
-            if key == self.__highlighted_key or (self.__finger == finger and self.__finger_is_visible):
+            if key == self.__highlighted_key or (self.__highlighted_finger ==
+                                                 finger and self.__highlight_finger_is_visible):
                 bg_color = self.change_color(color)
-            elif key == "Space" and (self.__highlighted_key == "L-Space" or self.__highlighted_key == "R-Space"):
+                pygame.draw.rect(screen, bg_color, rect, border_radius=5)
+            elif key == "Space":
                 bg_color = self.change_color(color)
-            elif self.__finger == pointer_finger and self.__finger_is_visible:
-                bg_color = self.change_color(self.POINTER_RED)
 
-            if key == "Space" or (
-                    self.__finger == finger and self.__finger_is_visible and finger in (FingersEnum.LEFT_THUMB, FingersEnum.RIGHT_THUMB)):
-                pygame.draw.rect(screen, self.REGULAR_BG_KEY_COLOR, rect, border_radius=5)
-                if self.__highlighted_key == "L-Space" or self.__finger == FingersEnum.LEFT_THUMB:
+                if self.__highlighted_key == "L-Space":
                     self.__draw_highlighted_space(screen, bg_color, rect, x=rect.x)
-                elif self.__highlighted_key == "R-Space" or self.__finger == FingersEnum.RIGHT_THUMB:
+                elif self.__highlighted_key == "R-Space":
                     self.__draw_highlighted_space(screen, bg_color, rect, x=rect.x + rect.width // 2)
-            else:
+
+                if self.__highlight_finger_is_visible:
+                    if self.__highlighted_finger == FingersEnum.LEFT_THUMB:
+                        self.__draw_highlighted_space(screen, bg_color, rect, x=rect.x)
+                    elif self.__highlighted_finger == FingersEnum.RIGHT_THUMB:
+                        self.__draw_highlighted_space(screen, bg_color, rect, x=rect.x + rect.width // 2)
+
+            elif self.__highlighted_finger == pointer_finger and self.__highlight_finger_is_visible:
+                bg_color = self.change_color(self.POINTER_RED)
                 pygame.draw.rect(screen, bg_color, rect, border_radius=5)
 
             pygame.draw.rect(screen, color, rect, int(1.3 * scale))

@@ -2,7 +2,6 @@ from pygame.font import Font
 from pygame.event import Event
 import pygame
 from common.common import get_resource_path
-from consts import BG_COLOR
 from game_state import GameState
 from services.keyboard_service import KeyboardService
 from services.line_stats_calc import LineStatsCalc
