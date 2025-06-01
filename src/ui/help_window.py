@@ -1,7 +1,6 @@
 import pygame
 from pygame.font import Font
-from pygame import Surface, Clock
-from pygame.key import ScancodeWrapper
+from pygame import Event, Surface, Clock
 from consts import BG_COLOR, FPS
 from generators.keyboard_lang import KeyboardLanguage
 from ui.hands_animator import HandsAnimator
@@ -29,9 +28,9 @@ class HelpWindow(WindowABC):
         self.__text_color = (255, 255, 255)
         self.__text_line_color = (60, 60, 60)
 
-    def update(self, screen_width: int):
+    def update(self, screen_width: int, events: list[Event]):
         self.__font_calc.update(len(self.__text), int(screen_width * 0.6))
-        self.__hands_animator.update()
+        self.__hands_animator.update(events)
         self.__keyboard.update()
         fingers_enum = self.__hands_animator.get_finger()
         is_visible = self.__hands_animator.is_visible()
@@ -70,12 +69,12 @@ class HelpWindow(WindowABC):
         while True:
             screen.fill(BG_COLOR)
 
-            events = pygame.event.get()
+            events: list[Event] = pygame.event.get()
 
             self.update_events(events, screen, min_screen_size, max_screen_size)
 
             for event in events:
-                if event.type == pygame.KEYDOWN and event.key != pygame.K_F11:
+                if event.type == pygame.KEYDOWN and event.key not in (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_F11):
                     return
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button:
                     return
@@ -83,7 +82,7 @@ class HelpWindow(WindowABC):
             if self.__hands_animator.is_repeat():
                 return
 
-            self.update(screen.get_width())
+            self.update(screen.get_width(), events)
             self.draw(screen, self.__font_calc.current_font_size())
 
             pygame.display.update()

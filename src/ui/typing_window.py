@@ -8,7 +8,6 @@ from consts import BG_COLOR, FPS, HELP_SHOW_TIME_MS
 from services.line_stats_calc import LineStatsCalc
 from services.mentor import Mentor
 from common.typing_errors import TypingErrors
-from pygame.key import ScancodeWrapper
 from game_state import GameState
 from ui.font_calc import FontCalc
 from ui.help_window import HelpWindow
