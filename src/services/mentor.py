@@ -5,7 +5,7 @@ from services.line_stats import LineStats
 class Mentor:
 
     def __init__(self):
-        self.__typing_level = 0
+        self.__typing_level = 5
 
     @property
     def typing_level(self) -> int: return self.__typing_level

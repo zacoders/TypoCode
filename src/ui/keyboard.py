@@ -33,6 +33,7 @@ class Keyboard:
         self.__language = language
         self.__finger: FingersEnum | None = None
         self.__finger_is_visible = False
+        self.__past_finger = FingersEnum.NONE
 
         self.__color_layout = [
             self.RED, self.RED, self.RED, self.YELLOW, self.GREEN, self.BLUE, self.BLUE,
@@ -63,7 +64,7 @@ class Keyboard:
             FingersEnum.LEFT_LITTLE, FingersEnum.LEFT_LITTLE, FingersEnum.LEFT_RING, FingersEnum.LEFT_MIDDLE, FingersEnum.LEFT_INDEX, FingersEnum.LEFT_INDEX,
             FingersEnum.RIGHT_INDEX, FingersEnum.RIGHT_INDEX, FingersEnum.RIGHT_MIDDLE, FingersEnum.RIGHT_RING, FingersEnum.RIGHT_LITTLE, FingersEnum.RIGHT_LITTLE,  # Fourth row
 
-            FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.BOTH_THUMBS, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE  # Space bar row
+            FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.LEFT_THUMB, FingersEnum.RIGHT_THUMB, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE, FingersEnum.NONE  # Space bar row
         ]
 
         self.__pointer_fingers_layout = [
@@ -124,8 +125,7 @@ class Keyboard:
             FingersEnum.LEFT_LITTLE,
         }
 
-    def highlight_key(self, key: str, past_key: str, word: str):
-
+    def highlight_key(self, key: str, word: str):
         is_capslock = is_capslock_on()
         is_shift = is_shift_pressed()
 
@@ -140,11 +140,13 @@ class Keyboard:
         layout = KeyboardLayouts.get_layout(self.__language, is_shift, is_capslock)
 
         if key in layout:
+            self.__past_finger = self.__fingers_layout[layout.index(key)]
+
+        if key in layout:
             self.__highlighted_key = key
             return
         elif key == " ":
-            past_finger = self.__fingers_layout[layout.index(past_key)]
-            if self.__is_left_finger(past_finger):
+            if self.__is_left_finger(self.__past_finger):
                 self.__highlighted_key = "R-Space"
             else:
                 self.__highlighted_key = "L-Space"
@@ -153,7 +155,6 @@ class Keyboard:
             self.__highlighted_key = key
 
         if not is_shift:
-
             caps_invert_layout = KeyboardLayouts.get_layout(self.__language, is_shift, not is_capslock)
             if key in caps_invert_layout:
                 layout = caps_invert_layout
@@ -162,6 +163,7 @@ class Keyboard:
             if key in shift_invert_layout:
                 layout = shift_invert_layout
 
+            # if key in layout:
             finger = self.__fingers_layout[layout.index(key)]
             if self.__is_left_finger(finger):
                 self.__highlighted_key = "R-Shift"
@@ -222,11 +224,12 @@ class Keyboard:
             elif self.__finger == pointer_finger and self.__finger_is_visible:
                 bg_color = self.change_color(self.POINTER_RED)
 
-            if key == "Space":
+            if key == "Space" or (
+                    self.__finger == finger and self.__finger_is_visible and finger in (FingersEnum.LEFT_THUMB, FingersEnum.RIGHT_THUMB)):
                 pygame.draw.rect(screen, self.REGULAR_BG_KEY_COLOR, rect, border_radius=5)
-                if self.__highlighted_key == "L-Space":
+                if self.__highlighted_key == "L-Space" or self.__finger == FingersEnum.LEFT_THUMB:
                     self.__draw_highlighted_space(screen, bg_color, rect, x=rect.x)
-                elif self.__highlighted_key == "R-Space":
+                elif self.__highlighted_key == "R-Space" or self.__finger == FingersEnum.RIGHT_THUMB:
                     self.__draw_highlighted_space(screen, bg_color, rect, x=rect.x + rect.width // 2)
             else:
                 pygame.draw.rect(screen, bg_color, rect, border_radius=5)

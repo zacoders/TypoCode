@@ -69,11 +69,9 @@ class InputLine:
 
         current_char_pos = len(self.__text)
         current_char = rand_text[current_char_pos]
-
         word = self.__get_word(current_char_pos)
-        past_char = rand_text[current_char_pos - 1] if current_char_pos > 0 else ''
 
-        self.__keyboard.highlight_key(current_char, past_char, word)
+        self.__keyboard.highlight_key(current_char, word)
 
         for event in events:
             if event.type != pygame.KEYDOWN:
