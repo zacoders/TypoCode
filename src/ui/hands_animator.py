@@ -2,8 +2,7 @@
 
 from typing import Tuple
 import pygame
-from pygame import Surface
-
+from pygame import Event, Surface
 from consts import FINGER_BLINK_TIME_MS
 from ui.fingers_enum import FingersEnum
 from ui.images_loader import ImagesLoader
@@ -29,7 +28,8 @@ class HandsAnimator:
             FingersEnum.LEFT_RING: self.__load_finger("left_ring_finger"),
             FingersEnum.LEFT_MIDDLE: self.__load_finger("left_middle_finger"),
             FingersEnum.LEFT_INDEX: self.__load_finger("left_index_finger"),
-            FingersEnum.BOTH_THUMBS: self.__load_finger("thumbs"),
+            FingersEnum.LEFT_THUMB: self.__load_finger("left_thumb"),
+            FingersEnum.RIGHT_THUMB: self.__load_finger("right_thumb"),
             FingersEnum.RIGHT_INDEX: self.__load_finger("right_index_finger"),
             FingersEnum.RIGHT_MIDDLE: self.__load_finger("right_middle_finger"),
             FingersEnum.RIGHT_RING: self.__load_finger("right_ring_finger"),
@@ -37,12 +37,13 @@ class HandsAnimator:
         }
 
         self.__draw_sequence = list(self.__fingers.keys())
+        self.__draw_sequence_len = len(self.__draw_sequence)
 
         self.__finger_enum = FingersEnum.BOTH_INDEXES
         self.__draw_finger = 0
         self.__blinks_num = 0
         self.__is_visible = False
-        self.__next_blink_time = pygame.time.get_ticks()
+        self.__next_blink_time: int = pygame.time.get_ticks()
         self.__blink_delay = FINGER_BLINK_TIME_MS
         self.__repeat = False
 
@@ -55,9 +56,24 @@ class HandsAnimator:
         scale_h = image_size[1] / screen_size[1] / self.HEIGHT_SCALE
         return max(scale_w, scale_h)
 
-    def update(self):
+    def __reset_blink(self):
+        self.__next_blink_time = 0
+        self.__blinks_num = 0
+        self.__is_visible = False
+
+    def update(self, events: list[Event]):
 
         now = pygame.time.get_ticks()
+
+        for event in events:
+            if event.type != pygame.KEYDOWN:
+                continue
+            if event.key == pygame.K_LEFT:
+                self.__draw_finger -= 1
+                self.__reset_blink()
+            if event.key == pygame.K_RIGHT:
+                self.__draw_finger += 1
+                self.__reset_blink()
 
         if now < self.__next_blink_time:
             return
@@ -71,10 +87,14 @@ class HandsAnimator:
         if self.__blinks_num >= 3:
             self.__blinks_num = 0
             self.__draw_finger += 1
+            if self.__draw_finger > self.__draw_sequence_len - 1:
+                self.__repeat = True
             self.__is_visible = True
 
-        if self.__draw_finger > len(self.__draw_sequence) - 1:
-            self.__repeat = True
+        if self.__draw_finger < 0:
+            self.__draw_finger = self.__draw_sequence_len - 1
+
+        if self.__draw_finger > self.__draw_sequence_len - 1:
             self.__draw_finger = 0
 
     def draw(self, screen: Surface):
