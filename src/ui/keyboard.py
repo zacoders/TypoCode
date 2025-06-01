@@ -180,14 +180,16 @@ class Keyboard:
         screen: pygame.Surface,
         bg_color: Tuple[int, int, int],
         rect: pygame.Rect,
-        x: int
+        is_left: bool
     ) -> None:
-
+        if is_left:
+            x = rect.x
+        else:
+            x = rect.x + rect.width // 2
         pygame.draw.rect(
             screen,
             bg_color,
-            (x, rect.y, rect.width // 2, rect.height),
-            border_radius=5
+            (x, rect.y, rect.width // 2, rect.height)
         )
 
     def draw(self, screen: pygame.Surface):
@@ -220,24 +222,24 @@ class Keyboard:
             if key == self.__highlighted_key or (self.__highlighted_finger ==
                                                  finger and self.__highlight_finger_is_visible):
                 bg_color = self.change_color(color)
-                pygame.draw.rect(screen, bg_color, rect, border_radius=5)
+                pygame.draw.rect(screen, bg_color, rect)
             elif key == "Space":
                 bg_color = self.change_color(color)
 
                 if self.__highlighted_key == "L-Space":
-                    self.__draw_highlighted_space(screen, bg_color, rect, x=rect.x)
+                    self.__draw_highlighted_space(screen, bg_color, rect, is_left=True)
                 elif self.__highlighted_key == "R-Space":
-                    self.__draw_highlighted_space(screen, bg_color, rect, x=rect.x + rect.width // 2)
+                    self.__draw_highlighted_space(screen, bg_color, rect, is_left=False)
 
                 if self.__highlight_finger_is_visible:
                     if self.__highlighted_finger == FingersEnum.LEFT_THUMB:
-                        self.__draw_highlighted_space(screen, bg_color, rect, x=rect.x)
+                        self.__draw_highlighted_space(screen, bg_color, rect, is_left=True)
                     elif self.__highlighted_finger == FingersEnum.RIGHT_THUMB:
-                        self.__draw_highlighted_space(screen, bg_color, rect, x=rect.x + rect.width // 2)
+                        self.__draw_highlighted_space(screen, bg_color, rect, is_left=False)
 
             elif self.__highlighted_finger == pointer_finger and self.__highlight_finger_is_visible:
                 bg_color = self.change_color(self.POINTER_RED)
-                pygame.draw.rect(screen, bg_color, rect, border_radius=5)
+                pygame.draw.rect(screen, bg_color, rect)
 
             pygame.draw.rect(screen, color, rect, int(1.3 * scale))
 
