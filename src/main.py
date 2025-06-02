@@ -2,7 +2,7 @@ import os
 import sys
 import pygame
 from common.common import is_linux, is_windows
-from game_state import GameState
+from state import State
 from ui.help_window import HelpWindow
 from ui.images_loader import ImagesLoader
 from ui.theme_config import save_theme
@@ -44,12 +44,12 @@ save_theme()
 
 clock = pygame.time.Clock()
 
-game_state = GameState()
+state = State()
 help_window = HelpWindow(images_loader)
-start_window = StartWindow(game_state)
+start_window = StartWindow(state)
 
 while True:
     start_window.show(screen, start_screen_size, clock, min_screen_size, max_screen_size)
 
-    typing_window = TypingWindow(game_state, help_window)
+    typing_window = TypingWindow(state, help_window)
     typing_window.show(screen, clock, min_screen_size, max_screen_size)

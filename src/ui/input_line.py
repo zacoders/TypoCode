@@ -2,7 +2,7 @@ from pygame.font import Font
 from pygame.event import Event
 import pygame
 from common.common import get_resource_path
-from game_state import GameState
+from state import State
 from services.keyboard_service import KeyboardService
 from services.line_stats_calc import LineStatsCalc
 from services.mentor import Mentor
@@ -20,11 +20,11 @@ class InputLine:
         typing_errors: TypingErrors,
         font_file_path: str,
         line_stats_calc: LineStatsCalc,
-        game_state: GameState,
+        state: State,
         mentor: Mentor
     ):
 
-        self.__game_state = game_state
+        self.__state = state
 
         self.__random_line = random_line
         self.__keyboard = keyboard
@@ -81,7 +81,7 @@ class InputLine:
                 continue
 
             unicode_char = self.__keyboard_service.get_char_from_key(
-                event.scancode, self.__game_state.generator.keyboard_lang)
+                event.scancode, self.__state.generator.keyboard_lang)
 
             if unicode_char == '':
                 continue

@@ -8,7 +8,7 @@ from pygame.event import Event
 import pygame_gui
 from pygame_gui.elements import UISelectionList
 from consts import BG_COLOR, FPS
-from game_state import GameState
+from state import State
 import generators
 from generators.generator_abc import GeneratorABC
 from ui.theme_config import get_theme_path
@@ -18,10 +18,10 @@ from pygame.typing import Point
 
 class StartWindow(WindowABC):
 
-    def __init__(self, game_state: GameState):
+    def __init__(self, state: State):
         super().__init__()
 
-        self.__game_state = game_state
+        self.__state = state
 
         self.__screen_width = 0
         self.__screen_height = 0
@@ -62,7 +62,7 @@ class StartWindow(WindowABC):
             if event.type == pygame_gui.UI_SELECTION_LIST_NEW_SELECTION:
                 selected_item = self.__selection_list.get_single_selection()
                 if selected_item and selected_item in self.__generators_list_items:
-                    self.__game_state.generator = self.__generators_list_items[selected_item]
+                    self.__state.generator = self.__generators_list_items[selected_item]
 
     def __gens_list_items(self):
         item = {}
