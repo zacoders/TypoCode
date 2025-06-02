@@ -6,3 +6,4 @@ class State:
     def __init__(self):
         self.generator: GeneratorABC
         self.is_help_showed: bool = False
+        self.zen_mode = False
