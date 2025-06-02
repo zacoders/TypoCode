@@ -227,11 +227,14 @@ class Keyboard:
                 raw_rect.height * scale
             )
             bg_color = self.REGULAR_BG_KEY_COLOR
+
             if key == self.__highlighted_key or (self.__highlighted_finger ==
                                                  finger and self.__highlight_finger_is_visible):
                 bg_color = self.change_color(color)
                 pygame.draw.rect(screen, bg_color, rect)
+
             elif key == "Space":
+                pygame.draw.rect(screen, bg_color, rect)
                 bg_color = self.change_color(color)
 
                 if self.__highlighted_key == "L-Space":
@@ -247,6 +250,9 @@ class Keyboard:
 
             elif self.__highlighted_finger == pointer_finger and self.__highlight_finger_is_visible:
                 bg_color = self.change_color(self.POINTER_RED)
+                pygame.draw.rect(screen, bg_color, rect)
+
+            else:
                 pygame.draw.rect(screen, bg_color, rect)
 
             pygame.draw.rect(screen, color, rect, int(1.3 * scale))
