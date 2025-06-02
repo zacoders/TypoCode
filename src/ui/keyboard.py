@@ -27,12 +27,13 @@ class Keyboard:
 
     REGULAR_BG_KEY_COLOR = (30, 30, 30)
 
-    def __init__(self, language: KeyboardLanguage, relative_y_pos: float):
+    def __init__(self, language: KeyboardLanguage, relative_y_pos: float, is_upper_layout: bool = False):
         self.__relative_y_pos = relative_y_pos
         self.__highlighted_key = None
         self.__language = language
         self.__highlighted_finger: FingersEnum | None = None
         self.__highlight_finger_is_visible = False
+        self.__is_upper_layout = is_upper_layout
 
         self.__color_layout = [
             self.RED, self.RED, self.RED, self.YELLOW, self.GREEN, self.BLUE, self.BLUE,
@@ -105,7 +106,6 @@ class Keyboard:
         return key_sizes
 
     def update(self):
-        # self._switch_layout(keys)
         ...
 
     def change_color(self, color, factor=0.5):
@@ -212,13 +212,20 @@ class Keyboard:
         is_capslock = is_capslock_on()
         is_shift = is_shift_pressed()
         is_upper = is_capslock ^ is_shift
+
+        if not self.__is_upper_layout:
+            keyboard_layout = KeyboardLayouts.get_layout(self.__language, is_shift, is_capslock)
+        else:
+            keyboard_layout = KeyboardLayouts.get_layout(self.__language, False, True)
+
         layout_zip = zip(
-            KeyboardLayouts.get_layout(self.__language, is_shift, is_capslock),
+            keyboard_layout,
             self.__key_sizes,
             self.__color_layout,
             self.__fingers_layout,
             self.__pointer_fingers_layout
         )
+
         for key, raw_rect, color, finger, pointer_finger in layout_zip:
             rect = pygame.rect.Rect(
                 raw_rect.x * scale + x,
@@ -257,7 +264,7 @@ class Keyboard:
 
             pygame.draw.rect(screen, color, rect, int(1.3 * scale))
 
-            if is_upper and len(key) == 1 and key.isalpha():
+            if (is_upper or self.__is_upper_layout) and len(key) == 1 and key.isalpha():
                 key_str = key.upper()
             else:
                 key_str = key

@@ -17,7 +17,7 @@ class HelpWindow(WindowABC):
     def __init__(self, images_loader: ImagesLoader):
         super().__init__()
 
-        self.__keyboard = Keyboard(KeyboardLanguage.ENGLISH, relative_y_pos=0.025)
+        self.__keyboard = Keyboard(KeyboardLanguage.ENGLISH, relative_y_pos=0.025, is_upper_layout=True)
         self.__hands_animator = HandsAnimator(relative_y_pos=0.48, images_loader=images_loader)
 
         self.__font_file_path = get_resource_path("src/_content/fonts/UbuntuMono-Regular.ttf")
