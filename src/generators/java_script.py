@@ -84,7 +84,7 @@ class JavaScriptGenerator(GeneratorABC):
         # A few words for the first typing level.
         "ask", "add", "lag", "sad", "glad", "had", "all", "fall", "hall", "glass", "flag", "flash",
         "dash", "gala", "saga", "alfa", "half", "gas", "has", "ash", "shall", "gag", "jag",
-        "flask", "slash", "hash", "lash", "fad", "gals", "jags", "shag",
+        "flask", "slash", "hash", "lash", "fad", "gals", "jags", "shag", "a", "s", "d", "f", "g", "h", "j", "k", "l",
 
         # Common words
         "addEventListener", "appendChild", "setAttribute", "getAttribute", "getElementById", "getElementsByClassName", "querySelector", "querySelectorAll",
