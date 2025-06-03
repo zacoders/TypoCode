@@ -110,7 +110,7 @@ class PhpGenerator(GeneratorABC):
         "pecl", "phpize", "php-config", "xdebug", "opcache",
 
         # A few words for the first typing level.
-        "as", "all", "ask", "lad", "jag", "lag", "sag", "fad", "gag", "hag", "dll", "hall", "fall", "gall", "flag", "slag", "glad", "add", "had", "has", "sad", "gal", "ash", "hash", "dash", "gals", "lags", "jags", "sags", "fads", "gags", "hags", "flash", "slash", "glass", "shall",
+        "as", "all", "ask", "lad", "jag", "lag", "sag", "fad", "gag", "hag", "dll", "hall", "fall", "gall", "flag", "slag", "glad", "add", "had", "has", "sad", "gal", "ash", "hash", "dash", "gals", "lags", "jags", "sags", "fads", "gags", "hags", "flash", "slash", "glass", "shall", "a", "s", "d", "f", "g", "h", "j", "k", "l",
 
         # Common words
         "Add", "AddRange", "Aggregate", "All", "Any", "Append", "Apply", "Args", "Array", "Ascii", "Assert",
