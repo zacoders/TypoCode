@@ -55,7 +55,7 @@ class JavaScriptGenerator(GeneratorABC):
         "(", ")", "[]", "{}", ":", ";", ",", ".", "`", "\"", "'", "${...}",
 
         # Other
-        "function() {}", "const name = ", "let value = ", "if (condition)", "for (let i = 0)", "while (true)", "try { } catch (e)",
+        "function() {}", "const name", "let value", "if (condition)", "for (let i = 0)", "while (true)", "try { } catch (e)",
 
         # Common variable names
         "name", "age", "count", "result", "data", "item", "value", "index",
