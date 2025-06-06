@@ -209,17 +209,18 @@ class Keyboard:
         y = screen.height * self.__relative_y_pos + self.KEY_SIZE
         x = screen.width / 2 - (Keyboard.LINE_KEYS_COUNT / 2.0 + 1) * self.KEY_SIZE * scale
         self.__font = pygame.font.Font(None, int(Keyboard.FONT_SIZE * scale))
-        is_capslock = is_capslock_on()
-        is_shift = is_shift_pressed()
+
+        if self.__is_upper_layout:
+            is_capslock = True
+            is_shift = False
+        else:
+            is_capslock = is_capslock_on()
+            is_shift = is_shift_pressed()
+
         is_upper = is_capslock ^ is_shift
 
-        if not self.__is_upper_layout:
-            keyboard_layout = KeyboardLayouts.get_layout(self.__language, is_shift, is_capslock)
-        else:
-            keyboard_layout = KeyboardLayouts.get_layout(self.__language, False, True)
-
         layout_zip = zip(
-            keyboard_layout,
+            KeyboardLayouts.get_layout(self.__language, is_shift, is_capslock),
             self.__key_sizes,
             self.__color_layout,
             self.__fingers_layout,
@@ -264,7 +265,7 @@ class Keyboard:
 
             pygame.draw.rect(screen, color, rect, int(1.3 * scale))
 
-            if (is_upper or self.__is_upper_layout) and len(key) == 1 and key.isalpha():
+            if is_upper and len(key) == 1 and key.isalpha():
                 key_str = key.upper()
             else:
                 key_str = key
