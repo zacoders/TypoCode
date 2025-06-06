@@ -58,6 +58,19 @@ class InputLine:
             count += len(word) + 1  # +1 for space
         return ""
 
+    def __get_sequences(self, word: str, index: int) -> list[str]:
+        sequences = [
+            word[index - 1:index + 2],
+            word[index:index + 3],
+            word[index - 3:index]
+        ]
+
+        for seq in sequences:
+            if len(seq) < 3:
+                sequences.remove(seq)
+
+        return sequences
+
     def update(self, events: list[Event]):
         rand_text = self.__random_line.get_text()
 
@@ -97,7 +110,17 @@ class InputLine:
             else:
                 if unicode_char:
                     word = self.__get_word(current_char_pos)
-                    self.__typing_errors.add_errors(current_char, word)
+                    # index = len(self.__text) - len(self.__text[:current_char_pos])
+                    if word != '':
+                        index = current_char_pos - rand_text.index(word[0])
+                        sequences = self.__get_sequences(word, index)
+                        print(f'sequences in input_line: {sequences}; {index=}')
+                        print(f'{current_char_pos=}, {rand_text.index(word[0])=}')
+                    else:
+                        sequences = ['']
+                        print(f'sequences in input_line: {sequences}; {index=}')
+                        print(f'{current_char_pos=}, {rand_text.index(word[0])=}')
+                    self.__typing_errors.add_errors(current_char, word, sequences)
                 self.__line_stats_calc.symbol_typed(is_error=True, char=unicode_char)
                 self.__error_sound.play()
                 self.__error_symbol = unicode_char
