@@ -80,7 +80,7 @@ class StartWindow(WindowABC):
         min_screen_size: Point,
         max_screen_size: Point
     ):
-
+        self.__selection_list.rebuild()
         while True:
             screen.fill(BG_COLOR)
 
