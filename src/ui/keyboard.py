@@ -27,12 +27,13 @@ class Keyboard:
 
     REGULAR_BG_KEY_COLOR = (30, 30, 30)
 
-    def __init__(self, language: KeyboardLanguage, relative_y_pos: float):
+    def __init__(self, language: KeyboardLanguage, relative_y_pos: float, is_upper_layout: bool = False):
         self.__relative_y_pos = relative_y_pos
         self.__highlighted_key = None
         self.__language = language
         self.__highlighted_finger: FingersEnum | None = None
         self.__highlight_finger_is_visible = False
+        self.__is_upper_layout = is_upper_layout
 
         self.__color_layout = [
             self.RED, self.RED, self.RED, self.YELLOW, self.GREEN, self.BLUE, self.BLUE,
@@ -105,7 +106,6 @@ class Keyboard:
         return key_sizes
 
     def update(self):
-        # self._switch_layout(keys)
         ...
 
     def change_color(self, color, factor=0.5):
@@ -209,9 +209,16 @@ class Keyboard:
         y = screen.height * self.__relative_y_pos + self.KEY_SIZE
         x = screen.width / 2 - (Keyboard.LINE_KEYS_COUNT / 2.0 + 1) * self.KEY_SIZE * scale
         self.__font = pygame.font.Font(None, int(Keyboard.FONT_SIZE * scale))
-        is_capslock = is_capslock_on()
-        is_shift = is_shift_pressed()
+
+        if self.__is_upper_layout:
+            is_capslock = True
+            is_shift = False
+        else:
+            is_capslock = is_capslock_on()
+            is_shift = is_shift_pressed()
+
         is_upper = is_capslock ^ is_shift
+
         layout_zip = zip(
             KeyboardLayouts.get_layout(self.__language, is_shift, is_capslock),
             self.__key_sizes,
@@ -219,6 +226,7 @@ class Keyboard:
             self.__fingers_layout,
             self.__pointer_fingers_layout
         )
+
         for key, raw_rect, color, finger, pointer_finger in layout_zip:
             rect = pygame.rect.Rect(
                 raw_rect.x * scale + x,
@@ -227,11 +235,14 @@ class Keyboard:
                 raw_rect.height * scale
             )
             bg_color = self.REGULAR_BG_KEY_COLOR
+
             if key == self.__highlighted_key or (self.__highlighted_finger ==
                                                  finger and self.__highlight_finger_is_visible):
                 bg_color = self.change_color(color)
                 pygame.draw.rect(screen, bg_color, rect)
+
             elif key == "Space":
+                pygame.draw.rect(screen, bg_color, rect)
                 bg_color = self.change_color(color)
 
                 if self.__highlighted_key == "L-Space":
@@ -247,6 +258,9 @@ class Keyboard:
 
             elif self.__highlighted_finger == pointer_finger and self.__highlight_finger_is_visible:
                 bg_color = self.change_color(self.POINTER_RED)
+                pygame.draw.rect(screen, bg_color, rect)
+
+            else:
                 pygame.draw.rect(screen, bg_color, rect)
 
             pygame.draw.rect(screen, color, rect, int(1.3 * scale))
