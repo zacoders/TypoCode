@@ -1,3 +1,4 @@
+import re
 from pygame.font import Font
 from pygame.event import Event
 import pygame
@@ -58,6 +59,27 @@ class InputLine:
             count += len(word) + 1  # +1 for space
         return ""
 
+    def __get_sequences(self, word: str, index: int) -> list[str]:
+        sequences = [
+            word[index - 1:index + 2],
+            word[index:index + 3],
+            word[index - 2:index + 1]
+        ]
+
+        return [seq for seq in sequences if len(seq) == 3]
+
+    def __get_letter_index(self, rand_text: str, current_char_pos: int) -> int:
+        words = list(re.finditer(r'\b\w+\b', rand_text))
+
+        for w in words:
+            start, end = w.start(), w.end()
+            if start <= current_char_pos < end:
+                word_start = start
+                break
+
+        index_in_word = current_char_pos - word_start
+        return index_in_word
+
     def update(self, events: list[Event]):
         rand_text = self.__random_line.get_text()
 
@@ -97,7 +119,14 @@ class InputLine:
             else:
                 if unicode_char:
                     word = self.__get_word(current_char_pos)
-                    self.__typing_errors.add_errors(current_char, word)
+
+                    if word != '':
+                        index = self.__get_letter_index(rand_text, current_char_pos)
+                        sequences = self.__get_sequences(word, index)
+                    else:
+                        sequences = ['']
+
+                    self.__typing_errors.add_errors(current_char, word, sequences)
                 self.__line_stats_calc.symbol_typed(is_error=True, char=unicode_char)
                 self.__error_sound.play()
                 self.__error_symbol = unicode_char

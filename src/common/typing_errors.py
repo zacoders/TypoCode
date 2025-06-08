@@ -7,8 +7,9 @@ class TypingErrors:
     def __init__(self):
         self.__error_letters = defaultdict(int)
         self.__error_words = defaultdict(int)
+        self.__error_sequences = defaultdict(int)
 
-    def add_errors(self, letter: str, word: str):
+    def add_errors(self, letter: str, word: str, sequences: list[str]):
 
         if letter:
             self.__error_letters[letter] += 1
@@ -16,9 +17,14 @@ class TypingErrors:
         if word:
             self.__error_words[word] += 1
 
+        if sequences:
+            for seq in sequences:
+                if seq != '':
+                    self.__error_sequences[seq] += 1
+
         print(f'{self.__error_letters=}')
         print(f'{self.__error_words=}')
-        
+        print(f'{self.__error_sequences=}')
 
     def del_word(self, word: str):
         if word:
@@ -35,8 +41,18 @@ class TypingErrors:
                 del self.__error_letters[letter]
         print(f'{self.__error_letters=}')
 
+    def del_sequence(self, sequence: str):
+        if sequence:
+            self.__error_sequences[sequence] -= 1
+            if self.__error_sequences[sequence] <= 0:
+                del self.__error_sequences[sequence]
+        print(f'{self.__error_sequences=}')
+
     def get_error_letters(self) -> List[str]:
         return list(self.__error_letters.keys())
 
     def get_error_words(self) -> List[str]:
         return list(self.__error_words.keys())
+
+    def get_error_sequences(self) -> List[str]:
+        return list(self.__error_sequences.keys())

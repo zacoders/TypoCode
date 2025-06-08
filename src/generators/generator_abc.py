@@ -48,6 +48,7 @@ class GeneratorABC(ABC):
             word_type = random.random()
             error_words = errors.get_error_words()
             error_letters = errors.get_error_letters()
+            error_sequences = errors.get_error_sequences()
 
             if max_word_len == 0:
                 word = self._get_random_word(words=self._words, max_length=1, typing_level=typing_level)
@@ -75,6 +76,14 @@ class GeneratorABC(ABC):
                 if not word:
                     continue
                 errors.del_letter(rand_letter)
+            elif word_type < 0.5 and len(error_sequences) > 0:
+                rand_sequence = random.choice(error_sequences)
+                word = self._get_random_word_with_sequence(
+                    words=self._words, max_length=max_word_len, sequence=rand_sequence, typing_level=typing_level
+                )
+                if not word:
+                    continue
+                errors.del_sequence(rand_sequence)
             else:
                 word = self._get_random_word(words=self._words, max_length=max_word_len, typing_level=typing_level)
 
@@ -99,6 +108,18 @@ class GeneratorABC(ABC):
             )
         )
         if len(right_words) == 0:
+            return None
+        return random.choice(right_words)
+
+    def _get_random_word_with_sequence(self, words: list[str], max_length: int, sequence: str, typing_level: int):
+        level_words = self.__get_level_words(words, typing_level)
+        right_words = list(
+            filter(
+                lambda w: len(w) <= max_length and sequence in w,
+                level_words
+            )
+        )
+        if not right_words:
             return None
         return random.choice(right_words)
 
