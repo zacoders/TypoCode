@@ -3,6 +3,7 @@ from pygame.font import Font
 from pygame import Event, Surface, Clock
 from consts import BG_COLOR, FPS
 from generators.keyboard_lang import KeyboardLanguage
+from state import State
 from ui.hands_animator import HandsAnimator
 from ui.images_loader import ImagesLoader
 from ui.keyboard import Keyboard
@@ -24,7 +25,7 @@ class HelpWindow(WindowABC):
         self.__font_calc = FontCalc(self.__font_file_path)
         self.__font = Font(self.__font_file_path, 150)
 
-        self.__text = 'F1 - Help;    F3 - Zen Mode;    F11 - Fulls Screen;    ESC - Exit'
+        self.__text = 'F1 - Help    F3 - Zen Mode    F10 - Sounds    F11 - Full Screen    ESC - Exit'
         self.__text_color = (255, 255, 255)
         self.__text_line_color = (60, 60, 60)
 
@@ -62,16 +63,18 @@ class HelpWindow(WindowABC):
         clock: Clock,
         min_screen_size: Point,
         max_screen_size: Point,
-        keyboard_lang: KeyboardLanguage
+        keyboard_lang: KeyboardLanguage,
+        state: State
     ):
         self.__keyboard.set_language(keyboard_lang)
         self.__hands_animator.restart()
+
         while True:
             screen.fill(BG_COLOR)
 
             events: list[Event] = pygame.event.get()
 
-            self.update_events(events, screen, min_screen_size, max_screen_size)
+            self.update_events(events, screen, min_screen_size, max_screen_size, state)
 
             for event in events:
                 if event.type == pygame.KEYDOWN and event.key not in (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_F11):

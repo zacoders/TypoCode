@@ -93,8 +93,12 @@ class TypingWindow(WindowABC):
     ):
         if not self.__state.is_help_showed:
             self.__help_window.show(
-                screen, clock, min_screen_size, max_screen_size,
-                self.__state.generator.keyboard_lang
+                screen,
+                clock,
+                min_screen_size,
+                max_screen_size,
+                self.__state.generator.keyboard_lang,
+                self.__state
             )
             self.__state.is_help_showed = True
             self.__update_help_show_time()
@@ -105,7 +109,7 @@ class TypingWindow(WindowABC):
             keys = pygame.key.get_pressed()
             events = pygame.event.get()
 
-            self.update_events(events, screen, min_screen_size, max_screen_size)
+            self.update_events(events, screen, min_screen_size, max_screen_size, self.__state)
 
             for event in events:
 
@@ -119,8 +123,12 @@ class TypingWindow(WindowABC):
 
                 if event.key == pygame.K_F1:
                     self.__help_window.show(
-                        screen, clock, min_screen_size, max_screen_size,
-                        self.__state.generator.keyboard_lang
+                        screen,
+                        clock,
+                        min_screen_size,
+                        max_screen_size,
+                        self.__state.generator.keyboard_lang,
+                        self.__state
                     )
 
                 if event.key == pygame.K_F3:
@@ -128,8 +136,12 @@ class TypingWindow(WindowABC):
 
             if pygame.time.get_ticks() > self.__help_show_time and not self.__zen_mode:
                 self.__help_window.show(
-                    screen, clock, min_screen_size, max_screen_size,
-                    self.__state.generator.keyboard_lang
+                    screen,
+                    clock,
+                    min_screen_size,
+                    max_screen_size,
+                    self.__state.generator.keyboard_lang,
+                    self.__state
                 )
                 self.__update_help_show_time()
 

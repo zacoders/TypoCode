@@ -87,7 +87,7 @@ class StartWindow(WindowABC):
             events = pygame.event.get()
             keys = pygame.key.get_pressed()
 
-            self.update_events(events, screen, min_screen_size, max_screen_size)
+            self.update_events(events, screen, min_screen_size, max_screen_size, self.__state)
 
             self.__update(events, screen.get_width(), screen.get_height())
 

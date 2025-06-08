@@ -2,6 +2,7 @@ from pygame.font import Font
 from pygame.event import Event
 import pygame
 from common.common import get_resource_path
+from common.sound_enum import SoundEnum
 from state import State
 from services.keyboard_service import KeyboardService
 from services.line_stats_calc import LineStatsCalc
@@ -90,7 +91,8 @@ class InputLine:
                 self.__line_stats_calc.start()
 
             if unicode_char == current_char:
-                self.__type_sound.play()
+                if self.__state.sound_state == SoundEnum.ON:
+                    self.__type_sound.play()
                 self.__line_stats_calc.symbol_typed(is_error=False, char=unicode_char)
                 self.__text += unicode_char
                 self.__error_symbol = ''
@@ -99,7 +101,8 @@ class InputLine:
                     word = self.__get_word(current_char_pos)
                     self.__typing_errors.add_errors(current_char, word)
                 self.__line_stats_calc.symbol_typed(is_error=True, char=unicode_char)
-                self.__error_sound.play()
+                if self.__state.sound_state == SoundEnum.ON or self.__state.sound_state == SoundEnum.ERROR_ONLY:
+                    self.__error_sound.play()
                 self.__error_symbol = unicode_char
 
             if len(self.__text) == self.__random_line.text_len:
