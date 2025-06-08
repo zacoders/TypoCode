@@ -1,3 +1,4 @@
+import re
 from pygame.font import Font
 from pygame.event import Event
 import pygame
@@ -62,14 +63,22 @@ class InputLine:
         sequences = [
             word[index - 1:index + 2],
             word[index:index + 3],
-            word[index - 3:index]
+            word[index - 2:index + 1]
         ]
 
-        for seq in sequences:
-            if len(seq) < 3:
-                sequences.remove(seq)
+        return [seq for seq in sequences if len(seq) == 3]
 
-        return sequences
+    def __get_letter_index(self, rand_text: str, current_char_pos: int) -> int:
+        words = list(re.finditer(r'\b\w+\b', rand_text))
+
+        for w in words:
+            start, end = w.start(), w.end()
+            if start <= current_char_pos < end:
+                word_start = start
+                break
+
+        index_in_word = current_char_pos - word_start
+        return index_in_word
 
     def update(self, events: list[Event]):
         rand_text = self.__random_line.get_text()
@@ -110,16 +119,13 @@ class InputLine:
             else:
                 if unicode_char:
                     word = self.__get_word(current_char_pos)
-                    # index = len(self.__text) - len(self.__text[:current_char_pos])
+
                     if word != '':
-                        index = current_char_pos - rand_text.index(word[0])
+                        index = self.__get_letter_index(rand_text, current_char_pos)
                         sequences = self.__get_sequences(word, index)
-                        print(f'sequences in input_line: {sequences}; {index=}')
-                        print(f'{current_char_pos=}, {rand_text.index(word[0])=}')
                     else:
                         sequences = ['']
-                        print(f'sequences in input_line: {sequences}; {index=}')
-                        print(f'{current_char_pos=}, {rand_text.index(word[0])=}')
+
                     self.__typing_errors.add_errors(current_char, word, sequences)
                 self.__line_stats_calc.symbol_typed(is_error=True, char=unicode_char)
                 self.__error_sound.play()

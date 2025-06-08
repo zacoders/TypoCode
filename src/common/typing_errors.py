@@ -41,12 +41,11 @@ class TypingErrors:
                 del self.__error_letters[letter]
         print(f'{self.__error_letters=}')
 
-    def del_sequence(self, sequences: list[str]):
-        if sequences:
-            for seq in sequences:
-                self.__error_sequences[seq] -= 1
-                if self.__error_sequences[seq] <= 0:
-                    del self.__error_sequences[seq]
+    def del_sequence(self, sequence: str):
+        if sequence:
+            self.__error_sequences[sequence] -= 1
+            if self.__error_sequences[sequence] <= 0:
+                del self.__error_sequences[sequence]
         print(f'{self.__error_sequences=}')
 
     def get_error_letters(self) -> List[str]:
