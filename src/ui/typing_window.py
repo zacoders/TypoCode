@@ -3,6 +3,7 @@ from pygame.time import Clock
 from pygame.event import Event
 from common.char_stats import CharStats
 from common.common import get_resource_path
+from common.sound_enum import SoundEnum
 from common.time_provider import TimeProvider
 from consts import BG_COLOR, FPS, HELP_SHOW_TIME_MS
 from services.line_stats_calc import LineStatsCalc
@@ -133,6 +134,10 @@ class TypingWindow(WindowABC):
 
                 if event.key == pygame.K_F3:
                     self.__zen_mode = not self.__zen_mode
+                    
+                if event.key == pygame.K_F10:
+                    if self.__state.sound_state == SoundEnum.ON:
+                        print("Sound ON")
 
             if pygame.time.get_ticks() > self.__help_show_time and not self.__zen_mode:
                 self.__help_window.show(
